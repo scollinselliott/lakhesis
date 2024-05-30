@@ -1,0 +1,20 @@
+Package: lakhesis
+Title: Consensus Seriation for Binary Data
+Version: 0.0.1
+Authors@R: 
+    person("Stephen", "Collins-Elliott", , "sce@utk.edu", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-5642-6903"))
+Description: Deterimining consensus seriations for binary incidence matrices, using a two step process of Procrustes-fit correspondence analysis for heuristic selection of potential seriations and iterative regression to establish a single consensus. Contains the Lakhesis Calculator, an exploratory graphical platform for identifying potentially well-seriated sequences.
+License: `use_gpl3_license()`
+Imports:
+    readr,
+    ca,
+    ggplot2,
+    Rdpack,
+    shiny,
+    shinydashboard,
+    bslib
+RdMacros: Rdpack
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.1
