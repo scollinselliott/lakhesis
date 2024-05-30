@@ -17,7 +17,7 @@ of their similarity, i.e, that things come into and go out of fashion
 with a peak moment of popularity. In ecology, the distribution of a
 species may occur according to a preferred environmental condition that
 diminishes as that environment changes. There are a number of R
-functions and packages (especially `seriation` and `vegan`) that provide
+functions and packages (especially `seriation` and `vegan`) that provide the
 means to seriate or ordinate data, especially for frequency or count
 data. While binary (presence/absence) data are often viewed as a
 reductive case of frequency data, they can also present their own
