@@ -45,21 +45,21 @@ The sidebar contains the following commands:
 
 ## Installation
 
-To install `lakhesis` from GitHub:
+To obtain the current development version of `lakhesis` from GitHub, install from GitHub in the `R` command line with:
 
 ``` r
 library(devtools)
 install_github("scollinselliott/lakhesis") 
 ```
 
-## Execution
+## Usage
 
-Starting the Lakhesis Calculator is performed with the function `LC()`:
+To start the Lakhesis Calculator, execute the function `LC()`:
 
 ``` r
 library(lakhesis)
 LC()
-``
+```
 
 ## Bibliography
 
