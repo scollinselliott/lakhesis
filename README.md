@@ -1,36 +1,37 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# <img src="man/figures/logo.png" align="right" /> lakhesis: Consensus Seriation for Binary Data
+# <img src="man/figures/logo.png" align="right" width="100px"/> lakhesis: Consensus Seriation for Binary Data
 
 <!-- badges: start -->
 <!-- badges: end -->
 
 The `R` package `lakhesis` provides a heuristic-critical platform for
 seriating binary data matrices through the exploration, selection, and
-consensus of partially seriated sequences. In brief, seriation
-(sequencing, ordination) involves putting a set of things in an optimal
-order. In archaeology, seriation can be used to establish a
-chronological order of contexts and find-types on the basis of their
-similarity, i.e, that things come into and go out of fashion with a peak
-moment of popularity. In ecology, the distribution of a species may
-occur according to a preferred environmental condition that diminishes
-as that environment changes. There are a number of R functions and
-packages (especially `seriation` and `vegan`) that provide means to
-seriate or ordinate data, especially for frequency or count data. While
-binary (presence/absence) data are often viewed as a reductive case of
-frequency data, they can also present their own challneges for
-seriation. Moreover, not all “incidence matrices” (the matrix of 0/1s
-that record the joint incidence or occurrence for a row-column pairing)
-will necessarily be well seriated. The selection of row and column
-elements in the input is accordingly an intrinsic part of the task of
-seriation. In this respect, `lakhesis` seeks to complement existing
-methods in `R`, by focusing on binary data. It uses correpsondence
-analysis, a mainstay technique for seriation, which is then fit to a
-reference curve that represents “ideally” seriated data. Multiple
-seriations can be run on partial subsets of the initial incidence
-matrix, which are then recompiled into a single consense seriation.
-Critical measures are also developed.
+consensus of partially seriated sequences.
+
+In brief, seriation (sequencing, ordination) involves putting a set of
+things in an optimal order. In archaeology, seriation can be used to
+establish a chronological order of contexts and find-types on the basis
+of their similarity, i.e, that things come into and go out of fashion
+with a peak moment of popularity. In ecology, the distribution of a
+species may occur according to a preferred environmental condition that
+diminishes as that environment changes. There are a number of R
+functions and packages (especially `seriation` and `vegan`) that provide
+means to seriate or ordinate data, especially for frequency or count
+data. While binary (presence/absence) data are often viewed as a
+reductive case of frequency data, they can also present their own
+challneges for seriation. Moreover, not all “incidence matrices” (the
+matrix of 0/1s that record the joint incidence or occurrence for a
+row-column pairing) will necessarily be well seriated. The selection of
+row and column elements in the input is accordingly an intrinsic part of
+the task of seriation. In this respect, `lakhesis` seeks to complement
+existing methods in `R`, by focusing on binary data. It uses
+correpsondence analysis, a mainstay technique for seriation, which is
+then fit to a reference curve that represents “ideally” seriated data.
+Multiple seriations can be run on partial subsets of the initial
+incidence matrix, which are then recompiled into a single consense
+seriation. Critical measures are also developed.
 
 While command line functions can be run in `R`, the functionality of
 `lakhesis` is achieved via the Lakhesis Calculator, a graphical platform
@@ -72,8 +73,8 @@ The sidebar contains the following commands:
   column contains a row element and the second column contains a column
   element of the incidence matrix. If data are already in incidence
   matrix format, the `im.long()` function in `lakhesis` can be used to
-  convert an incidence matrix to be exported into the necessary form.
-  Uses
+  convert an incidence matrix to be exported into the necessary long
+  format.
 - **Reinitialize** Resets the plots to their original, starting
   condition.
 - **Recompute with Selection** Upon the selection of row and column
