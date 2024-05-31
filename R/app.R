@@ -19,6 +19,6 @@
 #' @export
 #' @importFrom Rdpack reprompt
 LC <- function() {
-    shiny::runApp("inst/app.R") 
+    shiny::runApp(appDir = system.file('inst', package = 'lakhesis') )
 }
 
