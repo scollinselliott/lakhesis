@@ -1,7 +1,10 @@
 bibentry(
   bibtype  = "Manual",
   title    = "lakhesis: Consensus Seriation for Binary Data",
-  author = c(person(c("Stephen", "A."), "Collins-Elliott", role = c("aut", "cre", email = "sce@utk.edu")),
+  author   = c(person(c("Stephen", "A."), "Collins-Elliott", role = c("aut", "cre"), email = "sce@utk.edu")),
   year     = "2024",
-  url      = "https://github.com/scollinselliott/lakhesis"
+  note     = "R package version 0.0.1",
+  url      = "https://github.com/scollinselliott/lakhesis",
+  key      = "collins-elliott_lakhesis_2024"
 )
+
