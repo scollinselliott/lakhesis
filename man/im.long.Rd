@@ -10,8 +10,17 @@ im.long(obj)
 \item{obj}{An incidence matrix.}
 }
 \value{
-A data frame of two columns (row and column of the incidence matrix), in which row of the data frame represents a pair of an incidence.
+A data frame of two columns (row and column of the incidence matrix), in which row of the data frame represents a pair of an
 }
 \description{
 Take an incidence matrix and convert it to a data frame of two columns, where the first column represents the row elements of the incidence matrix and the second column represents the column elements of the incidence matrix. Each row pair represents the incidence (or occurrence) of that row and column element together.
+}
+\examples{
+data(quattrofontanili)
+qf <- im.long(quattrofontanili)
+
+# to export for uploading into the Lakhesis Calculator, use write.table() to remove both row and column names
+
+write.table(qf, file = 'qf.csv', row.names = FALSE, col.names = FALSE, sep = ",")
+
 }

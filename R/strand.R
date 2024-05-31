@@ -31,7 +31,6 @@ spearman.sq <- function(r1, r2) {
 #' @returns The measure of concentration.
 #' 
 #' @examples 
-#' # Quattro Fontanili 
 #' data("quattrofontanili")
 #' concentration.col(quattrofontanili)
 #' 
@@ -59,7 +58,6 @@ conc <- numeric(ncol(obj))
 #' @returns The \eqn{\kappa} coefficient of concentration.
 #' 
 #' @examples 
-#' #' Quattro Fontanili 
 #' data("quattrofontanili")
 #' kappa.coef(quattrofontanili)
 #' 
@@ -87,7 +85,6 @@ kappa.coef <- function(obj) {
 #'   * `p.val` \eqn{p} values of the column elements
 #' 
 #' @examples 
-#' # using the Münsingen data from the Münsingen-Rain
 #' data("quattrofontanili")
 #' element.eval(quattrofontanili)
 #' 

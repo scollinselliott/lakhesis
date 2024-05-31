@@ -18,7 +18,7 @@ The seriation of tombs from necropoleis at Veii, primarily Quattro Fontanili, bu
 }
 \examples{
 data("quattrofontanili")
-im.long(quattrofontanili)
+print(quattrofontanili)
 
 }
 \references{

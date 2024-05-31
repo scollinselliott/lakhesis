@@ -16,7 +16,6 @@ The measure of concentration.
 The Kendall-Doran measure of concentration \insertCite{kendall_statistical_1963,doran_computer_1971}{lakhesis}. In a seriated matrix, this function computes the total number cells between the first and last non-zero value, column by column.
 }
 \examples{
-# Quattro Fontanili 
 data("quattrofontanili")
 concentration.col(quattrofontanili)
 

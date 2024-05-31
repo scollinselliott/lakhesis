@@ -28,7 +28,6 @@ A \code{list} containing results in frames for row and column elements:
 Performs a goodness-of-fit test on individual row and column elements using deviance, using a quadratic-logistic model to fit row and column occurrences. In the case of perfect separation of 0/1 values, an \code{NA} value is assigned. Results are reported as \eqn{p} values for each row and column.
 }
 \examples{
-# using the Münsingen data from the Münsingen-Rain
 data("quattrofontanili")
 element.eval(quattrofontanili)
 

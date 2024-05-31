@@ -15,3 +15,14 @@ A single incidence matrix.
 \description{
 From two incidience matrices, create a single incidence matrix. Matrices may contain same row or column elements.
 }
+\examples{
+data(quattrofontanili)
+qf1 <- quattrofontanili[1:20, 1:40]
+qf1 <- qf1[rowSums(qf1) != 0, colSums(qf1) != 0]
+
+qf2 <- quattrofontanili[30:50, 20:60]
+qf2 <- qf2[rowSums(qf2) != 0, colSums(qf2) != 0]
+
+im.merge(qf1, qf2)
+
+}

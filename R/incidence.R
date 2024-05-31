@@ -89,7 +89,14 @@ im.ref <- function(obj) {
 #' Take an incidence matrix and convert it to a data frame of two columns, where the first column represents the row elements of the incidence matrix and the second column represents the column elements of the incidence matrix. Each row pair represents the incidence (or occurrence) of that row and column element together.
 #'
 #' @param obj An incidence matrix. 
-#' @returns A data frame of two columns (row and column of the incidence matrix), in which row of the data frame represents a pair of an incidence.
+#' @returns A data frame of two columns (row and column of the incidence matrix), in which row of the data frame represents a pair of an 
+#' @examples 
+#' data(quattrofontanili)
+#' qf <- im.long(quattrofontanili)
+#' 
+#' # to export for uploading into the Lakhesis Calculator, use write.table() to remove both row and column names
+#' 
+#' write.table(qf, file = 'qf.csv', row.names = FALSE, col.names = FALSE, sep = ",")
 #' 
 #' @export
 im.long <- function(obj) {
@@ -113,8 +120,18 @@ im.long <- function(obj) {
 #'
 #' @param obj1,obj2 Two incidence matrices of any size.
 #' @returns A single incidence matrix.
+#' @examples 
+#' data(quattrofontanili)
+#' qf1 <- quattrofontanili[1:20, 1:40]
+#' qf1 <- qf1[rowSums(qf1) != 0, colSums(qf1) != 0]
+#' 
+#' qf2 <- quattrofontanili[30:50, 20:60]
+#' qf2 <- qf2[rowSums(qf2) != 0, colSums(qf2) != 0]
+#' 
+#' im.merge(qf1, qf2)
 #' 
 #' @export
+#' 
 im.merge <- function(obj1, obj2) {
     dat <- rbind(im.long(obj1), im.long(obj2))
 
