@@ -81,8 +81,8 @@ lakhesize <- function(strands, obj) {
         }
         C <- C[!is.na(rowSums(C)),]        
 
-        consensus.row.pca <- prcomp(R, scale. = FALSE)
-        consensus.col.pca <- prcomp(C, scale. = FALSE)
+        consensus.row.pca <- stats::prcomp(R, scale. = FALSE)
+        consensus.col.pca <- stats::prcomp(C, scale. = FALSE)
         consensus.row.scores <- consensus.row.pca$x[,1]
         consensus.col.scores <- consensus.col.pca$x[,1]
         consensus.row.ranks <- rank(consensus.row.scores)
