@@ -87,7 +87,7 @@ kappa.coef <- function(obj) {
 
 #' Evaluating Element Fit
 #'
-#' Performs a deviance test using a quadratic logistic regression on the rows and columns of a seriated incidence matrix, returning the \eqn{p} value for each row or column. Rows or columns which exhibit perfect separation in 0/1 values are assigned an NA value. 
+#' Performs a deviance test using a quadratic-logistic regression on the rows and columns of a seriated incidence matrix, returning the \eqn{p} value for each row or column. Rows or columns which exhibit perfect separation in 0/1 values are assigned an NA value. 
 #' 
 #' @param obj A seriated binary matrix.
 #' @returns A list of the \eqn{p} values for each row and column 

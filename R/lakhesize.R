@@ -1,18 +1,19 @@
 #' Lakhesize
 #'
-#' This function returns the row and column consensus serations for a data frame of strands, containing their rankings,
-#' the results of their regression, and the Lakhesis coefficient of each strand. See documentation 
+#' This function returns the row and column consensus serations for a data frame of strands, in the form of a \code{list} of their rankings,
+#' the results of their regression, and coefficients of agreement and concentration for each strand. See documentation 
 #' on \code{\link[lakhesis]{kappa.coef}} and  \code{\link[lakhesis]{spearman.sq}}.
 #'
 #' @param strands A list of `strands`, which are data frames returned by \code{\link[lakhesis]{ca.procrustes.curve}}.
 #' @param obj The intial incidence matrix.
 #' @return A list of the following:
 #' * `RowConsensus` Data frame of the consensus seriation of the row elements in the order of their projection on the first principal axis.
-#' * `ColConsensus` Data frhe consensus seriation of the column elements in the order of their project onto the first principal axis.
+#' * `ColConsensus` Data of the consensus seriation of the column elements in the order of their project onto the first principal axis.
 #' * `RowPCA` The results of \code{prcomp} performed on the regressed row elements of strands.
 #' * `ColPCA` The results of \code{prcomp} performed on the regressed column elements of strands.
-#' * `Coef`  Coefficient of agreement with the consensus seriation (the product of the square of Spearman's rank correlation coefficient, \eqn{\rho}, of the \eqn{i}th row and column strand with those of consensus, 
-#' and the concentration coefficient \eqn{\kappa} (\code{\link[lakhesis]{kappa.coef}}).
+#' * `Coef`  Coefficients for each strand:
+#'   * Agreement: the measure of how well each strand accords with the consensus seriation, \eqn{\rho_r}\eqn{\rho)c},  the product of the square of Spearman's rank correlation coefficient, \eqn{\rho}, of the row and column strand with those of consensus.
+#'   * Concentration: the concentration coefficient \eqn{\kappa} (see \code{\link[lakhesis]{kappa.coef}}).
 #' 
 #' @export
 lakhesize <- function(strands, obj) {
