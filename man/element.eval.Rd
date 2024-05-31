@@ -29,11 +29,7 @@ Performs a goodness-of-fit test on individual row and column elements using devi
 }
 \examples{
 # using the Münsingen data from the Münsingen-Rain
-library(seriation)
-munsingen <- data(Munsingen)
-
-# row and column names should be unique
-rownames(munsingen) <- paste("Context", rownames(munsingen))
-colnames(munsingen) <- paste("Find", colnames(munsingen))
+data("quattrofontanili")
+element.eval(quattrofontanili)
 
 }

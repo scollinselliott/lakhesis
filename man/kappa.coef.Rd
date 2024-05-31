@@ -20,14 +20,4 @@ The concentration coefficient \eqn{\kappa}, which extends the Kendall-Doran meas
 data("quattrofontanili")
 kappa.coef(quattrofontanili)
 
-# Münsingen-Rain
-library(seriation)
-data(Munsingen)
-
-# unique row and column names
-rownames(Munsingen) <- paste("Context", rownames(Munsingen))
-colnames(Munsingen) <- paste("Find", colnames(Munsingen))
-
-kappa.coef(munsingen)
-
 }

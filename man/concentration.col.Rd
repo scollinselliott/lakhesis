@@ -20,15 +20,6 @@ The Kendall-Doran measure of concentration \insertCite{kendall_statistical_1963,
 data("quattrofontanili")
 concentration.col(quattrofontanili)
 
-# Münsingen-Rain
-library(seriation)
-data("Munsingen")
-
-# unique row and column names
-rownames(Munsingen) <- paste("Context", rownames(Munsingen))
-colnames(Munsingen) <- paste("Find", colnames(Munsingen))
-
-concentration.col(Munsingen)
 
 }
 \references{

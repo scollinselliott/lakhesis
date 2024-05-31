@@ -35,15 +35,6 @@ spearman.sq <- function(r1, r2) {
 #' data("quattrofontanili")
 #' concentration.col(quattrofontanili)
 #' 
-#' # Münsingen-Rain
-#' library(seriation)
-#' data("Munsingen")
-#' 
-#' # unique row and column names
-#' rownames(Munsingen) <- paste("Context", rownames(Munsingen))
-#' colnames(Munsingen) <- paste("Find", colnames(Munsingen))
-#' 
-#' concentration.col(Munsingen)
 #' 
 #' @references
 #'   \insertAllCited{}
@@ -72,16 +63,6 @@ conc <- numeric(ncol(obj))
 #' data("quattrofontanili")
 #' kappa.coef(quattrofontanili)
 #' 
-#' # Münsingen-Rain
-#' library(seriation)
-#' data(Munsingen)
-#' 
-#' # unique row and column names
-#' rownames(Munsingen) <- paste("Context", rownames(Munsingen))
-#' colnames(Munsingen) <- paste("Find", colnames(Munsingen))
-#' 
-#' kappa.coef(munsingen)
-#' 
 #' @export kappa.coef
 kappa.coef <- function(obj) {
      nu <- sum(obj)
@@ -107,12 +88,8 @@ kappa.coef <- function(obj) {
 #' 
 #' @examples 
 #' # using the Münsingen data from the Münsingen-Rain
-#' library(seriation)
-#' munsingen <- data(Munsingen)
-#' 
-#' # row and column names should be unique
-#' rownames(munsingen) <- paste("Context", rownames(munsingen))
-#' colnames(munsingen) <- paste("Find", colnames(munsingen))
+#' data("quattrofontanili")
+#' element.eval(quattrofontanili)
 #' 
 #' @export
 element.eval <- function(obj) {
