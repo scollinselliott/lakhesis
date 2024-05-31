@@ -1,6 +1,6 @@
 #' Read csv File to Incidence Matrix
 #'
-#' Wrapper around the \code{\link[readr]{read_csv}} function from the \code{\link[readr]{readr}} package \insertCite{wickham_readr_2024}{lakhesis}. Read a \code{.csv} file in which the first column represents row elements and the second column represents column elements, and convert it into an incidence matrix.
+#' Wrapper around the \code{\link[readr]{read_csv}} function from the \code{readr} package \insertCite{wickham_readr_2024}{lakhesis}. Read a \code{.csv} file in which the first column represents row elements and the second column represents column elements, and convert it into an incidence matrix.
 #'  
 #' @param filename The filename to uploaded (must be in \code{.csv} format).
 #' @param header If the \code{.csv} file contains a header. Default is `FALSE`.

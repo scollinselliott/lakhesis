@@ -24,7 +24,7 @@ im.csv.read(
 An incidence matrix of binary values (0 = row/column occurrence is absence; 1 = row/column occurrence is present).
 }
 \description{
-Wrapper around the \code{\link[readr]{read_csv}} function from the \code{\link[readr]{readr}} package \insertCite{wickham_readr_2024}{lakhesis}. Read a \code{.csv} file in which the first column represents row elements and the second column represents column elements, and convert it into an incidence matrix.
+Wrapper around the \code{\link[readr]{read_csv}} function from the \code{readr} package \insertCite{wickham_readr_2024}{lakhesis}. Read a \code{.csv} file in which the first column represents row elements and the second column represents column elements, and convert it into an incidence matrix.
 }
 \references{
 \insertAllCited{}

@@ -26,18 +26,8 @@ Performs a polynomial regression on the row reference scores and orthogonally pr
 }
 \examples{
 # Quattro Fontanili
-data(quattofontanili)
+data(quattrofontanili)
 ca.procrustes.poly(quattrofontanili)
-
-# Münsingen-Rain
-library(seriation)
-data(Munsingen)
-
-# row and column names should be unique
-rownames(Munsingen) <- paste("Context", rownames(Munsingen))
-colnames(Munsingen) <- paste("Find", colnames(Munsingen))
-
-ca.procrustes.poly(Munsingen)
 
 }
 \references{

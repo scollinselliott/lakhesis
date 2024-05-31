@@ -38,9 +38,9 @@ lakhesize <- function(strands, obj) {
                 dat <- data.frame(regressed$Row, rowranks[,m2])
                 if (sum(!is.na(rowSums(dat))) > 3)  {
                     dat2 <- dat[!is.na(rowSums(dat)),]
-                    y <- prcomp(dat2)$x[,1]
-                    fit1 <- lm(y ~ dat2[,1])
-                    fit2 <- lm(y ~ dat2[,2])
+                    y <- stats::prcomp(dat2)$x[,1]
+                    fit1 <- stats::lm(y ~ dat2[,1])
+                    fit2 <- stats::lm(y ~ dat2[,2])
                     regr1 <- dat[,1] * fit1$coef[2] + fit1$coef[1]
                     regr2 <- dat[,2] * fit2$coef[2] + fit2$coef[1]
                     regr <- matrix(c(regr1,regr2), ncol = 2)
@@ -65,9 +65,9 @@ lakhesize <- function(strands, obj) {
                 dat <- data.frame(regressed$Col, colranks[,m2])
                 if (sum(!is.na(rowSums(dat))) > 3)  {
                     dat2 <- dat[!is.na(rowSums(dat)),]
-                    y <- prcomp(dat2)$x[,1]
-                    fit1 <- lm(y ~ dat2[,1])
-                    fit2 <- lm(y ~ dat2[,2])
+                    y <- stats::prcomp(dat2)$x[,1]
+                    fit1 <- stats::lm(y ~ dat2[,1])
+                    fit2 <- stats::lm(y ~ dat2[,2])
                     regr1 <- dat[,1] * fit1$coef[2] + fit1$coef[1]
                     regr2 <- dat[,2] * fit2$coef[2] + fit2$coef[1]
                     regr <- matrix(c(regr1,regr2), ncol = 2)
@@ -94,8 +94,8 @@ lakhesize <- function(strands, obj) {
         # concentration of each strand
         strand.k.c <- c()
         for (i in 1:length(strands)) {
-            ctx <- na.omit(rowranks[,i])
-            fnd <- na.omit(colranks[,i])
+            ctx <- stats::na.omit(rowranks[,i])
+            fnd <- stats::na.omit(colranks[,i])
             roworder <- names(ctx[order(ctx)])
             colorder <- names(fnd[order(fnd)])
             strand.im <- obj[roworder,colorder]

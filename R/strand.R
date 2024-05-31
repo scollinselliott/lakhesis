@@ -125,14 +125,14 @@ element.eval <- function(obj) {
             x <- 1:length(obj[,j])
             y <- obj[,j]
             suppressWarnings({
-            fit <- glm(y ~ x + I(x^2), family = binomial(link = "logit"))
+            fit <- stats::glm(y ~ x + I(x^2), family = stats::binomial(link = "logit"))
             })
             dev.res <- fit$deviance
             dev.nul <- fit$null.deviance
             df.res <- fit$df.residual
             df.nul <- fit$df.null
 
-            pval <- 1-pchisq(dev.nul - dev.res, df.nul - df.res)
+            pval <- 1 - stats::pchisq(dev.nul - dev.res, df.nul - df.res)
             dev.c[j] <- pval
         } 
     }
@@ -148,14 +148,14 @@ element.eval <- function(obj) {
             x <- 1:length(obj[i,])
             y <- obj[i,]
             suppressWarnings({
-            fit <- glm(y ~ x + I(x^2), family = binomial(link = "logit"))
+            fit <- stats::glm(y ~ x + I(x^2), family = stats::binomial(link = "logit"))
             })
             dev.res <- fit$deviance
             dev.nul <- fit$null.deviance
             df.res <- fit$df.residual
             df.nul <- fit$df.null
 
-            pval <- 1-pchisq(dev.nul - dev.res, df.nul - df.res)
+            pval <- 1-stats::pchisq(dev.nul - dev.res, df.nul - df.res)
             dev.r[i] <- pval
         } 
     }

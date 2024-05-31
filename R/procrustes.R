@@ -13,18 +13,8 @@
 #' 
 #' @examples 
 #' # Quattro Fontanili
-#' data(quattofontanili)
+#' data(quattrofontanili)
 #' ca.procrustes(quattrofontanili)
-#' 
-#' # Münsingen-Rain
-#' library(seriation)
-#' data(Munsingen)
-#' 
-#' # row and column names should be unique
-#' rownames(Munsingen) <- paste("Context", rownames(Munsingen))
-#' colnames(Munsingen) <- paste("Find", colnames(Munsingen))
-#' 
-#' ca.procrustes(Munsingen)
 #' 
 #' @references
 #'   \insertAllCited{}
@@ -152,18 +142,8 @@ ca.procrustes <- function(obj) {
 #' 
 #' @examples
 #' # Quattro Fontanili
-#' data(quattofontanili)
+#' data(quattrofontanili)
 #' ca.procrustes.poly(quattrofontanili)
-#' 
-#' # Münsingen-Rain
-#' library(seriation)
-#' data(Munsingen)
-#' 
-#' # row and column names should be unique
-#' rownames(Munsingen) <- paste("Context", rownames(Munsingen))
-#' colnames(Munsingen) <- paste("Find", colnames(Munsingen))
-#' 
-#' ca.procrustes.poly(Munsingen)
 #' 
 #' @references
 #'   \insertAllCited{}
@@ -180,8 +160,8 @@ ca.procrustes.poly <- function(obj, resolution = 10000) {
 
     # polynomial fitting
     xx <- seq(-1, 1, length.out = resolution)
-    fit <- lm(y ~ x + I(x^2))
-    yy <- predict(fit, data.frame(x = xx))
+    fit <- stats::lm(y ~ x + I(x^2))
+    yy <- stats::predict(fit, data.frame(x = xx))
     ref2.r <- as.matrix(cbind(xx,yy))
 
     # row points
@@ -234,7 +214,7 @@ ca.procrustes.poly <- function(obj, resolution = 10000) {
 #' @param resolution Number of samples to use for plotting points along polynomial curve (default is 10000).
 #' @return A data frame of the following:.
 #' * `Procrustes1,Procrustes2` The location of the point on the biplot after fitting.
-#' * `CurveIndex` The orthogonal projection of the point onto the reference curve, given as the index of the point sampled along \eqn{y = β_2 x^2 + β_0}. 
+#' * `CurveIndex` The orthogonal projection of the point onto the reference curve, given as the index of the point sampled along \eqn{y = \beta_2 x^2 + \beta_0}. 
 #' * `Distance` The squared Euclidean distance of the point to the nearest point on the reference curve.
 #' * `Rank` The ranking of the row or column, a range of `1:nrow`` and `1:ncol``.
 #' * `Type` Either `row` or `col`.
@@ -242,18 +222,8 @@ ca.procrustes.poly <- function(obj, resolution = 10000) {
 #'
 #' @examples
 #' # Quattro Fontanili
-#' data(quattofontanili)
+#' data(quattrofontanili)
 #' ca.procrustes.curve(quattrofontanili)
-#' 
-#' # Münsingen-Rain
-#' library(seriation)
-#' data(Munsingen)
-#' 
-#' # row and column names should be unique
-#' rownames(Munsingen) <- paste("Context", rownames(Munsingen))
-#' colnames(Munsingen) <- paste("Find", colnames(Munsingen))
-#' 
-#' ca.procrustes.curve(Munsingen)
 #' 
 #' @references
 #'   \insertAllCited{}

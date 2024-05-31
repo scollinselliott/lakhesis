@@ -24,18 +24,8 @@ Fit scores of correspondence analysis on an incidence matrix to those produced b
 }
 \examples{
 # Quattro Fontanili
-data(quattofontanili)
+data(quattrofontanili)
 ca.procrustes(quattrofontanili)
-
-# Münsingen-Rain
-library(seriation)
-data(Munsingen)
-
-# row and column names should be unique
-rownames(Munsingen) <- paste("Context", rownames(Munsingen))
-colnames(Munsingen) <- paste("Find", colnames(Munsingen))
-
-ca.procrustes(Munsingen)
 
 }
 \references{
