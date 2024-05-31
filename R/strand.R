@@ -173,9 +173,9 @@ element.eval <- function(obj) {
 
 #' Strand Extract
 #' 
-#' From the results of \link{\code[lakhesis]{ca.procrustes.curve}}, extrect two matrices containing the ranks of the rows and columns. The row/column elements are contained in the rows, and the strands are contained in the columns. NA values are entered where a given row/column element is missing from that strand.
+#' From the results of \code{\link[lakhesis]{ca.procrustes.curve}}, extrect two matrices containing the ranks of the rows and columns. The row/column elements are contained in the rows, and the strands are contained in the columns. NA values are entered where a given row/column element is missing from that strand.
 #' 
-#' @param strands A list of `strands`, which are data frames returned by \link{\code[lakhesis]{ca.procrustes.curve}}.
+#' @param strands A list of `strands`, which are data frames returned by \code{\link[lakhesis]{ca.procrustes.curve}}.
 #' @param obj The intial incidence matrix.
 #' 
 #' @return A list of.
