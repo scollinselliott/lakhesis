@@ -17,7 +17,7 @@ of their similarity, i.e, that things come into and go out of fashion
 with a peak moment of popularity. In ecology, the distribution of a
 species may occur according to a preferred environmental condition that
 diminishes as that environment changes. There are a number of R
-functions and packages (especially `seriation` and `vegan`) that provide the
+functions and packages (especially `seriation` and `vegan`) that provide
 means to seriate or ordinate data, especially for frequency or count
 data. While binary (presence/absence) data are often viewed as a
 reductive case of frequency data, they can also present their own
@@ -30,8 +30,8 @@ existing methods in `R`, by focusing on binary data. It uses
 correpsondence analysis, a mainstay technique for seriation, which is
 then fit to a reference curve that represents “ideally” seriated data.
 Multiple seriations can be run on partial subsets of the initial
-incidence matrix, which are then recompiled into a single consense
-seriation. Critical measures are also developed.
+incidence matrix, which are then recompiled into a single consensus
+seriation. Critical measures are also provided.
 
 While command line functions can be run in `R`, the functionality of
 `lakhesis` is achieved via the Lakhesis Calculator, a graphical platform
