@@ -12,19 +12,19 @@ im.csv.read(
 )
 }
 \arguments{
-\item{filename}{The filename to uploaded (must be in CSV format).}
+\item{filename}{The filename to uploaded (must be in \code{.csv} format).}
 
-\item{header}{If the CSV file contains a header. Default is \code{FALSE}.}
+\item{header}{If the \code{.csv} file contains a header. Default is \code{FALSE}.}
 
 \item{characterencoding}{File encoding as used by \code{\link[readr::locale]{locale}}. Default is \code{"iso-8859-1"} to handle special characters.}
 
 \item{remove.hapax}{Remove any row or column which has a sum of 1 (i.e., is only attested once), since they do not directly contribute to the result of the seriation. Default is \code{TRUE}.}
 }
 \value{
-An incidence matrix of binary values (0 = column element is lacking for row element; 1 = column element is present for row element).
+An incidence matrix of binary values (0 = row/column occurrence is absence; 1 = row/column occurrence is present).
 }
 \description{
-Wrapper around the \code{\link[readr]{read_csv}} function from the \code{\link[readr]{readr}} package \insertCite{wickham_readr_2024}{lakhesis}. Read a CSV file in which the first column represents row elements and the second column represents column elements, and convert it into an incidence matrix.
+Wrapper around the \code{\link[readr]{read_csv}} function from the \code{\link[readr]{readr}} package \insertCite{wickham_readr_2024}{lakhesis}. Read a \code{.csv} file in which the first column represents row elements and the second column represents column elements, and convert it into an incidence matrix.
 }
 \references{
 \insertAllCited{}

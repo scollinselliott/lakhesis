@@ -20,18 +20,22 @@ A list of the following:.
 }
 }
 \description{
-Fit scores of correspondence analysis on an incidence matrix to those produced by reference matrix which contain an ideal seriation using a Procrustes method (on the reference matrix, see \link[lakhesis]{im.ref}). Rotation is determined by minimizing Euclidean distance from each row score to the  nearest reference row score. Correspondence analysis is performed using the \code{\link[ca]{ca}} package \insertCite{nenadic_correspondence_2007}{lakhesis}. \insertNoCite{hahsler_getting_2008}{lakhesis}
+Fit scores of correspondence analysis on an incidence matrix to those produced by reference matrix which contain an ideal seriation using a Procrustes method (on the reference matrix, see \code{\link[lakhesis]{im.ref}}). Rotation is determined by minimizing Euclidean distance from each row score to the nearest reference row score. Correspondence analysis is performed using the \code{\link[ca]{ca}} package \insertCite{nenadic_correspondence_2007}{lakhesis}.
 }
 \examples{
-# example using Hodson's data from Münsingen-Rain
+# Quattro Fontanili
+data(quattofontanili)
+ca.procrustes(quattrofontanili)
+
+# Münsingen-Rain
 library(seriation)
-munsingen <- data(Munsingen)
+data(Munsingen)
 
 # row and column names should be unique
-rownames(munsingen) <- paste("Context", rownames(munsingen))
-colnames(munsingen) <- paste("Find", colnames(munsingen))
+rownames(Munsingen) <- paste("Context", rownames(Munsingen))
+colnames(Munsingen) <- paste("Find", colnames(Munsingen))
 
-ca.procrustes(munsingen)
+ca.procrustes(Munsingen)
 
 }
 \references{

@@ -22,18 +22,22 @@ A list of the following:.
 }
 }
 \description{
-Performs a polynomial regresssion on the row reference scores and orthogonally projects data points on to the reference curve. Sampling can be increased to refine ranking and avoid ties, but default is largely sufficient. Correspondence analysis is performed using the \code{\link[ca]{ca}} package \insertCite{nenadic_correspondence_2007}{lakhesis}. \insertNoCite{hahsler_getting_2008}{lakhesis}
+Performs a polynomial regression on the row reference scores and orthogonally projects data points on to the reference curve. Sampling can be increased to refine ranking and avoid ties, but default is largely sufficient. Correspondence analysis is performed using the \code{\link[ca]{ca}} package \insertCite{nenadic_correspondence_2007}{lakhesis}.
 }
 \examples{
-# example using Hodson's data from Münsingen-Rain
+# Quattro Fontanili
+data(quattofontanili)
+ca.procrustes.poly(quattrofontanili)
+
+# Münsingen-Rain
 library(seriation)
-munsingen <- data(Munsingen)
+data(Munsingen)
 
 # row and column names should be unique
-rownames(munsingen) <- paste("Context", rownames(munsingen))
-colnames(munsingen) <- paste("Find", colnames(munsingen))
+rownames(Munsingen) <- paste("Context", rownames(Munsingen))
+colnames(Munsingen) <- paste("Find", colnames(Munsingen))
 
-ca.procrustes.poly(munsingen)
+ca.procrustes.poly(Munsingen)
 
 }
 \references{

@@ -10,10 +10,22 @@ element.eval(obj)
 \item{obj}{A seriated binary matrix.}
 }
 \value{
-A list of the \eqn{p} values for each row and column
+A \code{list} containing results in frames for row and column elements:
+\itemize{
+\item \code{RowFit} a data frame containing
+\itemize{
+\item \code{id} Row element
+\item \code{p.val} \eqn{p} values of the row elements
+}
+\item \code{ColFit} a data frame containing
+\itemize{
+\item \code{id} Column element
+\item \code{p.val} \eqn{p} values of the column elements
+}
+}
 }
 \description{
-Performs a deviance test using a quadratic-logistic regression on the rows and columns of a seriated incidence matrix, returning the \eqn{p} value for each row or column. Rows or columns which exhibit perfect separation in 0/1 values are assigned an NA value.
+Performs a goodness-of-fit test on individual row and column elements using deviance, using a quadratic-logistic model to fit row and column occurrences. In the case of perfect separation of 0/1 values, an \code{NA} value is assigned. Results are reported as \eqn{p} values for each row and column.
 }
 \examples{
 # using the Münsingen data from the Münsingen-Rain

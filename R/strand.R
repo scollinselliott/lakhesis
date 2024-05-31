@@ -31,16 +31,19 @@ spearman.sq <- function(r1, r2) {
 #' @returns The measure of concentration.
 #' 
 #' @examples 
-#' # example using Hodson's data from Münsingen-Rain
+#' # Quattro Fontanili 
+#' data("quattrofontanili")
+#' concentration.col(quattrofontanili)
+#' 
+#' # Münsingen-Rain
 #' library(seriation)
-#' data(Munsingen)
-#' munsingen <- Munsingen
+#' data("Munsingen")
 #' 
-#' # row and column names should be unique
-#' rownames(munsingen) <- paste("Context", rownames(munsingen))
-#' colnames(munsingen) <- paste("Find", colnames(munsingen))
+#' # unique row and column names
+#' rownames(Munsingen) <- paste("Context", rownames(Munsingen))
+#' colnames(Munsingen) <- paste("Find", colnames(Munsingen))
 #' 
-#' concentration.col(munsingen)
+#' concentration.col(Munsingen)
 #' 
 #' @references
 #'   \insertAllCited{}
@@ -59,19 +62,23 @@ conc <- numeric(ncol(obj))
 
 #' Kappa Concentration
 #'
-#' The concentration coefficient \eqn{\kappa}, which extends the Kendall-Doran measure of concentration to include rows, and then weights the total measure by the total sum of the matrix. See \code{\link[lakhesis]{concentration.col}}.
+#' The concentration coefficient \eqn{\kappa}, which extends the Kendall-Doran measure of concentration to include rows and then weights the total measure by the total sum of values in the matrix. See \code{\link[lakhesis]{concentration.col}}.
 #' 
 #' @param obj A seriated binary matrix.
 #' @returns The \eqn{\kappa} coefficient of concentration.
 #' 
 #' @examples 
-#' # using the Münsingen data from the Münsingen-Rain
-#' library(seriation)
-#' munsingen <- data(Munsingen)
+#' #' Quattro Fontanili 
+#' data("quattrofontanili")
+#' kappa.coef(quattrofontanili)
 #' 
-#' # row and column names should be unique
-#' rownames(munsingen) <- paste("Context", rownames(munsingen))
-#' colnames(munsingen) <- paste("Find", colnames(munsingen))
+#' # Münsingen-Rain
+#' library(seriation)
+#' data(Munsingen)
+#' 
+#' # unique row and column names
+#' rownames(Munsingen) <- paste("Context", rownames(Munsingen))
+#' colnames(Munsingen) <- paste("Find", colnames(Munsingen))
 #' 
 #' kappa.coef(munsingen)
 #' 
@@ -84,13 +91,19 @@ kappa.coef <- function(obj) {
 
 
 
-
 #' Evaluating Element Fit
 #'
-#' Performs a deviance test using a quadratic-logistic regression on the rows and columns of a seriated incidence matrix, returning the \eqn{p} value for each row or column. Rows or columns which exhibit perfect separation in 0/1 values are assigned an NA value. 
+#' Performs a goodness-of-fit test on individual row and column elements using deviance, using a quadratic-logistic model to fit row and column occurrences. In the case of perfect separation of 0/1 values, an `NA` value is assigned. Results are reported as \eqn{p} values for each row and column.
 #' 
 #' @param obj A seriated binary matrix.
-#' @returns A list of the \eqn{p} values for each row and column 
+#' @returns A `list` containing results in frames for row and column elements:
+#' 
+#' * `RowFit` a data frame containing
+#'   * `id` Row element
+#'   * `p.val` \eqn{p} values of the row elements
+#' * `ColFit` a data frame containing
+#'   * `id` Column element
+#'   * `p.val` \eqn{p} values of the column elements
 #' 
 #' @examples 
 #' # using the Münsingen data from the Münsingen-Rain
@@ -160,12 +173,12 @@ element.eval <- function(obj) {
 
 #' Strand Extract
 #' 
-#' From the results of `ca.procrustes.curve()`, extrect two matrices containing the ranks of the rows and columns. The row/column elements are contained in the rows, and the strands are contained in the columns. NA values are entered where a given row/column element is missing from that strand.
+#' From the results of \link{\code[lakhesis]{ca.procrustes.curve}}, extrect two matrices containing the ranks of the rows and columns. The row/column elements are contained in the rows, and the strands are contained in the columns. NA values are entered where a given row/column element is missing from that strand.
 #' 
-#' @param strands A list of `strands`, which are data frames returned by `ca.procrustes.curve()`.
+#' @param strands A list of `strands`, which are data frames returned by \link{\code[lakhesis]{ca.procrustes.curve}}.
 #' @param obj The intial incidence matrix.
 #' 
-#' @return A list of the following:.
+#' @return A list of.
 #' * `Row` A matrix of the ranks of the row elements.
 #' * `Col` A matrix of teh ranks of the column elements.
 #' 
@@ -201,11 +214,11 @@ strand.extract <- function(strands, obj) {
 
 #' Suppress Element from Strands
 #' 
-#' Given a list of strands, remove a row or column element and re-run seriation by correspondence analysis with Procrustes fitting (\code{\link[lakhesis]{ca.procrustes.curve}}) to generate a new list of strands. The row or column element id is stored in an output list in case it should be added back into the strand. Column and row names are required to be unique. If the resulting strand lacks sufficient points, the entire strand is deleted in the output.
+#' Given a list of strands, remove a row or column element and re-run seriation by correspondence analysis with Procrustes fitting (\code{\link[lakhesis]{ca.procrustes.curve}}) to generate a new list of strands. The row or column element id is stored in an output list in case it should be added back into the strand. Column and row names are required to be unique. If the resulting strand lacks sufficient points to perform correspondence analysis, that strand is deleted in the output.
 #' 
-#' @param strands A list of `strands`, which are data frames returned by `ca.procrustes.curve()`.
+#' @param strands A list of strands, which are data frames returned by \code{\link[lakhesis]{ca.procrustes.curve}}.
 #' @param obj The intial incidence matrix.
-#' @param elements The name of one or more row or column ids to suppress.
+#' @param elements A vector of one or more row or column ids to suppress.
 #' 
 #' @return A list of the strands.
 #' 

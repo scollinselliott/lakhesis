@@ -13,16 +13,20 @@
 The \eqn{\kappa} coefficient of concentration.
 }
 \description{
-The concentration coefficient \eqn{\kappa}, which extends the Kendall-Doran measure of concentration to include rows, and then weights the total measure by the total sum of the matrix. See \code{\link[lakhesis]{concentration.col}}.
+The concentration coefficient \eqn{\kappa}, which extends the Kendall-Doran measure of concentration to include rows and then weights the total measure by the total sum of values in the matrix. See \code{\link[lakhesis]{concentration.col}}.
 }
 \examples{
-# using the Münsingen data from the Münsingen-Rain
-library(seriation)
-munsingen <- data(Munsingen)
+#' Quattro Fontanili 
+data("quattrofontanili")
+kappa.coef(quattrofontanili)
 
-# row and column names should be unique
-rownames(munsingen) <- paste("Context", rownames(munsingen))
-colnames(munsingen) <- paste("Find", colnames(munsingen))
+# Münsingen-Rain
+library(seriation)
+data(Munsingen)
+
+# unique row and column names
+rownames(Munsingen) <- paste("Context", rownames(Munsingen))
+colnames(Munsingen) <- paste("Find", colnames(Munsingen))
 
 kappa.coef(munsingen)
 

@@ -16,16 +16,19 @@ The measure of concentration.
 The Kendall-Doran measure of concentration \insertCite{kendall_statistical_1963,doran_computer_1971}{lakhesis}. In a seriated matrix, this function computes the total number cells between the first and last non-zero value, column by column.
 }
 \examples{
-# example using Hodson's data from Münsingen-Rain
+# Quattro Fontanili 
+data("quattrofontanili")
+concentration.col(quattrofontanili)
+
+# Münsingen-Rain
 library(seriation)
-data(Munsingen)
-munsingen <- Munsingen
+data("Munsingen")
 
-# row and column names should be unique
-rownames(munsingen) <- paste("Context", rownames(munsingen))
-colnames(munsingen) <- paste("Find", colnames(munsingen))
+# unique row and column names
+rownames(Munsingen) <- paste("Context", rownames(Munsingen))
+colnames(Munsingen) <- paste("Find", colnames(Munsingen))
 
-concentration.col(munsingen)
+concentration.col(Munsingen)
 
 }
 \references{

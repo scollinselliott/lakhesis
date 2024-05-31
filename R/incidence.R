@@ -1,12 +1,12 @@
 #' Read csv File to Incidence Matrix
 #'
-#' Wrapper around the \code{\link[readr]{read_csv}} function from the \code{\link[readr]{readr}} package \insertCite{wickham_readr_2024}{lakhesis}. Read a CSV file in which the first column represents row elements and the second column represents column elements, and convert it into an incidence matrix.
+#' Wrapper around the \code{\link[readr]{read_csv}} function from the \code{\link[readr]{readr}} package \insertCite{wickham_readr_2024}{lakhesis}. Read a \code{.csv} file in which the first column represents row elements and the second column represents column elements, and convert it into an incidence matrix.
 #'  
-#' @param filename The filename to uploaded (must be in CSV format).
-#' @param header If the CSV file contains a header. Default is `FALSE`.
+#' @param filename The filename to uploaded (must be in \code{.csv} format).
+#' @param header If the \code{.csv} file contains a header. Default is `FALSE`.
 #' @param characterencoding File encoding as used by \code{\link[readr::locale]{locale}}. Default is `"iso-8859-1"` to handle special characters. 
 #' @param remove.hapax Remove any row or column which has a sum of 1 (i.e., is only attested once), since they do not directly contribute to the result of the seriation. Default is `TRUE`.
-#' @returns An incidence matrix of binary values (0 = column element is lacking for row element; 1 = column element is present for row element).
+#' @returns An incidence matrix of binary values (0 = row/column occurrence is absence; 1 = row/column occurrence is present). 
 #' 
 #' @references
 #'   \insertAllCited{}
@@ -42,8 +42,8 @@ im.csv.read <- function(filename, header = FALSE, characterencoding = "iso-8859-
 #'
 #' Create an ideal reference matrix of well-seriated values of the same size as the input matrix. 
 #'
-#' @param obj A matrix of size n x k.
-#' @returns A matrix with 1s along the diagonal. If n > k, 1s are placed from (i,i) to (i,i+k-n), with 0 in all other cells.
+#' @param obj A matrix of size \eqn{n \times k}.
+#' @returns A matrix of size \eqn{n \times k} with 1s along the diagonal. If \eqn{n > k}, 1s are placed from cell \eqn{(i,i)} to \eqn{(i,i+k-n)}, with 0 in all other cells.
 #' @examples
 #' im.ref(matrix(NA, 5, 5))
 #' im.ref(matrix(1, 7, 12))
@@ -109,9 +109,9 @@ im.long <- function(obj) {
 
 #' Merge Two Incidence Matrices
 #'
-#' Create an ideal reference matrix of well-seriated values of the same size as the input matrix. 
+#' From two incidience matrices, create a single incidence matrix. Matrices may contain same row or column elements. 
 #'
-#' @param obj1,obj2 Two incidence matrices, which may contain overlapping row or column values.
+#' @param obj1,obj2 Two incidence matrices of any size.
 #' @returns A single incidence matrix.
 #' 
 #' @export

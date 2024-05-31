@@ -1,6 +1,6 @@
 #' Correspondence Analysis with Procrustes Fitting
 #'
-#' Fit scores of correspondence analysis on an incidence matrix to those produced by reference matrix which contain an ideal seriation using a Procrustes method (on the reference matrix, see \link[lakhesis]{im.ref}). Rotation is determined by minimizing Euclidean distance from each row score to the  nearest reference row score. Correspondence analysis is performed using the \code{\link[ca]{ca}} package \insertCite{nenadic_correspondence_2007}{lakhesis}. \insertNoCite{hahsler_getting_2008}{lakhesis}
+#' Fit scores of correspondence analysis on an incidence matrix to those produced by reference matrix which contain an ideal seriation using a Procrustes method (on the reference matrix, see \code{\link[lakhesis]{im.ref}}). Rotation is determined by minimizing Euclidean distance from each row score to the nearest reference row score. Correspondence analysis is performed using the \code{\link[ca]{ca}} package \insertCite{nenadic_correspondence_2007}{lakhesis}.
 #'
 #' @param obj An incidence matrix of size n x k.
 #' @returns A list of the following:.
@@ -12,15 +12,19 @@
 #' * `y.dat` A data frame containing the same information as `x.dat`, but with respect to the column scores.
 #' 
 #' @examples 
-#' # example using Hodson's data from Münsingen-Rain
+#' # Quattro Fontanili
+#' data(quattofontanili)
+#' ca.procrustes(quattrofontanili)
+#' 
+#' # Münsingen-Rain
 #' library(seriation)
-#' munsingen <- data(Munsingen)
+#' data(Munsingen)
 #' 
 #' # row and column names should be unique
-#' rownames(munsingen) <- paste("Context", rownames(munsingen))
-#' colnames(munsingen) <- paste("Find", colnames(munsingen))
+#' rownames(Munsingen) <- paste("Context", rownames(Munsingen))
+#' colnames(Munsingen) <- paste("Find", colnames(Munsingen))
 #' 
-#' ca.procrustes(munsingen)
+#' ca.procrustes(Munsingen)
 #' 
 #' @references
 #'   \insertAllCited{}
@@ -58,9 +62,8 @@ ca.procrustes <- function(obj) {
     ref.c <- R.cc / R.rc.rad.max  # rescale with row data
 
     # procrustes rotation without landmark points
-    #
-    # minimize rss of one-to-many distance from data to
-    # reference curve
+
+    # minimize rss of one-to-many distance from data to reference curve
 
     mid <- round(nrow(ref.r)/2)
     ref.mid.rad <- atan2(ref.r[mid,2], ref.r[mid,1])
@@ -136,7 +139,7 @@ ca.procrustes <- function(obj) {
 
 #' Projection onto Reference Curve
 #'
-#' Performs a polynomial regresssion on the row reference scores and orthogonally projects data points on to the reference curve. Sampling can be increased to refine ranking and avoid ties, but default is largely sufficient. Correspondence analysis is performed using the \code{\link[ca]{ca}} package \insertCite{nenadic_correspondence_2007}{lakhesis}. \insertNoCite{hahsler_getting_2008}{lakhesis}
+#' Performs a polynomial regression on the row reference scores and orthogonally projects data points on to the reference curve. Sampling can be increased to refine ranking and avoid ties, but default is largely sufficient. Correspondence analysis is performed using the \code{\link[ca]{ca}} package \insertCite{nenadic_correspondence_2007}{lakhesis}.
 #'
 #' @param obj An incidence matrix of size n x k.
 #' @param resolution Number of samples to use for plotting points along polynomial curve (default is 10000).
@@ -148,15 +151,19 @@ ca.procrustes <- function(obj) {
 #' * `y.dat` A data frame containing the same information as `x.dat`, but with respect to the column scores.
 #' 
 #' @examples
-#' # example using Hodson's data from Münsingen-Rain
+#' # Quattro Fontanili
+#' data(quattofontanili)
+#' ca.procrustes.poly(quattrofontanili)
+#' 
+#' # Münsingen-Rain
 #' library(seriation)
-#' munsingen <- data(Munsingen)
+#' data(Munsingen)
 #' 
 #' # row and column names should be unique
-#' rownames(munsingen) <- paste("Context", rownames(munsingen))
-#' colnames(munsingen) <- paste("Find", colnames(munsingen))
+#' rownames(Munsingen) <- paste("Context", rownames(Munsingen))
+#' colnames(Munsingen) <- paste("Find", colnames(Munsingen))
 #' 
-#' ca.procrustes.poly(munsingen)
+#' ca.procrustes.poly(Munsingen)
 #' 
 #' @references
 #'   \insertAllCited{}
@@ -221,7 +228,7 @@ ca.procrustes.poly <- function(obj, resolution = 10000) {
 
 #' Seriate Using Reference Curve
 #' 
-#' Obtain a ranking of row and column scores projected onto a reference curve of an ideal seriation (row and column scores are ranked separately). Scores of correspondence analysis have been fit to those produced by reference matrix contain an ideal seriation using a Procrustes method, projecting them. Rotation is determined by minimizing Euclidean distance from each row score to the  nearest reference row score. Correspondence analysis is performed using the \code{\link[ca]{ca}} package \insertCite{nenadic_correspondence_2007}{lakhesis}. \insertNoCite{hahsler_getting_2008}{lakhesis}
+#' Obtain a ranking of row and column scores projected onto a reference curve of an ideal seriation (row and column scores are ranked separately). Scores of correspondence analysis have been fit to those produced by reference matrix contain an ideal seriation using a Procrustes method, projecting them. Rotation is determined by minimizing Euclidean distance from each row score to the nearest reference row score. Correspondence analysis is performed using the \code{\link[ca]{ca}} package \insertCite{nenadic_correspondence_2007}{lakhesis}.
 #'
 #' @param obj An incidence matrix of size n x k.
 #' @param resolution Number of samples to use for plotting points along polynomial curve (default is 10000).
@@ -229,20 +236,24 @@ ca.procrustes.poly <- function(obj, resolution = 10000) {
 #' * `Procrustes1,Procrustes2` The location of the point on the biplot after fitting.
 #' * `CurveIndex` The orthogonal projection of the point onto the reference curve, given as the index of the point sampled along \eqn{y = β_2 x^2 + β_0}. 
 #' * `Distance` The squared Euclidean distance of the point to the nearest point on the reference curve.
-#' * `Rank` The ranking of the row or column, from 1:nrow and 1:ncol.
+#' * `Rank` The ranking of the row or column, a range of `1:nrow`` and `1:ncol``.
 #' * `Type` Either `row` or `col`.
 #' * `sel` Data frame column used in `shiny` app to indicate whether point is selected in biplot/curve projection.
 #'
 #' @examples
-#' # example using Hodson's data from Münsingen-Rain
+#' # Quattro Fontanili
+#' data(quattofontanili)
+#' ca.procrustes.curve(quattrofontanili)
+#' 
+#' # Münsingen-Rain
 #' library(seriation)
-#' munsingen <- data(Munsingen)
+#' data(Munsingen)
 #' 
 #' # row and column names should be unique
-#' rownames(munsingen) <- paste("Context", rownames(munsingen))
-#' colnames(munsingen) <- paste("Find", colnames(munsingen))
+#' rownames(Munsingen) <- paste("Context", rownames(Munsingen))
+#' colnames(Munsingen) <- paste("Find", colnames(Munsingen))
 #' 
-#' ca.procrustes.curve(munsingen)
+#' ca.procrustes.curve(Munsingen)
 #' 
 #' @references
 #'   \insertAllCited{}

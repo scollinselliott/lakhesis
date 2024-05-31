@@ -7,15 +7,15 @@
 strand.suppress(strands, obj, elements)
 }
 \arguments{
-\item{strands}{A list of \code{strands}, which are data frames returned by \code{ca.procrustes.curve()}.}
+\item{strands}{A list of strands, which are data frames returned by \code{\link[lakhesis]{ca.procrustes.curve}}.}
 
 \item{obj}{The intial incidence matrix.}
 
-\item{elements}{The name of one or more row or column ids to suppress.}
+\item{elements}{A vector of one or more row or column ids to suppress.}
 }
 \value{
 A list of the strands.
 }
 \description{
-Given a list of strands, remove a row or column element and re-run seriation by correspondence analysis with Procrustes fitting (\code{\link[lakhesis]{ca.procrustes.curve}}) to generate a new list of strands. The row or column element id is stored in an output list in case it should be added back into the strand. Column and row names are required to be unique. If the resulting strand lacks sufficient points, the entire strand is deleted in the output.
+Given a list of strands, remove a row or column element and re-run seriation by correspondence analysis with Procrustes fitting (\code{\link[lakhesis]{ca.procrustes.curve}}) to generate a new list of strands. The row or column element id is stored in an output list in case it should be added back into the strand. Column and row names are required to be unique. If the resulting strand lacks sufficient points to perform correspondence analysis, that strand is deleted in the output.
 }

@@ -7,17 +7,17 @@
 strand.extract(strands, obj)
 }
 \arguments{
-\item{strands}{A list of \code{strands}, which are data frames returned by \code{ca.procrustes.curve()}.}
+\item{strands}{A list of \code{strands}, which are data frames returned by \link{\code[lakhesis]{ca.procrustes.curve}}.}
 
 \item{obj}{The intial incidence matrix.}
 }
 \value{
-A list of the following:.
+A list of.
 \itemize{
 \item \code{Row} A matrix of the ranks of the row elements.
 \item \code{Col} A matrix of teh ranks of the column elements.
 }
 }
 \description{
-From the results of \code{ca.procrustes.curve()}, extrect two matrices containing the ranks of the rows and columns. The row/column elements are contained in the rows, and the strands are contained in the columns. NA values are entered where a given row/column element is missing from that strand.
+From the results of \link{\code[lakhesis]{ca.procrustes.curve}}, extrect two matrices containing the ranks of the rows and columns. The row/column elements are contained in the rows, and the strands are contained in the columns. NA values are entered where a given row/column element is missing from that strand.
 }

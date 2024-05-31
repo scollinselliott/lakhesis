@@ -17,24 +17,28 @@ A data frame of the following:.
 \item \verb{Procrustes1,Procrustes2} The location of the point on the biplot after fitting.
 \item \code{CurveIndex} The orthogonal projection of the point onto the reference curve, given as the index of the point sampled along \eqn{y = β_2 x^2 + β_0}. 
 \item \code{Distance} The squared Euclidean distance of the point to the nearest point on the reference curve.
-\item \code{Rank} The ranking of the row or column, from 1:nrow and 1:ncol.
+\item \code{Rank} The ranking of the row or column, a range of \verb{1:nrow`` and }1:ncol``.
 \item \code{Type} Either \code{row} or \code{col}.
 \item \code{sel} Data frame column used in \code{shiny} app to indicate whether point is selected in biplot/curve projection.
 }
 }
 \description{
-Obtain a ranking of row and column scores projected onto a reference curve of an ideal seriation (row and column scores are ranked separately). Scores of correspondence analysis have been fit to those produced by reference matrix contain an ideal seriation using a Procrustes method, projecting them. Rotation is determined by minimizing Euclidean distance from each row score to the  nearest reference row score. Correspondence analysis is performed using the \code{\link[ca]{ca}} package \insertCite{nenadic_correspondence_2007}{lakhesis}. \insertNoCite{hahsler_getting_2008}{lakhesis}
+Obtain a ranking of row and column scores projected onto a reference curve of an ideal seriation (row and column scores are ranked separately). Scores of correspondence analysis have been fit to those produced by reference matrix contain an ideal seriation using a Procrustes method, projecting them. Rotation is determined by minimizing Euclidean distance from each row score to the nearest reference row score. Correspondence analysis is performed using the \code{\link[ca]{ca}} package \insertCite{nenadic_correspondence_2007}{lakhesis}.
 }
 \examples{
-# example using Hodson's data from Münsingen-Rain
+# Quattro Fontanili
+data(quattofontanili)
+ca.procrustes.curve(quattrofontanili)
+
+# Münsingen-Rain
 library(seriation)
-munsingen <- data(Munsingen)
+data(Munsingen)
 
 # row and column names should be unique
-rownames(munsingen) <- paste("Context", rownames(munsingen))
-colnames(munsingen) <- paste("Find", colnames(munsingen))
+rownames(Munsingen) <- paste("Context", rownames(Munsingen))
+colnames(Munsingen) <- paste("Find", colnames(Munsingen))
 
-ca.procrustes.curve(munsingen)
+ca.procrustes.curve(Munsingen)
 
 }
 \references{

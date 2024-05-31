@@ -17,28 +17,30 @@ of their similarity, i.e, that things come into and go out of fashion
 with a peak moment of popularity. In ecology, the distribution of a
 species may occur according to a preferred environmental condition that
 diminishes as that environment changes. There are a number of R
-functions and packages (especially `seriation` and `vegan`) that provide
-means to seriate or ordinate data, especially for frequency or count
-data. While binary (presence/absence) data are often viewed as a
-reductive case of frequency data, they can also present their own
-challenges for seriation. Moreover, not all “incidence matrices” (the
-matrix of 0/1s that record the joint incidence or occurrence for a
-row-column pairing) will necessarily be well seriated. The selection of
-row and column elements in the input is accordingly an intrinsic part of
-the task of seriation. In this respect, `lakhesis` seeks to complement
-existing methods in `R`, by focusing on binary data. It uses
-correspondence analysis, a mainstay technique for seriation, which is
-then fit to a reference curve that represents “ideally” seriated data.
-Multiple seriations can be run on partial subsets of the initial
-incidence matrix, which are then recompiled into a single consensus
-seriation. Critical measures are also provided.
+functions and packages (especially
+[`seriation`](https://github.com/mhahsler/seriation) and
+[`vegan`](https://CRAN.R-project.org/package=vegan)) that provide means
+to seriate or ordinate matrices, especially for frequency or count data.
+While binary (presence/absence) data are often viewed as a reductive
+case of frequency data, they can also present their own challenges for
+seriation. Moreover, not all “incidence matrices” (the matrix of 0/1s
+that record the joint incidence or occurrence for a row-column pairing)
+will necessarily be well seriated. The selection of row and column
+elements in the input is accordingly an intrinsic part of the task of
+seriation. In this respect, `lakhesis` seeks to complement existing
+methods in `R`, by focusing on binary data. It uses correspondence
+analysis, a mainstay technique for seriation, which is then fit to a
+reference curve that represents “ideally” seriated data. Multiple
+seriations can be run on partial subsets of the initial incidence
+matrix, which are then recompiled into a single consensus seriation.
+Critical measures are also provided.
 
 While command line functions can be run in `R`, the functionality of
-`lakhesis` is achieved via the Lakhesis Calculator, a graphical platform
-in `shiny` that enables investigators to explore datasets for potential
-seriated sequences, select them, and then harmonize them into a single
-consensus seriation. The four panels in the calculator include the
-following:
+`lakhesis` is primarily achieved via the Lakhesis Calculator, a
+graphical platform in `shiny` that enables investigators to explore
+datasets for potential seriated sequences, select them, and then
+harmonize them into a single consensus seriation. The four panels in the
+calculator include the following:
 
 - **Seriation Explorer** (Top left) Displays the correspondence analysis
   of a dataset which has been fit to the curve an “ideal” seriation. Two
@@ -59,8 +61,9 @@ following:
   strand agrees with consensus seriation. Concentration expresses how
   well seriated the strand is with respect to both row and column
   values. Tabs marked deviance report on the goodness-of-fit of row and
-  column elements in the consensus seriation using deviance and a
-  quadratic-logistic model. Higher $p$ values will indicate poorer fit.
+  column elements in the consensus seriation using deviance with a
+  quadratic-logistic model. Higher $p$ values will indicate poorer fit
+  for a particular row or column element.
 - **Modify** (Bottom right) Temporarily suppress row or column values
   from correspondence analysis, including recomputing the seriations
   from previously selected strands. Strands which have low agreement or
@@ -107,7 +110,42 @@ The sidebar contains the following commands:
   - `results` The results of `lakhesize()`, itself a `list` which
     contains the consensus seriation, the row and column PCA, and
     coefficients of agreement and concentration.
-  - `strands` The strands selected used to produce `results`.
+  - `strands` The strands selected to produce `results`.
   - `im.seriated` The seriated incidence matrix (this matrix only
     includes row and column elements selected in the strands, not all
     rows and columns of the initial dataset).
+
+## Installation
+
+To install `lakhesis` from GitHub:
+
+``` r
+library(devtools)
+install_github("scollinselliott/lakhesis") 
+```
+
+## Execution
+
+Starting the Lakhesis Calculator is performed with the function `LC()`:
+
+\``r library(lakhesis) LC()`
+
+## Bibliography
+
+Hahsler M, Hornik K, Buchcta C (2008). “Getting Things in Order: An
+Introduction to the R Package seriation.” *Journal of Statistical
+Software*, **25**, 1-34.
+[doi:10.18637/jss.v025.i03](https://doi.org/10.18637/jss.v025.i03).
+
+Ihm P (2005). “A Contribution to the History of Seriation in
+Archaeology.” In Weihs C, Gaul W (eds.), *Classification - The
+Ubiquitous Challenge*, 307-16. Springer, Berlin.
+
+Nenadic O, Greenacre MJ (2007). “Correspondence Analysis in R, with Two-
+and Three-dimensional Graphics: The ca Package.” *Journal of Statistical
+Software*, **20**, 1-13.
+[doi:10.18637/jss.v020.i03](https://doi.org/10.18637/jss.v020.i03).
+
+ter Braak CJF, Looman, CWN. (1986). “Weighted Averaging, Logistic
+Regression and the Gaussian Response Model.” *Vegetatio* **65**, 3-11.
+[doi:10.1007/BF00032121](https://doi.org/10.1007/BF00032121).

@@ -7,11 +7,11 @@
 im.merge(obj1, obj2)
 }
 \arguments{
-\item{obj1, obj2}{Two incidence matrices, which may contain overlapping row or column values.}
+\item{obj1, obj2}{Two incidence matrices of any size.}
 }
 \value{
 A single incidence matrix.
 }
 \description{
-Create an ideal reference matrix of well-seriated values of the same size as the input matrix.
+From two incidience matrices, create a single incidence matrix. Matrices may contain same row or column elements.
 }
