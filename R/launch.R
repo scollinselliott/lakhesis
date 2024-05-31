@@ -19,6 +19,6 @@
 #' @export
 #' @importFrom Rdpack reprompt
 LC <- function() {
-    shiny::runApp(appDir = system.file("app", package = "lakhesis"))
+    shiny::runApp(appDir = system.file("app", package = "lakhesis"), launch.browser = TRUE)
 }
 
