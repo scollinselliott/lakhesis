@@ -26,61 +26,55 @@ server <- function(input, output, session) {
 
         sup$rowsel <- rownames(isolate(mats$mat_initial))
         sup$colsel <- colnames(isolate(mats$mat_initial))
+
+        updateSelectInput(session,
+            "suppressrows",
+            choices = isolate(sup$rowsel)
+        )
+    
+        updateSelectInput(session,
+            "suppresscols",
+            choices = isolate(sup$colsel)
+        )
     })
 
     updateSelectInput(session,
-                      "suppressrows",
-                      choices = isolate(sup$rowsel)
+        "suppressrows",
+        choices = isolate(sup$rowsel)
     )
     
     updateSelectInput(session,
-                      "suppresscolumns",
-                      choices = isolate(sup$colsel)
+        "suppresscols",
+        choices = isolate(sup$colsel)
     )
-    
-    #input$rowsel <- rownames(isolate(mats$mat_initial))
-    #input$colsel <- colnames(isolate(mats$mat_initial))
-
-    caproc_biplot <- reactive({
-        x <- ca.procrustes(mats$mat)
-        x
-        })
 
     # interactive plots
     selections <- reactiveValues(biplot = NULL, curve = NULL )
     selections$biplot <- rep(FALSE, isolate(mats$nr))
     selections$curve <- rep(FALSE, isolate(mats$nr))
 
-    #selected_biplot <- reactiveVal( rep(FALSE, isolate(mats$nr)) )
-    #selected_curve  <- reactiveVal( rep(FALSE, isolate(mats$nr)) ) 
-
     observeEvent(input$plot_brush_biplot, {
         brushed_biplot <- brushedPoints(mats$caproc, input$plot_brush_biplot, allRows = TRUE)$selected_
         selections$biplot <- (brushed_biplot | selections$biplot)
-        #selected_biplot(brushed_biplot | selected_biplot())
     })
 
     observeEvent(input$plot_brush_curve, {
         brushed_curve <- brushedPoints(mats$caproc, input$plot_brush_curve, allRows = TRUE)$selected_
         selections$curve <- (brushed_curve | selections$curve)        
-        #selected_curve(brushed_curve | selected_curve())
     })
 
     observeEvent(input$plot_reset, {
         nr <- mats$nr
         selections$biplot <- rep(FALSE, nr)
         selections$curve <- rep(FALSE, nr)
-        #selected_biplot(rep(FALSE, nr ))
-        #selected_curve(rep(FALSE, nr ))
     })
 
     output$biplot <- renderPlot({
         dat <- mats$caproc
-        dat$sel <- selections$biplot #selected_biplot()
+        dat$sel <- selections$biplot
 
         refcurve <- isolate(mats$caproc_ref)
         refcurve <- refcurve$ref
-        #refcurve <- caproc_biplot()$ref
         refcurve <- data.frame(Procrustes1 = refcurve[,1], Procrustes2 = refcurve[,2])
 
         curve.plot <- ggplot2::ggplot() +
@@ -88,7 +82,6 @@ server <- function(input, output, session) {
                 ggplot2::geom_text(data = dat, ggplot2::aes(x = Procrustes1, y = Procrustes2, color = interaction(Type, sel, ":") ), label = rownames(dat), size = 3, hjust = 0.025, nudge_x = 0.015, check_overlap = TRUE) + 
                 ggplot2::theme(aspect.ratio = 1, legend.position="none") + 
                 ggplot2::geom_line(data = refcurve,  ggplot2::aes(x = Procrustes1, y = Procrustes2), linewidth=1, alpha=0.4, linetype=1) 
-        #}
         curve.plot
     },  res = 96)
 
@@ -128,8 +121,6 @@ server <- function(input, output, session) {
 
             selections$biplot <- rep(FALSE, isolate(mats$nr))
             selections$curve <- rep(FALSE, isolate(mats$nr))
-            #selected_biplot(FALSE)
-            #selected_curve(FALSE)
             } else {
                 print("Infinite values in selection.")
             }
@@ -142,8 +133,6 @@ server <- function(input, output, session) {
     observeEvent(input$reinitialize, {
         selections$biplot[] <- FALSE
         selections$curve[] <- FALSE
-        #selected_biplot(FALSE)
-        #selected_curve(FALSE)
 
         mats$mat <- mats$mat_initial
         mats$caproc <- ca.procrustes.curve(mats$mat)
@@ -305,15 +294,6 @@ server <- function(input, output, session) {
         if (results$lakhesized == TRUE) {
 
             m <- isolate(mats$mat_initial)
-            #suppressWarnings({
-            #results$lakhesis_results <- lakhesize(isolate(results$strands), isolate(mats$mat)) 
-            #})
-            #selections$biplot[] <- FALSE
-            #selections$curve[] <- FALSE
-
-            #mats$mat <- mats$mat_initial
-            #mats$caproc <- ca.procrustes.curve(mats$mat)
-            #mats$nr <- nrow(mats$caproc)
 
             lr <- isolate(results$lakhesis_results)
             m <- m[lr$RowConsensus$Row, ]
@@ -322,9 +302,6 @@ server <- function(input, output, session) {
             dev <- element.eval(m)
             mats$devc <- head(dev$Col, n = 10L)
             mats$devr <- head(dev$Row, n = 10L)
-
-            #selections$biplot <- rep(FALSE, mats$nr)
-            #selections$curve <- rep(FALSE, mats$nr)
         }
     })
 
@@ -388,7 +365,7 @@ server <- function(input, output, session) {
     observeEvent(input$suppresscols, {
         if (!is.null(input$suppresscols)) {
             mi <- isolate(mats$mat_initial)
-            sc <- input$suppresscols
+            sc <- isolate(input$suppresscols)
             if (!is.null(results$strand_backup)) {
                 backup <- isolate(results$strand_backup)
                 new <- strand.suppress(backup, mi, sc)

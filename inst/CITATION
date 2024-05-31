@@ -3,5 +3,5 @@ bibentry(
   title    = "lakhesis: Consensus Seriation for Binary Data",
   author = c(person(c("Stephen", "A."), "Collins-Elliott"),
   year     = 2024,
-  url      = "https://github.com/scollinselliott/lakhesis",
+  url      = "https://github.com/scollinselliott/lakhesis"
 )
