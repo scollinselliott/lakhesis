@@ -17,8 +17,8 @@
 #' @export
 #' @importFrom Rdpack reprompt
 spearman.sq <- function(r1, r2) {
-    dat <-  na.omit( data.frame(r1,r2) )
-    r <- (cor(dat)[1,2])^2
+    dat <-  stats::na.omit( data.frame(r1,r2) )
+    r <- (stats::cor(dat)[1,2])^2
     return(r)
     }
 
