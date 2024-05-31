@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# <img src="man/figures/logo.png" align="right" width="100px"/> lakhesis: Consensus Seriation for Binary Data
+# <img src="man/figures/logo.png" align="right" width="150px"/> lakhesis: Consensus Seriation for Binary Data
 
 <!-- badges: start -->
 <!-- badges: end -->
@@ -21,13 +21,13 @@ functions and packages (especially `seriation` and `vegan`) that provide
 means to seriate or ordinate data, especially for frequency or count
 data. While binary (presence/absence) data are often viewed as a
 reductive case of frequency data, they can also present their own
-challneges for seriation. Moreover, not all “incidence matrices” (the
+challenges for seriation. Moreover, not all “incidence matrices” (the
 matrix of 0/1s that record the joint incidence or occurrence for a
 row-column pairing) will necessarily be well seriated. The selection of
 row and column elements in the input is accordingly an intrinsic part of
 the task of seriation. In this respect, `lakhesis` seeks to complement
 existing methods in `R`, by focusing on binary data. It uses
-correpsondence analysis, a mainstay technique for seriation, which is
+correspondence analysis, a mainstay technique for seriation, which is
 then fit to a reference curve that represents “ideally” seriated data.
 Multiple seriations can be run on partial subsets of the initial
 incidence matrix, which are then recompiled into a single consensus
@@ -53,7 +53,7 @@ following:
   iterative regressions on partially seriated sequences which are
   harmonized via PCA, separately on row and column elements. The
   seriated incidence matrix is also displayed in this panel.
-- **Criteria** (Bottom left) Critical coefficients to detemrine whether
+- **Criteria** (Bottom left) Critical coefficients to determine whether
   discordant strands should be removed and/or row or column elements
   should be suppressed from consideration. Agreement expresses whether a
   strand agrees with consensus seriation. Concentration expresses how
@@ -62,14 +62,14 @@ following:
   column elements in the consensus seriation using deviance and a
   quadratic-logistic model. Higher $p$ values will indicate poorer fit.
 - **Modify** (Bottom right) Temporarily suppress row or column values
-  from correpsondence analysis, including recomputing the seriations
+  from correspondence analysis, including recomputing the seriations
   from previously selected strands. Strands which have low agreement or
   high concentration may also be deleted in this panel.
 
 The sidebar contains the following commands:
 
-- **Upload CSV** Data must be with a header in a two columnn “long”
-  format of occuring pairs of row and column elements, where the first
+- **Upload CSV** Data must be with a header in a two-column “long”
+  format of occurring pairs of row and column elements, where the first
   column contains a row element and the second column contains a column
   element of the incidence matrix. If data are already in incidence
   matrix format, the `im.long()` function in `lakhesis` can be used to
@@ -89,12 +89,12 @@ The sidebar contains the following commands:
   dimensional space.
 - **Lakhesize Strands** Constructs a consensus seriation of the selected
   strands using an iterative process of orthogonal and linear regression
-  of partial rankings, with PCA to harmonize sequences. Reults are
+  of partial rankings, with PCA to harmonize sequences. Results are
   displayed in the Consensus Seriation panel, which displays the PCA
   biplot of the row and column consensus seriations separately. The
   matrix plot displays the incidence matrix of the resulting consensus
-  seration, with its coefficient of concentration. The agreement of the
-  seriation in each strand with that of the conensus seriation as well
+  seriation, with its coefficient of concentration. The agreement of the
+  seriation in each strand with that of the consensus seriation as well
   as its concentration coefficient is displayed in the Criteria panel.
   The function `lakhesize()` performs this task.
 - **Run Deviance Test** Performs a goodness-of-fit test using deviance,
@@ -106,8 +106,8 @@ The sidebar contains the following commands:
   is a `list` containing the following objects:
   - `results` The results of `lakhesize()`, itself a `list` which
     contains the consensus seriation, the row and column PCA, and
-    coefficients of agreement and conccentration.
+    coefficients of agreement and concentration.
   - `strands` The strands selected used to produce `results`.
   - `im.seriated` The seriated incidence matrix (this matrix only
     includes row and column elements selected in the strands, not all
-    rows and columns of the intitial dataset).
+    rows and columns of the initial dataset).
