@@ -26,8 +26,7 @@ A data frame of the following:.
 Obtain a ranking of row and column scores projected onto a reference curve of an ideal seriation (row and column scores are ranked separately). Scores of correspondence analysis have been fit to those produced by reference matrix contain an ideal seriation using a Procrustes method, projecting them. Rotation is determined by minimizing Euclidean distance from each row score to the nearest reference row score. Correspondence analysis is performed using the \code{\link[ca]{ca}} package \insertCite{nenadic_correspondence_2007}{lakhesis}.
 }
 \examples{
-# Quattro Fontanili
-data(quattrofontanili)
+data("quattrofontanili")
 ca.procrustes.curve(quattrofontanili)
 
 }

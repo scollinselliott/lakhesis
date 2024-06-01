@@ -34,7 +34,6 @@ spearman.sq <- function(r1, r2) {
 #' data("quattrofontanili")
 #' concentration.col(quattrofontanili)
 #' 
-#' 
 #' @references
 #'   \insertAllCited{}
 #' 
@@ -147,14 +146,19 @@ element.eval <- function(obj) {
 
 #' Strand Extract
 #' 
-#' From the results of \code{\link[lakhesis]{ca.procrustes.curve}}, extrect two matrices containing the ranks of the rows and columns. The row/column elements are contained in the rows, and the strands are contained in the columns. NA values are entered where a given row/column element is missing from that strand.
+#' From a `list` of strands produced by \code{\link[lakhesis]{ca.procrustes.curve}}, extract two matrices containing the ranks of the rows and columns. The row/column elements are contained in the rows, and the strands are contained in the columns. NA values are entered where a given row/column element is missing from that strand.
 #' 
 #' @param strands A list of `strands`, which are data frames returned by \code{\link[lakhesis]{ca.procrustes.curve}}.
 #' @param obj The intial incidence matrix.
 #' 
-#' @return A list of.
+#' @return A list of two matrices: 
 #' * `Row` A matrix of the ranks of the row elements.
-#' * `Col` A matrix of teh ranks of the column elements.
+#' * `Col` A matrix of the ranks of the column elements.
+#' 
+#' @examples
+#' data("quattrofontanili")
+#' data("qfStrands")
+#' strand.extract(qfStrands, quattrofontanili)
 #' 
 #' @export
 strand.extract <- function(strands, obj) {
@@ -188,13 +192,20 @@ strand.extract <- function(strands, obj) {
 
 #' Suppress Element from Strands
 #' 
-#' Given a list of strands, remove a row or column element and re-run seriation by correspondence analysis with Procrustes fitting (\code{\link[lakhesis]{ca.procrustes.curve}}) to generate a new list of strands. The row or column element id is stored in an output list in case it should be added back into the strand. Column and row names are required to be unique. If the resulting strand lacks sufficient points to perform correspondence analysis, that strand is deleted in the output.
+#' Given a list of strands, remove a row or column element and re-run seriation by correspondence analysis with Procrustes fitting (\code{\link[lakhesis]{ca.procrustes.curve}}) to generate a new list of strands that exclude the specified elements. If the resulting strand lacks sufficient points to perform correspondence analysis, that strand is deleted in the output.
 #' 
 #' @param strands A list of strands, which are data frames returned by \code{\link[lakhesis]{ca.procrustes.curve}}.
 #' @param obj The intial incidence matrix.
 #' @param elements A vector of one or more row or column ids to suppress.
 #' 
 #' @return A list of the strands.
+#' 
+#' @examples
+#' data("quattrofontanili")
+#' data("qfStrands")
+#' strand.suppress(qfStrands, quattrofontanili, "QF II 15-16")
+#' 
+#' strand.suppress(qfStrands, quattrofontanili, c("QF II 15-16", "I", "XIV"))
 #' 
 #' @export
 strand.suppress <- function(strands, obj, elements) {

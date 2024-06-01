@@ -17,19 +17,19 @@
 "quattrofontanili"
 
 
-#' Quattro Fontanili - Lakhesis Results
+#' Quattro Fontanili - Strands
 #'
-#' The results of \code{\link[lakhesis]{lakhesize}} applied to \code{\link[lakhesis]{quattrofontanili}} data (exported and reimported into the Calculator). Seven strands were selected by the package author as an example for the documentation of functions. Consult the \code{\link[lakhesis]{lakhesize}} function for the structure of the object.
+#' Seven seriated strands selected from \code{\link[lakhesis]{quattrofontanili}} data, identified by the package author as an example for the documentation of functions.
 #'
 #' @format
-#' A list containing the following objects output by \code{\link[lakhesis]{lakhesize}}.
-#' }
-#' @usage data("qfLakhesis")
-#' @examples
-#' data("qfLakhesis")
-#' print(qfLakhesis)
+#' A list containing data frames output by \code{\link[lakhesis]{ca.procrustes.curve}}.
 #' 
-"qfLakhesis"
+#' @usage data("qfStrands")
+#' @examples
+#' data("qfStrands")
+#' print(qfStrands)
+#' 
+"qfStrands"
 
 
 

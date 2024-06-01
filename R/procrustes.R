@@ -12,8 +12,7 @@
 #' * `y.dat` A data frame containing the same information as `x.dat`, but with respect to the column scores.
 #' 
 #' @examples 
-#' # Quattro Fontanili
-#' data(quattrofontanili)
+#' data("quattrofontanili")
 #' ca.procrustes(quattrofontanili)
 #' 
 #' @references
@@ -141,8 +140,7 @@ ca.procrustes <- function(obj) {
 #' * `y.dat` A data frame containing the same information as `x.dat`, but with respect to the column scores.
 #' 
 #' @examples
-#' # Quattro Fontanili
-#' data(quattrofontanili)
+#' data("quattrofontanili")
 #' ca.procrustes.poly(quattrofontanili)
 #' 
 #' @references
@@ -221,8 +219,7 @@ ca.procrustes.poly <- function(obj, resolution = 10000) {
 #' * `sel` Data frame column used in `shiny` app to indicate whether point is selected in biplot/curve projection.
 #'
 #' @examples
-#' # Quattro Fontanili
-#' data(quattrofontanili)
+#' data("quattrofontanili")
 #' ca.procrustes.curve(quattrofontanili)
 #' 
 #' @references

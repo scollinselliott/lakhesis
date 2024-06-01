@@ -12,12 +12,18 @@ strand.extract(strands, obj)
 \item{obj}{The intial incidence matrix.}
 }
 \value{
-A list of.
+A list of two matrices:
 \itemize{
 \item \code{Row} A matrix of the ranks of the row elements.
-\item \code{Col} A matrix of teh ranks of the column elements.
+\item \code{Col} A matrix of the ranks of the column elements.
 }
 }
 \description{
-From the results of \code{\link[lakhesis]{ca.procrustes.curve}}, extrect two matrices containing the ranks of the rows and columns. The row/column elements are contained in the rows, and the strands are contained in the columns. NA values are entered where a given row/column element is missing from that strand.
+From a \code{list} of strands produced by \code{\link[lakhesis]{ca.procrustes.curve}}, extract two matrices containing the ranks of the rows and columns. The row/column elements are contained in the rows, and the strands are contained in the columns. NA values are entered where a given row/column element is missing from that strand.
+}
+\examples{
+data("quattrofontanili")
+data("qfStrands")
+strand.extract(qfStrands, quattrofontanili)
+
 }

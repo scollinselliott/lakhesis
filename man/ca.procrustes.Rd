@@ -23,8 +23,7 @@ A list of the following:.
 Fit scores of correspondence analysis on an incidence matrix to those produced by reference matrix which contain an ideal seriation using a Procrustes method (on the reference matrix, see \code{\link[lakhesis]{im.ref}}). Rotation is determined by minimizing Euclidean distance from each row score to the nearest reference row score. Correspondence analysis is performed using the \code{\link[ca]{ca}} package \insertCite{nenadic_correspondence_2007}{lakhesis}.
 }
 \examples{
-# Quattro Fontanili
-data(quattrofontanili)
+data("quattrofontanili")
 ca.procrustes(quattrofontanili)
 
 }

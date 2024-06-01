@@ -2,19 +2,25 @@
 #'
 #' This function returns the row and column consensus seriation for a `list` of strands, containing their rankings, the results of their PCA, and coefficients of association and concentration.
 #' 
-#' Consensus seriation is achieved by iterative linear regression using simulation. Strands are chosen at random, omitting incomplete or missing pairs, using PCA to determine the best-fitting line for their rankings. Either strand ranking is then regressed onto that line to determine missing values and re-ranked, repeating until all strands have been regressed. PCA of the simulated rankings is then used to determine the final sequence of the row and column elements.
+#' Consensus seriation is achieved by iterative, multi-step linear regression using simulation. On one iteration, strands are chosen at random, omitting incomplete or missing pairs, using PCA to determine the best-fitting line for their rankings. Both strands' rankings are then regressed onto that line to determine missing values, and then re-ranked, repeating until all strands have been regressed. PCA of the simulated rankings is then used to determine the final sequence of the row and column elements.
 #'
 #' @param strands A `list` of strands, which are data frames returned by \code{\link[lakhesis]{ca.procrustes.curve}}.
 #' @param obj The intial incidence matrix.
 #' @return A `list` of the following:
 #' 
-#' * `RowConsensus` Data frame of the consensus seriation of the row elements in the order of their projection on the first principal axis.
-#' * `ColConsensus` Data frhe consensus seriation of the column elements in the order of their project onto the first principal axis.
-#' * `RowPCA` The results of `prcomp` performed on the row elements of strands.
-#' * `ColPCA` The results of `prcomp` performed on the column elements of strands.
-#' * `Coef`  Coefficients of agreement and concentration:
-#'   * Agreement: the measure of how well each strand accords with the consensus seriation. Using the square of Spearman's rank correlation coefficient, \eqn{\rho^2}, between each strand and the consensus ranking, agreement is computed as the product of \eqn{\rho^2} for their row and column rankings, \eqn{\rho_r^2}\eqn{\rho_c^2}. 
-#'   * Concentration: the concentration coefficient \eqn{\kappa}, which provides a measure of the optimality of the seriation (see \code{\link[lakhesis]{kappa.coef}}).
+#' * `RowConsensus` Data frame of the consensus seriation of the row elements in the order of their projection on the first principal axis. Contains one column, `Row`.
+#' * `ColConsensus` Data frame of the consensus seriation of the column elements in the order of their project onto the first principal axis. Contains one column, `Column`.
+#' * `RowPCA` The results of `\link[stats]{prcomp}` performed on the row elements of strands.
+#' * `ColPCA` The results of `\link[stats]{prcomp}` performed on the column elements of strands.
+#' * `Coef`  A data frame containing the coefficients of agreement and concentration:
+#'   * `Strand` The number of the strand.
+#'   * `Consensus.Spearman.Sq` the measure of agreement, i.e., how well each strand accords with the consensus seriation. Using the square of Spearman's rank correlation coefficient, \eqn{\rho^2}, between each strand and the consensus ranking, agreement is computed as the product of \eqn{\rho^2} for their row and column rankings, \eqn{\rho_r^2}\eqn{\rho_c^2}. 
+#'   * `Concentration.Kappa`` the concentration coefficient \eqn{\kappa}, which provides a measure of the optimality of each strand (see \code{\link[lakhesis]{kappa.coef}}).
+#' 
+#' @examples
+#' data("quattrofontanili")
+#' data("qfStrands")
+#' lakhesize(qfStrands, quattrofontanili)
 #' 
 #' @export
 lakhesize <- function(strands, obj) {

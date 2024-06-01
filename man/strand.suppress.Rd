@@ -17,5 +17,13 @@ strand.suppress(strands, obj, elements)
 A list of the strands.
 }
 \description{
-Given a list of strands, remove a row or column element and re-run seriation by correspondence analysis with Procrustes fitting (\code{\link[lakhesis]{ca.procrustes.curve}}) to generate a new list of strands. The row or column element id is stored in an output list in case it should be added back into the strand. Column and row names are required to be unique. If the resulting strand lacks sufficient points to perform correspondence analysis, that strand is deleted in the output.
+Given a list of strands, remove a row or column element and re-run seriation by correspondence analysis with Procrustes fitting (\code{\link[lakhesis]{ca.procrustes.curve}}) to generate a new list of strands that exclude the specified elements. If the resulting strand lacks sufficient points to perform correspondence analysis, that strand is deleted in the output.
+}
+\examples{
+data("quattrofontanili")
+data("qfStrands")
+strand.suppress(qfStrands, quattrofontanili, "QF II 15-16")
+
+strand.suppress(qfStrands, quattrofontanili, c("QF II 15-16", "I", "XIV"))
+
 }

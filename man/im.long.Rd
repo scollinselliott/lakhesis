@@ -21,6 +21,6 @@ qf <- im.long(quattrofontanili)
 
 # to export for uploading into the Lakhesis Calculator, use write.table() to remove both row and column names
 
-write.table(qf, file = 'qf.csv', row.names = FALSE, col.names = FALSE, sep = ",")
+# write.table(qf, file = 'qf.csv', row.names = FALSE, col.names = FALSE, sep = ",")
 
 }

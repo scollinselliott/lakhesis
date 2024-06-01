@@ -71,13 +71,10 @@ calculator include the following:
 
 The sidebar contains the following commands:
 
-- **Upload CSV** Data must be with a header in a two-column “long”
+- **Choose CSV** Data must be with a header in a two-column “long”
   format of occurring pairs of row and column elements, where the first
   column contains a row element and the second column contains a column
-  element of the incidence matrix. If data are already in incidence
-  matrix format, the `im.long()` function in `lakhesis` can be used to
-  convert an incidence matrix to be exported into the necessary long
-  format.
+  element of the incidence matrix.
 - **Reinitialize** Resets the plots to their original, starting
   condition.
 - **Recompute with Selection** Upon the selection of row and column
@@ -133,6 +130,13 @@ To start the Lakhesis Calculator, execute the function `LC()`:
 library(lakhesis)
 LC()
 ```
+
+Note that in uploading a `csv` file for analysis inside the Lakhesis
+Calculator, the file should consist of just two columms without headers.
+If data are already in incidence matrix format, the `im.long()` function
+in `lakhesis` can be used to convert an incidence matrix to be exported
+into the necessary long format, using the `write.table()` function to
+export (see documentation on `im.long()`).
 
 ## Bibliography
 

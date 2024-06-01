@@ -19,7 +19,6 @@ The Kendall-Doran measure of concentration \insertCite{kendall_statistical_1963,
 data("quattrofontanili")
 concentration.col(quattrofontanili)
 
-
 }
 \references{
 \insertAllCited{}

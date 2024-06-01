@@ -25,8 +25,7 @@ A list of the following:.
 Performs a polynomial regression on the row reference scores and orthogonally projects data points on to the reference curve. Sampling can be increased to refine ranking and avoid ties, but default is largely sufficient. Correspondence analysis is performed using the \code{\link[ca]{ca}} package \insertCite{nenadic_correspondence_2007}{lakhesis}.
 }
 \examples{
-# Quattro Fontanili
-data(quattrofontanili)
+data("quattrofontanili")
 ca.procrustes.poly(quattrofontanili)
 
 }
