@@ -19,7 +19,8 @@ Take an incidence matrix and convert it to a data frame of two columns, where th
 data(quattrofontanili)
 qf <- im.long(quattrofontanili)
 
-# to export for uploading into the Lakhesis Calculator, use write.table() to remove both row and column names
+# to export for uploading into the Lakhesis Calculator, use write.table() to 
+# remove both row and column names:
 
 # write.table(qf, file = 'qf.csv', row.names = FALSE, col.names = FALSE, sep = ",")
 
