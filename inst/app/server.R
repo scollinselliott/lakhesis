@@ -207,7 +207,7 @@ server <- function(input, output, session) {
     output$consensusplot <- renderPlot({
         if (results$lakhesized == TRUE) {
             lakhcoef <- results$lakhesis_results$Coef
-            lakhcoef$Strand <- factor(lakhcoef$Strand, levels = lakhcoef$Strand[order(lakhcoef$Consensus.Spearman.Sq, decreasing = TRUE)]) 
+            lakhcoef$Strand <- factor(lakhcoef$Strand, levels = lakhcoef$Strand[order(lakhcoef$Consensus.Spearman.Sq, decreasing = FALSE)]) 
             suppressWarnings({
                 ggplot2::ggplot(lakhcoef, ggplot2::aes(x=Strand, y=Consensus.Spearman.Sq)) + 
                 ggplot2::geom_bar(stat = "identity") 
@@ -258,7 +258,6 @@ server <- function(input, output, session) {
                 mats$caproc <- ca.procrustes.curve(mats$mat)
                 mats$caproc_ref <- ca.procrustes(isolate(mats$mat))
                 mats$nr <- nrow(mats$caproc)
-                results$lakhesized <- FALSE
             }
             selections$biplot <- rep(FALSE, mats$nr)
             selections$curve <- rep(FALSE, mats$nr)

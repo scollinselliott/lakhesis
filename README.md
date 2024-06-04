@@ -51,9 +51,9 @@ calculator include the following:
   biplot or the reference plot.
 - **Consensus Seriation** (Top right) Displays the results of
   harmonizing selected partial seriations, which have been identified as
-  “strands.” The process of deriving a consensus seriation entails an
-  iterative regressions on partially seriated sequences which are
-  harmonized via PCA, separately on row and column elements. The
+  “strands.” The process of deriving a consensus seriation entails a
+  process of iterative regressions on partially seriated sequences which
+  are harmonized via PCA, separately on row and column elements. The
   seriated incidence matrix is also displayed in this panel.
 - **Criteria** (Bottom left) Critical coefficients to determine whether
   discordant strands should be removed and/or row or column elements
