@@ -15,7 +15,7 @@
 #' * `Coef`  A data frame containing the coefficients of agreement and concentration:
 #'   * `Strand` The number of the strand.
 #'   * `Consensus.Spearman.Sq` the measure of agreement, i.e., how well each strand accords with the consensus seriation. Using the square of Spearman's rank correlation coefficient, \eqn{\rho^2}, between each strand and the consensus ranking, agreement is computed as the product of \eqn{\rho^2} for their row and column rankings, \eqn{\rho_r^2}\eqn{\rho_c^2}. 
-#'   * `Concentration.Kappa`` the concentration coefficient \eqn{\kappa}, which provides a measure of the optimality of each strand (see \code{\link[lakhesis]{kappa.coef}}).
+#'   * `Concentration.Kappa` the concentration coefficient \eqn{\kappa}, which provides a measure of the optimality of each strand (see \code{\link[lakhesis]{kappa.coef}}).
 #' 
 #' @examples
 #' data("quattrofontanili")
