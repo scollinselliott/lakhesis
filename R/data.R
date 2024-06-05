@@ -19,7 +19,7 @@
 
 #' Quattro Fontanili - Strands
 #'
-#' Seven seriated strands selected from \code{\link[lakhesis]{quattrofontanili}} data, identified by the package author as an example for the documentation of functions.
+#' Five seriated strands selected from \code{\link[lakhesis]{quattrofontanili}} data, identified by the package author as an example for the documentation of functions.
 #'
 #' @format
 #' A list containing data frames output by \code{\link[lakhesis]{ca.procrustes.curve}}.
