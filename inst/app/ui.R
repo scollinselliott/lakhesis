@@ -22,15 +22,15 @@ ui <- shinydashboard::dashboardPage(
         shiny::fluidRow(
             shinydashboard::tabBox(title = "Seriation Explorer",
                 id = "pointselector", height = "600px",
-                shiny::tabPanel("CA-Procrustes Biplot",
+                shiny::tabPanel("CA-Procrustes Plot",
                     shiny::plotOutput(outputId="biplot", brush = shiny::brushOpts(id="plot_brush_biplot", resetOnNew = TRUE), dblclick = "plot_reset"),
                     #column(12,align = "center",offset = 0,
-                    #shiny::actionButton("save_biplot", "Gather Biplot Points", width = "90%"))
+                    #shiny::actionButton("save_biplot", "Gather Plot Points", width = "90%"))
                 ),
                 shiny::tabPanel("Curve Plot",
                     shiny::plotOutput(outputId="procrustesplot", brush = shiny::brushOpts(id="plot_brush_curve", resetOnNew = TRUE), dblclick = "plot_reset"),
                     #column(12,align = "center",offset = 0,
-                    #shiny::actionButton("save_curve", "Gather Curve Points", width = "90%"))
+                    #shiny::actionButton("save_curve", "Gather Plot Points", width = "90%"))
                 )
             ),
             shinydashboard::tabBox(title = "Consensus Seriation",

@@ -71,7 +71,7 @@ lakhesize <- function(strands, obj) {
                 dat <- data.frame(regressed$Col, colranks[,m2])
                 if (sum(!is.na(rowSums(dat))) > 3)  {
                     dat2 <- dat[!is.na(rowSums(dat)),]
-                    y <- stats::prcomp(dat2)$x[,1]
+                    y <- stats::prcomp(dat2, scale. = FALSE)$x[,1]
                     fit1 <- stats::lm(y ~ dat2[,1])
                     fit2 <- stats::lm(y ~ dat2[,2])
                     regr1 <- dat[,1] * fit1$coef[2] + fit1$coef[1]
