@@ -8,7 +8,7 @@ im.csv.read(
   filename,
   header = FALSE,
   characterencoding = "iso-8859-1",
-  remove.hapax = TRUE
+  remove.hapax = FALSE
 )
 }
 \arguments{
