@@ -13,7 +13,7 @@
 #' 
 #' @export
 #' @importFrom Rdpack reprompt
-im.csv.read <- function(filename, header = FALSE, characterencoding = "iso-8859-1", remove.hapax = TRUE) {
+im.csv.read <- function(filename, header = FALSE, characterencoding = "iso-8859-1", remove.hapax = FALSE) {
     dat <- readr::read_csv(filename, col_names = header, show_col_types = FALSE, locale = readr::locale(encoding = characterencoding))
     dat <- data.frame(dat)
 
