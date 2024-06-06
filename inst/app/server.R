@@ -14,9 +14,9 @@ server <- function(input, output, session) {
     mats$devc <- data.frame(Message = c("Lakhesize and run deviance test."))
     sup$rowsel <- rownames(isolate(mats$mat_initial))
     sup$colsel <- colnames(isolate(mats$mat_initial))
-  
+
     observeEvent(input$datafile, {
-        mats$mat <- im.csv.read(input$datafile$datapath)
+        mats$mat <- im.csv.read(input$datafile$datapath, remove.hapax = as.logical(input$hapax))
         mats$mat_initial <- mats$mat
         mats$caproc <- ca.procrustes.curve(isolate(mats$mat))
         mats$caproc_ref <- ca.procrustes(isolate(mats$mat))
@@ -122,10 +122,10 @@ server <- function(input, output, session) {
             selections$biplot <- rep(FALSE, isolate(mats$nr))
             selections$curve <- rep(FALSE, isolate(mats$nr))
             } else {
-                print("Infinite values in selection.")
+                message("Infinite values in selection.")
             }
         } else {
-            print("Insufficient number of points selected.")
+            message("Insufficient number of points selected.")
         }
     })
 

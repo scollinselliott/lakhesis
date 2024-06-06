@@ -128,7 +128,7 @@ lakhesize <- function(strands, obj) {
         results[["Coef"]] <- coefs
         return(results)
     } else {
-        print("Need more than 1 strand to create consensus seration.")
+        warning("Need more than 1 strand to create consensus seration.")
     }
 }
 

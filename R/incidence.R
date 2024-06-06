@@ -5,7 +5,7 @@
 #' @param filename The filename to uploaded (must be in \code{.csv} format).
 #' @param header If the \code{.csv} file contains a header. Default is `FALSE`.
 #' @param characterencoding File encoding as used by \code{\link[readr]{locale}}. Default is `"iso-8859-1"` to handle special characters. 
-#' @param remove.hapax Remove any row or column which has a sum of 1 (i.e., is only attested once), since they do not directly contribute to the result of the seriation. Default is `TRUE`.
+#' @param remove.hapax Remove any row or column which has a sum of 1 (i.e., is only attested once), since they do not directly contribute to the result of the seriation. Default is `FALSE`.
 #' @returns An incidence matrix of binary values (0 = row/column occurrence is absence; 1 = row/column occurrence is present). 
 #' 
 #' @references
@@ -78,7 +78,7 @@ im.ref <- function(obj) {
     }
     return(ref)
     } else {
-        print("Input into im.ref() is not a matrix.")
+        warning("Input into im.ref() is not a matrix.")
     }
 }
 

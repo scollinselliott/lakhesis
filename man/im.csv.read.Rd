@@ -18,7 +18,7 @@ im.csv.read(
 
 \item{characterencoding}{File encoding as used by \code{\link[readr]{locale}}. Default is \code{"iso-8859-1"} to handle special characters.}
 
-\item{remove.hapax}{Remove any row or column which has a sum of 1 (i.e., is only attested once), since they do not directly contribute to the result of the seriation. Default is \code{TRUE}.}
+\item{remove.hapax}{Remove any row or column which has a sum of 1 (i.e., is only attested once), since they do not directly contribute to the result of the seriation. Default is \code{FALSE}.}
 }
 \value{
 An incidence matrix of binary values (0 = row/column occurrence is absence; 1 = row/column occurrence is present).

@@ -245,6 +245,6 @@ ca.procrustes.curve <- function(obj, resolution = 10000) {
         proc.ranking$sel <- FALSE
         return(proc.ranking)
     } else {
-        print("Insufficient points for correspondence analysis.")
+        message("Insufficient points for correspondence analysis.")
     }
 }
