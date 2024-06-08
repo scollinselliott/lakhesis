@@ -4,7 +4,7 @@ Version: 0.0.1
 Authors@R: 
     person(c("Stephen", "A."), "Collins-Elliott", , "sce@utk.edu", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-5642-6903"))
-Description: Determining consensus seriations for binary incidence matrices, using a two-step process of Procrustes-fit correspondence analysis for heuristic selection of partial seriations and iterative regression to establish a single consensus. Contains the Lakhesis Calculator, a graphical platform for identifying seriated sequences.
+Description: Determining consensus seriations for binary incidence matrices, using a two-step process of Procrustes-fit correspondence analysis for heuristic selection of partial seriations and iterative regression to establish a single consensus. Contains the Lakhesis Calculator, a graphical platform for identifying seriated sequences. Collins-Elliott (2024) <http://volweb.utk.edu/~scolli46/sceLakhesis.pdf>.
 License: GPL (>= 3)
 Imports:
     stats,
