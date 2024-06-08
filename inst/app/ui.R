@@ -69,7 +69,7 @@ ui <- shinydashboard::dashboardPage(
             shinydashboard::box(title = "Modify", 
                 selectInput("suppressrows", label = "Select Rows to Suppress", choices = "rowsel", multiple = TRUE),
                 selectInput("suppresscols", label = "Select Columns to Suppress", choices = "colsel", multiple = TRUE),
-                shiny::p("Removing row or column values may also entail the automatic suppression of any resulting columns and rows containing all zeros. Saving a new strand or lakhesizing will permanently eliminate suppressed row and column values for all past selection of strands."),
+                shiny::p("Currently suppressed row or column values will not be included when saving strands, and are not removed from previously saved strands."),
                 shiny::br(),
                 shiny::textInput("strandDelete", "Delete Strand (Indices Will Resort Automatically, Undo Will Re-Add as Last Strand)"),
                 shiny::actionButton("submitStrandDelete", "Delete"),

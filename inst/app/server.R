@@ -155,22 +155,25 @@ server <- function(input, output, session) {
 
     # lachesize strands
     observeEvent(input$lakhesize, {    
-        s <- isolate(results$strands)
-        results$strand_backup <- isolate(results$strands)
-        m <- isolate(mats$mat_initial)
-        suppressWarnings({
-            results$lakhesis_results <- lakhesize(s, m) 
-        })
-        results$lakhesized <- TRUE
-        selections$biplot[] <- FALSE
-        selections$curve[] <- FALSE
+        if (length(isolate(results$strands)) > 1) {
+            s <- isolate(results$strands)
+            results$strand_backup <- isolate(results$strands)
+            m <- isolate(mats$mat_initial)
+            suppressWarnings({
+                results$lakhesis_results <- lakhesize(s, m) 
+            })
+            results$lakhesized <- TRUE
+            selections$biplot[] <- FALSE
+            selections$curve[] <- FALSE
 
-        mats$mat <- mats$mat_initial
-        mats$caproc <- ca.procrustes.curve(mats$mat)
-        mats$nr <- nrow(mats$caproc)
+            mats$mat <- mats$mat_initial
+            mats$caproc <- ca.procrustes.curve(mats$mat)
+            mats$caproc_ref <- ca.procrustes(isolate(mats$mat))
+            mats$nr <- nrow(mats$caproc)
 
-        selections$biplot <- rep(FALSE, mats$nr)
-        selections$curve <- rep(FALSE, mats$nr)
+            selections$biplot <- rep(FALSE, mats$nr)
+            selections$curve <- rep(FALSE, mats$nr)
+        }
     })
 
     # plots output after lakhesize() is run
@@ -196,7 +199,7 @@ server <- function(input, output, session) {
         m <- m[results$lakhesis_results$RowConsensus$Row, ]
         m <- m[, results$lakhesis_results$ColConsensus$Col]
         mk <- kappa.coef(m)
-        ttl <- paste("kappa = ",format(mk, nsmall = 3), sep = "")
+        ttl <- paste(format(nrow(m))," x ",format(ncol(m)),"; kappa = ",format(mk), sep = "")
         image(t(m), col=c('white','black'), xaxt="n", yaxt="n", main = ttl)
         } else {
             plot(0,0, pch = " ", xlab = "Lakhesize to produce consensus matrix plot.", ylab = " " )
@@ -240,7 +243,7 @@ server <- function(input, output, session) {
 
             results$strands[delValue] <- NULL
 
-            if (length(results$strands) > 2) {
+            if (length(results$strands) > 1) {
 
             mats$mat <- mats$mat_initial
             suppressWarnings({
@@ -345,11 +348,6 @@ server <- function(input, output, session) {
         if (!is.null(input$suppressrows)) {
             mi <- isolate(mats$mat_initial)
             sr <- isolate(input$suppressrows)
-            if (!is.null(results$strand_backup)) {
-                backup <- isolate(results$strand_backup)
-                new <- strand.suppress(backup, mi, sr)
-                results$strands <- new
-            }
             mi <- mi[(!(rownames(mi) %in% sr)), ]
             mi <- mi[ , (colSums(mi) != 0)]
             mats$mat <- mi
@@ -365,11 +363,6 @@ server <- function(input, output, session) {
         if (!is.null(input$suppresscols)) {
             mi <- isolate(mats$mat_initial)
             sc <- isolate(input$suppresscols)
-            if (!is.null(results$strand_backup)) {
-                backup <- isolate(results$strand_backup)
-                new <- strand.suppress(backup, mi, sc)
-                results$strands <- new
-            }
             mi <- mi[, (!(colnames(mi) %in% sc)) ]
             mi <- mi[(rowSums(mi) != 0), ]
             mats$mat <- mi

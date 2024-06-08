@@ -33,7 +33,7 @@ lakhesize <- function(strands, obj) {
         R <- matrix(NA, nrow = nrow(rowranks), ncol = 0)
         C <- matrix(NA, nrow = nrow(colranks), ncol = 0)
 
-        for (m in 1:100) { 
+        for (m in 1:200) { 
             remaining <- 1:ncol(rowranks)
             start <- sample(remaining, 1)
             regressed <- data.frame(Row = rowranks[,start])
@@ -60,7 +60,7 @@ lakhesize <- function(strands, obj) {
         }
         R <- R[!is.na(rowSums(R)),]
 
-        for (m in 1:100) { 
+        for (m in 1:200) { 
             remaining <- 1:ncol(colranks)
             start <- sample(remaining, 1)
             regressed <- data.frame(Col = colranks[,start])
