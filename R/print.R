@@ -9,7 +9,7 @@ print.procrustean <- function(result) {
 
 
 
-
+#' @rdname ca_procrustes
 #' @export 
 plot.procrustean <- function(result) {
     ref <- data.frame(Procrustes1 = result$ref[,1], Procrustes2 = result$ref[,2])
@@ -63,7 +63,7 @@ summary.strand <- function(strand) {
 
 
 
-
+#' @rdname ca_procrustes_ser
 #' @export 
 plot.strand <- function(strand, display = "ca") {
     #ref <- im_ref( matrix(NA, nrow = sum(strand$Type == 'row'),  ncol = sum(strand$Type == 'col')  ))
@@ -131,7 +131,7 @@ summary.lakhesis <- function(result) {
 
 
 
-
+#' @rdname lakhesize
 #' @export 
 plot.lakhesis <- function(result, display = "im_seriated") {
     lakhcoef <- result$coef

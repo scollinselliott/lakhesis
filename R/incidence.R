@@ -55,7 +55,7 @@ im_ref <- function(obj) {
     UseMethod("im_ref")
 }
 
-
+#' @rdname im_ref
 #' @export
 im_ref.matrix <- function(obj) { 
         ref <- matrix(0, nrow = nrow(obj), ncol = ncol(obj))
@@ -114,7 +114,7 @@ im_long <- function(obj) {
     UseMethod("im_long")
 }
 
-
+#' @rdname im_long
 #' @export
 im_long.matrix <- function(obj) { 
     dat <- data.frame(Row = c(), Col = c())
@@ -130,7 +130,7 @@ im_long.matrix <- function(obj) {
     return(dat)
 }
 
-
+#' @rdname im_long
 #' @export
 im_long.incidence_matrix <- function(obj) { 
     im_long.matrix(obj)
@@ -157,6 +157,7 @@ im_merge <- function(obj1, obj2) {
     UseMethod("im_merge")
 }
 
+#' @rdname im_merge
 #' @export
 im_merge.matrix <- function(obj1, obj2) {
     dat <- rbind(im_long(obj1), im_long(obj2))
@@ -176,6 +177,7 @@ im_merge.matrix <- function(obj1, obj2) {
     return(obj)
 }
 
+#' @rdname im_merge
 #' @export
 im_merge.incidence_matrix <- function(obj1, obj2) {
     im_merge.matrix(obj1, obj2)

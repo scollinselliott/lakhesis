@@ -115,7 +115,7 @@ element_eval <- function(obj) {
     UseMethod("element_eval")
 }
 
-
+#' @rdname element_eval
 #' @export
 element_eval.incidence_matrix <- function(obj) {
     dev.c <- numeric(ncol(obj))
@@ -195,6 +195,7 @@ strand_extract <- function(strands, ...) {
     UseMethod("strand_extract")
 }  
 
+#' @rdname strand_extract
 #' @export
 strand_extract.strands <- function(strands) {
     obj <- strands[[1]]$im_seriated
@@ -250,14 +251,13 @@ strand_suppress <- function(strands, ...) {
     UseMethod("strand_suppress")
 }
 
-
+#' @rdname strand_suppress
 #' @export
 strand_suppress.strands <- function(strands, ...) {
     strand_suppress.default(strands, ...)
 }
 
 #' @rdname strand_suppress
-#' @method strand_suppress default
 #' @export
 strand_suppress.default <- function(strands, elements) {
     new <- list()
@@ -303,7 +303,7 @@ strand_add <- function(strand, ...) {
     UseMethod("strand_add")
 }
 
-
+#' @rdname strand_add
 #' @export
 strand_add.strand <- function(strand, strands) {
     strands[[length(strands) + 1]] <- strand

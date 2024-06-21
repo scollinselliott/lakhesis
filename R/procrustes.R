@@ -27,6 +27,7 @@ ca_procrustes.default <- function(obj) {
     stop(paste('ca_procrustes cannot take input of class "', class(obj), '" ', sep =''))
 }
 
+#' @rdname ca_procrustes
 #' @export
 ca_procrustes.matrix <- function(obj) {
     transposed = FALSE
@@ -110,6 +111,7 @@ ca_procrustes.matrix <- function(obj) {
     return(results)
 }
 
+#' @rdname ca_procrustes
 #' @export
 ca_procrustes.incidence_matrix <- function(obj) {
     ca_procrustes.matrix(obj)
@@ -148,11 +150,13 @@ ca_procrustes_ser <- function(obj, samples = 10^5) {
     UseMethod("ca_procrustes_ser")
 }
 
+#' @rdname ca_procrustes_ser
 #' @export
 ca_procrustes_ser.incidence_matrix <- function(obj, samples = 10^5) {
     ca_procrustes_ser.matrix(obj, samples = 10^5)
 }
 
+#' @rdname ca_procrustes_ser
 #' @export
 ca_procrustes_ser.matrix <- function(obj, samples = 10^5) {
     if ((nrow(obj) > 2 ) & (ncol(obj) > 2) ) {

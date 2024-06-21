@@ -36,11 +36,13 @@ lakhesize <- function(strands, ...) {
     UseMethod("lakhesize")
 }
 
+#' @rdname lakhesize
 #' @export 
 lakhesize.strands <- function(strands, method = "exploratory", iter = 100, sim = 1) {
     lakhesize.default(strands, method, iter, sim)
 }
 
+#' @rdname lakhesize
 #' @export
 lakhesize.default <- function(strands, method = "exploratory", iter = 100, sim = 1) {    
     if (!(method %in% c("exploratory", "optimize"))) {
