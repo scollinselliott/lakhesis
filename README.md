@@ -10,7 +10,7 @@ The `R` package `lakhesis` provides an interactive platform and critical
 measures for seriating binary data matrices through the exploration,
 selection, and consensus of partially seriated sequences.
 
-In brief, seriation (sequencing, ordination) involves putting a set of
+In a word, seriation (sequencing, ordination) involves putting a set of
 things in an optimal order. In archaeology, seriation can be used to
 establish a chronological order of contexts and find-types on the basis
 of their similarity, i.e, that things come into and go out of fashion
@@ -28,7 +28,8 @@ that record the joint incidence or occurrence for a row-column pairing)
 will necessarily be well seriated. The selection of row and column
 elements in the input is accordingly an intrinsic part of the task of
 seriation. In this respect, `lakhesis` seeks to complement existing
-methods in `R`, by focusing on binary data. It uses correspondence
+methods in `R`, focusing on binary data, by providing an interactive,
+graphical means of selecting seriated sequences. It uses correspondence
 analysis, a mainstay technique for seriation, which is then fit to a
 reference curve that represents “ideally” seriated data. Multiple
 seriations can be run on partial subsets of the initial incidence
@@ -39,8 +40,8 @@ While command line functions can be run in `R`, the functionality of
 `lakhesis` is primarily achieved via the Lakhesis Calculator, a
 graphical platform in `shiny` that enables investigators to explore
 datasets for potential seriated sequences, select them, and then
-harmonize them into a single consensus seriation. The four panels in the
-calculator include the following:
+harmonize them into a single consensus seriation. Four panels are
+displayed in the calculator:
 
 - **Seriation Explorer** (Top left) Displays the correspondence analysis
   of a dataset which has been fit to the curve an “ideal” seriation. Two
@@ -66,10 +67,9 @@ calculator include the following:
     column elements in the consensus seriation using deviance with a
     quadratic-logistic model. Higher $p$ values will indicate poorer fit
     for a particular row or column element.
-- **Modify** (Bottom right) Temporarily suppress row or column values
-  from correspondence analysis, including recomputing the seriations
-  from previously selected strands. Strands which have low agreement or
-  high concentration may also be deleted in this panel.
+- **Modify** (Bottom right) Temporarily suppress row or column elements
+  from correspondence analysis. Strands which have low agreement or high
+  concentration may also be deleted in this panel.
 
 The sidebar contains the following commands:
 
@@ -82,7 +82,7 @@ The sidebar contains the following commands:
 - **Recompute with Selection** Upon the selection of row and column
   points from the Seriation Explorer panel, this command will perform
   and fit CA only on the selection. To return to the initial dataset,
-  press the Reinitialize button. The function `ca.procrustes.curve()`
+  press the Reinitialize button. The function `ca_procrustes_ser()`
   performs this task.
 - **Save Selection as Strand** Record the displayed plot as a partial
   seriation, or “strand” (i.e., partial with respect to the initial
@@ -103,7 +103,7 @@ The sidebar contains the following commands:
   treating the distribution of the row and column incidences with a
   quadratic-logistic model. The largest $p$ values of the row and column
   elements is contained in the Criteria panel. The function
-  `element.eval()` performs this task.
+  `element_eval()` performs this task.
 - **Export Data** Will download results in a single `.rds` file, which
   is a `list` class object containing the following:
   - `consensus` The results of `lakhesize()`, a `lakhesis` class object
@@ -132,7 +132,7 @@ LC()
 ```
 
 Note that in uploading a `csv` file for analysis inside the Lakhesis
-Calculator, the file should consist of just two columms without headers.
+Calculator, the file should consist of just two columns without headers.
 If data are already in incidence matrix format, the `im_long()` function
 in `lakhesis` can be used to convert an incidence matrix to be exported
 into the necessary long format, using the `write.table()` function to
@@ -141,15 +141,15 @@ export (see documentation on `im_long()`).
 The core of `lakhesis` lies in singular value decomposition (SVD), as it
 does with both PCA and CA, and so the same caveats apply in terms of the
 rotation of axes in the graphical display of principal scores. The
-Lakhesis Calculator enables the temprorary suppression of row or column
+Lakhesis Calculator enables the temporary suppression of row or column
 elements from the plots, with zero rows/columns automatically removed.
 As such, unexpected results may be elicited if key elements are
-supressed. All elements can easily be re-added and the starting
+suppressed. All elements can easily be re-added and the starting
 incidence matrix re-initialized.
 
-As Lakhesis analysis uses simulation to derive a consensus seration, it
+As Lakhesis analysis uses simulation to derive a consensus seriation, it
 is recommended that one check for the potential of an even more optimal
-conensus seriation by running the `lakhesize()` function using the
+consensus seriation by running the `lakhesize()` function using the
 method `"optimize"`, especially if there are a high number of `strands`:
 
 ``` r
