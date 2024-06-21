@@ -76,7 +76,8 @@ data("qfStrands")
 x <- lakhesize(qfStrands, method = "exporatory", iter = 100, sim = 1)
 summary(x)
 
-# optimal method may reduce the number of iterations and use more simulation runs. The output comprises the consensus seriation with the lowest concentration measure attained:
+# optimal method may reduce the number of iterations and use more simulation runs 
+# to attain consensus seriation with the lowest concentration measure 
 y <- lakhesize(qfStrands, method = "optimize", iter = 20, sim = 20)
 summary(y)
 ```
