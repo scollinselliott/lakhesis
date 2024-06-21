@@ -20,8 +20,6 @@ spearman_sq <- function(r1, r2) {
     UseMethod("spearman_sq")
 }
 
-#' @rdname spearman_sq
-#' @method spearman_sq numeric
 #' @export 
 spearman_sq.numeric <- function(r1, r2) {
     dat <-  stats::na.omit( data.frame(r1,r2) )
@@ -50,8 +48,6 @@ conc_col <- function(obj) {
     UseMethod("conc_col")
 }
 
-#' @rdname conc_col
-#' @method conc_col matrix
 #' @export
 conc_col.matrix <- function(obj) {
     conc <- numeric(ncol(obj))
@@ -61,8 +57,6 @@ conc_col.matrix <- function(obj) {
     return(sum(conc))
 }
 
-#' @rdname conc_col
-#' @method conc_col incidence_matrix
 #' @export
 conc_col.incidence_matrix <- function(obj) {
     conc_col.matrix(obj)
@@ -85,8 +79,6 @@ conc_kappa <- function(obj) {
     UseMethod("conc_kappa")
 }
 
-#' @rdname conc_kappa
-#' @method conc_kappa matrix
 #' @export
 conc_kappa.matrix <- function(obj) {
     nu <- sum(obj)
@@ -94,8 +86,6 @@ conc_kappa.matrix <- function(obj) {
     return(k)
 }
 
-#' @rdname conc_kappa
-#' @method conc_kappa incidence_matrix
 #' @export
 conc_kappa.incidence_matrix <- function(obj) {
     conc_kappa.incidence_matrix(obj)
@@ -125,8 +115,7 @@ element_eval <- function(obj) {
     UseMethod("element_eval")
 }
 
-#' @rdname element_eval
-#' @method element_eval incidence_matrix
+
 #' @export
 element_eval.incidence_matrix <- function(obj) {
     dev.c <- numeric(ncol(obj))
@@ -206,8 +195,6 @@ strand_extract <- function(strands, ...) {
     UseMethod("strand_extract")
 }  
 
-#' @rdname strand_extract 
-#' @method strand_extract strands
 #' @export
 strand_extract.strands <- function(strands) {
     obj <- strands[[1]]$im_seriated
@@ -263,8 +250,7 @@ strand_suppress <- function(strands, ...) {
     UseMethod("strand_suppress")
 }
 
-#' @rdname strand_suppress
-#' @method strand_suppress strands
+
 #' @export
 strand_suppress.strands <- function(strands, ...) {
     strand_suppress.default(strands, ...)
@@ -317,8 +303,7 @@ strand_add <- function(strand, ...) {
     UseMethod("strand_add")
 }
 
-#' @rdname strand_add
-#' @method strand_add strand
+
 #' @export
 strand_add.strand <- function(strand, strands) {
     strands[[length(strands) + 1]] <- strand
