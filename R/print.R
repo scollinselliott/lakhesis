@@ -162,7 +162,7 @@ plot.lakhesis <- function(result, display = "im_seriated") {
 
 
 
-#' @rdname im_csv_read
+#' @rdname im_read_csv
 #' @export 
 plot.incidence_matrix <- function(im_seriated) {
     k <- conc_kappa(im_seriated)
