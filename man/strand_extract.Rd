@@ -2,9 +2,12 @@
 % Please edit documentation in R/strand.R
 \name{strand_extract}
 \alias{strand_extract}
+\alias{strand_extract.strands}
 \title{Strand Extract}
 \usage{
 strand_extract(strands, ...)
+
+\method{strand_extract}{strands}(strands)
 }
 \arguments{
 \item{strands}{A \code{list} of class \code{strands}.}
@@ -17,7 +20,7 @@ A list of two matrices:
 }
 }
 \description{
-From a \code{list} of strands produced by \code{\link[lakhesis]{ca.procrustes.curve}}, extract two matrices containing the ranks of the rows and columns. The row/column elements are contained in the rows, and the strands are contained in the columns. NA values are entered where a given row/column element is missing from that strand.
+From a \code{list} of strands produced by \code{\link[lakhesis]{ca_procrustes_ser}}, extract two matrices containing the ranks of the rows and columns. The row/column elements are contained in the rows, and the strands are contained in the columns. NA values are entered where a given row/column element is missing from that strand.
 }
 \examples{
 data("quattrofontanili")

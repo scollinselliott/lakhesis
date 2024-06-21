@@ -2,9 +2,15 @@
 % Please edit documentation in R/incidence.R
 \name{im_merge}
 \alias{im_merge}
+\alias{im_merge.matrix}
+\alias{im_merge.incidence_matrix}
 \title{Merge Two Incidence Matrices}
 \usage{
 im_merge(obj1, obj2)
+
+\method{im_merge}{matrix}(obj1, obj2)
+
+\method{im_merge}{incidence_matrix}(obj1, obj2)
 }
 \arguments{
 \item{obj1, obj2}{Two incidence matrices of any size.}

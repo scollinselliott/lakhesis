@@ -2,12 +2,15 @@
 % Please edit documentation in R/strand.R
 \name{strand_add}
 \alias{strand_add}
+\alias{strand_add.strand}
 \title{Add Strand to List of Strands}
 \usage{
 strand_add(strand, ...)
+
+\method{strand_add}{strand}(strand, strands)
 }
 \arguments{
-\item{strand}{An object of class \code{strand} returned by \code{\link[lakhesis]{ca.procrustes.curve}}.}
+\item{strand}{An object of class \code{strand} returned by \code{\link[lakhesis]{ca_procrustes_ser}}.}
 
 \item{strands}{A \code{list} of strands.}
 }
@@ -15,5 +18,5 @@ strand_add(strand, ...)
 A \code{list} of class \code{strands}.
 }
 \description{
-Given a list of strands, remove a row or column element and re-run seriation by correspondence analysis with Procrustes fitting (\code{\link[lakhesis]{ca.procrustes.curve}}) to generate a new list of strands that exclude the specified elements. If the resulting strand lacks sufficient points to perform correspondence analysis, that strand is deleted in the output.
+Given a list of strands, remove a row or column element and re-run seriation by correspondence analysis with Procrustes fitting (\code{\link[lakhesis]{ca_procrustes_ser}}) to generate a new list of strands that exclude the specified elements. If the resulting strand lacks sufficient points to perform correspondence analysis, that strand is deleted in the output.
 }

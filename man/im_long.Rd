@@ -2,9 +2,15 @@
 % Please edit documentation in R/incidence.R
 \name{im_long}
 \alias{im_long}
+\alias{im_long.matrix}
+\alias{im_long.incidence_matrix}
 \title{Convert Incidence Matrix to Pairs (Long Format)}
 \usage{
 im_long(obj)
+
+\method{im_long}{matrix}(obj)
+
+\method{im_long}{incidence_matrix}(obj)
 }
 \arguments{
 \item{obj}{An incidence matrix.}

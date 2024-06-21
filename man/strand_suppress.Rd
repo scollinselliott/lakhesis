@@ -2,10 +2,13 @@
 % Please edit documentation in R/strand.R
 \name{strand_suppress}
 \alias{strand_suppress}
+\alias{strand_suppress.strands}
 \alias{strand_suppress.default}
 \title{Suppress Element from Strands}
 \usage{
 strand_suppress(strands, ...)
+
+\method{strand_suppress}{strands}(strands, ...)
 
 \method{strand_suppress}{default}(strands, elements)
 }
@@ -18,7 +21,7 @@ strand_suppress(strands, ...)
 A list of the strands.
 }
 \description{
-Given a list of strands, remove a row or column element and re-run seriation by correspondence analysis with Procrustes fitting (\code{\link[lakhesis]{ca.procrustes.curve}}) to generate a new list of strands that exclude the specified elements. If the resulting strand lacks sufficient points to perform correspondence analysis, that strand is deleted in the output.
+Given a list of strands, remove a row or column element and re-run seriation by correspondence analysis with Procrustes fitting (\code{\link[lakhesis]{ca_procrustes_ser}}) to generate a new list of strands that exclude the specified elements. If the resulting strand lacks sufficient points to perform correspondence analysis, that strand is deleted in the output.
 }
 \examples{
 data("quattrofontanili")

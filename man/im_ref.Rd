@@ -2,9 +2,12 @@
 % Please edit documentation in R/incidence.R
 \name{im_ref}
 \alias{im_ref}
+\alias{im_ref.matrix}
 \title{Create Reference Matrix}
 \usage{
 im_ref(obj)
+
+\method{im_ref}{matrix}(obj)
 }
 \arguments{
 \item{obj}{A matrix of size \eqn{n \times k}.}
