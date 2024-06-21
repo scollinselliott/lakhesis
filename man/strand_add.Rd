@@ -2,12 +2,9 @@
 % Please edit documentation in R/strand.R
 \name{strand_add}
 \alias{strand_add}
-\alias{strand_add.strand}
 \title{Add Strand to List of Strands}
 \usage{
 strand_add(strand, ...)
-
-\method{strand_add}{strand}(strand, strands)
 }
 \arguments{
 \item{strand}{An object of class \code{strand} returned by \code{\link[lakhesis]{ca.procrustes.curve}}.}

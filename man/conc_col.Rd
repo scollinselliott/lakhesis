@@ -2,15 +2,9 @@
 % Please edit documentation in R/strand.R
 \name{conc_col}
 \alias{conc_col}
-\alias{conc_col.matrix}
-\alias{conc_col.incidence_matrix}
 \title{Kendall-Doran Concentration}
 \usage{
 conc_col(obj)
-
-\method{conc_col}{matrix}(obj)
-
-\method{conc_col}{incidence_matrix}(obj)
 }
 \arguments{
 \item{obj}{A seriated binary matrix.}

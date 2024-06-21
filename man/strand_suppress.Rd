@@ -2,13 +2,10 @@
 % Please edit documentation in R/strand.R
 \name{strand_suppress}
 \alias{strand_suppress}
-\alias{strand_suppress.strands}
 \alias{strand_suppress.default}
 \title{Suppress Element from Strands}
 \usage{
 strand_suppress(strands, ...)
-
-\method{strand_suppress}{strands}(strands, ...)
 
 \method{strand_suppress}{default}(strands, elements)
 }

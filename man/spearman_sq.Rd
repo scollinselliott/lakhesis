@@ -2,12 +2,9 @@
 % Please edit documentation in R/strand.R
 \name{spearman_sq}
 \alias{spearman_sq}
-\alias{spearman_sq.numeric}
 \title{Spearman Correlation Squared}
 \usage{
 spearman_sq(r1, r2)
-
-\method{spearman_sq}{numeric}(r1, r2)
 }
 \arguments{
 \item{r1, r2}{Two vectors of paired ranks.}

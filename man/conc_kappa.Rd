@@ -2,15 +2,9 @@
 % Please edit documentation in R/strand.R
 \name{conc_kappa}
 \alias{conc_kappa}
-\alias{conc_kappa.matrix}
-\alias{conc_kappa.incidence_matrix}
 \title{Kappa Concentration}
 \usage{
 conc_kappa(obj)
-
-\method{conc_kappa}{matrix}(obj)
-
-\method{conc_kappa}{incidence_matrix}(obj)
 }
 \arguments{
 \item{obj}{A seriated binary matrix.}

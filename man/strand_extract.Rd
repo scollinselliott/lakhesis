@@ -2,12 +2,9 @@
 % Please edit documentation in R/strand.R
 \name{strand_extract}
 \alias{strand_extract}
-\alias{strand_extract.strands}
 \title{Strand Extract}
 \usage{
 strand_extract(strands, ...)
-
-\method{strand_extract}{strands}(strands)
 }
 \arguments{
 \item{strands}{A \code{list} of class \code{strands}.}
