@@ -73,7 +73,7 @@ displayed in the calculator:
 
 The sidebar contains the following commands:
 
-- **Choose CSV** Data must be with a header in a two-column “long”
+- **Choose CSV** Data must be without a header in a two-column “long”
   format of occurring pairs of row and column elements, where the first
   column contains a row element and the second column contains a column
   element of the incidence matrix.
