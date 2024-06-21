@@ -307,7 +307,7 @@ strand_add <- function(strand, ...) {
 #' @export
 strand_add.strand <- function(strand, strands) {
     strands[[length(strands) + 1]] <- strand
-    class(strands) <- c("strands, list")
+    class(strands) <- c("strands", "list")
     return(strands)
 }
 

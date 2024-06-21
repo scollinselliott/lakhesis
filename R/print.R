@@ -136,7 +136,11 @@ summary.lakhesis <- function(result) {
 plot.lakhesis <- function(result, display = "im_seriated") {
     lakhcoef <- result$coef
     if (display == "im_seriated") {
-        plot(result$im_seriated)
+        im_seriated <- result$im_seriated
+        k <- conc_kappa(im_seriated)
+        ttl <- paste(format(nrow(im_seriated))," x ",format(ncol(im_seriated)),"; kappa = ",format(k), sep = "")
+        im_Image <- t(im_seriated[nrow(im_seriated):1 , ])
+        image(im_Image, col=c('white','black'), xaxt='n', yaxt='n', main = ttl)
     } else if (display == "rowPCA") {
         biplot(result$rowPCA)
     } else if (display == "colPCA") {
@@ -158,7 +162,7 @@ plot.lakhesis <- function(result, display = "im_seriated") {
 
 
 
-
+#' @rdname im_csv_read
 #' @export 
 plot.incidence_matrix <- function(im_seriated) {
     k <- conc_kappa(im_seriated)
