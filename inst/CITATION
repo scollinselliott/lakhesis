@@ -5,7 +5,7 @@ bibentry(
   year     = "2024",
   note     = "R package version 0.0.2",
   url      = "https://CRAN.R-project.org/package=lakhesis",
-  doi      = "10.32614/CRAN.package.lakhesis"
+  doi      = "10.32614/CRAN.package.lakhesis",
   key      = "collins-elliott_lakhesis_2024"
 )
 
