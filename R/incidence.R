@@ -6,14 +6,14 @@
 #' @param header If the \code{.csv} file contains a header. Default is `FALSE`.
 #' @param characterencoding File encoding as used by \code{\link[readr]{locale}}. Default is `"iso-8859-1"` to handle special characters. 
 #' @param remove.hapax Remove any row or column which has a sum of 1 (i.e., is only attested once), since they do not directly contribute to the result of the seriation. Default is `FALSE`.
-#' @returns An incidence matrix of binary values (0 = row/column occurrence is absence; 1 = row/column occurrence is present). 
+#' @returns A matrix of binary values (0 = row/column occurrence is absence; 1 = row/column occurrence is present). 
 #' 
 #' @references
 #'   \insertAllCited{}
 #' 
 #' @export
 #' @importFrom Rdpack reprompt
-im.csv.read <- function(filename, header = FALSE, characterencoding = "iso-8859-1", remove.hapax = FALSE) {
+im_read_csv <- function(filename, header = FALSE, characterencoding = "iso-8859-1", remove.hapax = FALSE) {
     dat <- readr::read_csv(filename, col_names = header, show_col_types = FALSE, locale = readr::locale(encoding = characterencoding))
     dat <- data.frame(dat)
 
@@ -33,6 +33,8 @@ im.csv.read <- function(filename, header = FALSE, characterencoding = "iso-8859-
         obj <- obj[, colSums(obj) > 1]
         obj <- obj[rowSums(obj) > 1, ]
     }
+
+    class(obj) <- c("incidence_matrix", "matrix", "array")
     return(obj)
 }
 
@@ -45,43 +47,51 @@ im.csv.read <- function(filename, header = FALSE, characterencoding = "iso-8859-
 #' @param obj A matrix of size \eqn{n \times k}.
 #' @returns A matrix of size \eqn{n \times k} with 1s along the diagonal. If \eqn{n > k}, 1s are placed from cell \eqn{(i,i)} to \eqn{(i,i+k-n)}, with 0 in all other cells.
 #' @examples
-#' im.ref(matrix(NA, 5, 5))
-#' im.ref(matrix(1, 7, 12))
+#' im_ref(matrix(NA, 5, 5))
+#' im_ref(matrix(1, 7, 12))
 #' 
 #' @export
-im.ref <- function(obj) {
-    if (is.matrix(obj)) {
-    ref <- matrix(0, nrow = nrow(obj), ncol = ncol(obj))
-    if (nrow(ref) > ncol(ref)) {
-        r <- nrow(ref) - ncol(ref) 
-        for (j in 1:ncol(ref)) {
-            end <- j+r
-            ref[j:end,j] <- 1
-        } 
-    } else if (nrow(ref) == ncol(ref)) {
-        diag(ref) <- 1
-        r <- nrow(ref) - ncol(ref) 
-        for (j in 1:(ncol(ref)-1)) {
-            end <- j+1
-            ref[j:end,j] <- 1
-        } 
-    } else {
-        r <- ncol(ref) - nrow(ref) 
-        for (i in 1:nrow(ref)) {
-            end <- i+r
-            ref[i, i:end] <- 1
-        }
-    }
-    if (is.null(colnames(ref))) {
-        rownames(ref) <- paste("R", 1:nrow(ref), sep = '')
-        colnames(ref) <- paste("C", 1:ncol(ref), sep = '')
-    }
-    return(ref)
-    } else {
-        warning("Input into im.ref() is not a matrix.")
-    }
+im_ref <- function(obj) {
+    UseMethod("im_ref")
 }
 
+
+#' @export
+im_ref.matrix <- function(obj) { 
+        ref <- matrix(0, nrow = nrow(obj), ncol = ncol(obj))
+        if (nrow(ref) > ncol(ref)) {
+            r <- nrow(ref) - ncol(ref) 
+            for (j in 1:ncol(ref)) {
+                end <- j+r
+                ref[j:end,j] <- 1
+            } 
+        } else if (nrow(ref) == ncol(ref)) {
+            diag(ref) <- 1
+            r <- nrow(ref) - ncol(ref) 
+            for (j in 1:(ncol(ref)-1)) {
+                end <- j+1
+                ref[j:end,j] <- 1
+            } 
+        } else {
+            r <- ncol(ref) - nrow(ref) 
+            for (i in 1:nrow(ref)) {
+                end <- i+r
+                ref[i, i:end] <- 1
+            }
+        }
+        if (is.null(colnames(ref))) {
+            rownames(ref) <- paste("R", 1:nrow(ref), sep = '')
+            colnames(ref) <- paste("C", 1:ncol(ref), sep = '')
+        }
+    class(ref) <- c("incidence_matrix", "matrix", "array")
+    return(ref)
+}
+
+
+#' @export
+im_ref.incidence_matrix <- function(obj) { 
+    im_ref.matrix(obj)
+}
 
 
 #' Convert Incidence Matrix to Pairs (Long Format)
@@ -92,7 +102,7 @@ im.ref <- function(obj) {
 #' @returns A data frame of two columns (row and column of the incidence matrix), in which row of the data frame represents a pair of an 
 #' @examples 
 #' data(quattrofontanili)
-#' qf <- im.long(quattrofontanili)
+#' qf <- im_long(quattrofontanili)
 #' 
 #' # to export for uploading into the Lakhesis Calculator, use write.table() to 
 #' # remove both row and column names:
@@ -100,7 +110,13 @@ im.ref <- function(obj) {
 #' # write.table(qf, file = 'qf.csv', row.names = FALSE, col.names = FALSE, sep = ",")
 #' 
 #' @export
-im.long <- function(obj) {
+im_long <- function(obj) {
+    UseMethod("im_long")
+}
+
+
+#' @export
+im_long.matrix <- function(obj) { 
     dat <- data.frame(Row = c(), Col = c())
     for (i in 1:nrow(obj)) {
         row <- obj[i, ]
@@ -110,10 +126,15 @@ im.long <- function(obj) {
         dat <- rbind(dat, tmp)
     }
     colnames(dat) <- c("Row", "Col")
+    class(dat) <- "data.frame"
     return(dat)
 }
 
 
+#' @export
+im_long.incidence_matrix <- function(obj) { 
+    im_long.matrix(obj)
+}
 
 #' Merge Two Incidence Matrices
 #'
@@ -129,12 +150,16 @@ im.long <- function(obj) {
 #' qf2 <- quattrofontanili[30:50, 20:60]
 #' qf2 <- qf2[rowSums(qf2) != 0, colSums(qf2) != 0]
 #' 
-#' im.merge(qf1, qf2)
+#' im_merge(qf1, qf2)
 #' 
 #' @export
-#' 
-im.merge <- function(obj1, obj2) {
-    dat <- rbind(im.long(obj1), im.long(obj2))
+im_merge <- function(obj1, obj2) {
+    UseMethod("im_merge")
+}
+
+#' @export
+im_merge.matrix <- function(obj1, obj2) {
+    dat <- rbind(im_long(obj1), im_long(obj2))
 
     finds <- levels(factor(dat[,2]))
     contexts <- levels(factor(dat[,1]))
@@ -147,8 +172,12 @@ im.merge <- function(obj1, obj2) {
         i <- which(contexts == dat[k, 1])
         obj[i, j] <- 1
     }
+    class(obj) <- c("incidence_matrix", "matrix", "array")
     return(obj)
 }
 
-
+#' @export
+im_merge.incidence_matrix <- function(obj1, obj2) {
+    im_merge.matrix(obj1, obj2)
+}
 

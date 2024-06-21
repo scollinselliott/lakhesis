@@ -9,18 +9,25 @@
 #' # e.g., for two partial seriations:
 #' x <- c(1, 2, 3, 4, NA, 5, 6, NA, 7.5, 7.5, 9)
 #' y <- c(23, 17, 19, NA, 21, 22, 25, 26, 27, 36, 32)
-#' spearman.sq(x, y)
+#' spearman_sq(x, y)
 #' 
 #' @references
 #'   \insertAllCited{}
 #' 
 #' @export
 #' @importFrom Rdpack reprompt
-spearman.sq <- function(r1, r2) {
+spearman_sq <- function(r1, r2) {
+    UseMethod("spearman_sq")
+}
+
+#' @rdname spearman_sq
+#' @method spearman_sq numeric
+#' @export 
+spearman_sq.numeric <- function(r1, r2) {
     dat <-  stats::na.omit( data.frame(r1,r2) )
-    r <- (stats::cor(dat)[1,2])^2
+    r <- (stats::cor(dat)[1,2])^2 
     return(r)
-    }
+}
 
 
 #' Kendall-Doran Concentration
@@ -32,21 +39,34 @@ spearman.sq <- function(r1, r2) {
 #' 
 #' @examples 
 #' data("quattrofontanili")
-#' concentration.col(quattrofontanili)
+#' conc_col(quattrofontanili)
 #' 
 #' @references
 #'   \insertAllCited{}
 #' 
 #' @export
 #' @importFrom Rdpack reprompt
-concentration.col <- function(obj) {
-conc <- numeric(ncol(obj))
+conc_col <- function(obj) {
+    UseMethod("conc_col")
+}
+
+#' @rdname conc_col
+#' @method conc_col matrix
+#' @export
+conc_col.matrix <- function(obj) {
+    conc <- numeric(ncol(obj))
     for (j in 1:ncol(obj)) {
         conc[j] <- max(which(obj[,j] != 0)) - min(which(obj[,j] != 0)) + 1
     }
     return(sum(conc))
 }
 
+#' @rdname conc_col
+#' @method conc_col incidence_matrix
+#' @export
+conc_col.incidence_matrix <- function(obj) {
+    conc_col.matrix(obj)
+}
 
 
 #' Kappa Concentration
@@ -58,15 +78,28 @@ conc <- numeric(ncol(obj))
 #' 
 #' @examples 
 #' data("quattrofontanili")
-#' kappa.coef(quattrofontanili)
+#' conc_kappa(quattrofontanili)
 #' 
-#' @export kappa.coef
-kappa.coef <- function(obj) {
-     nu <- sum(obj)
-     k <- ( concentration.col(obj) + concentration.col(t(obj)) ) / (2 * nu)
-     return(k)
+#' @export
+conc_kappa <- function(obj) {
+    UseMethod("conc_kappa")
 }
 
+#' @rdname conc_kappa
+#' @method conc_kappa matrix
+#' @export
+conc_kappa.matrix <- function(obj) {
+    nu <- sum(obj)
+    k <- ( conc_col(obj) + conc_col(t(obj)) ) / (2 * nu)
+    return(k)
+}
+
+#' @rdname conc_kappa
+#' @method conc_kappa incidence_matrix
+#' @export
+conc_kappa.incidence_matrix <- function(obj) {
+    conc_kappa.incidence_matrix(obj)
+}
 
 
 #' Evaluating Element Fit
@@ -74,7 +107,7 @@ kappa.coef <- function(obj) {
 #' Performs a goodness-of-fit test on individual row and column elements using deviance, using a quadratic-logistic model to fit row and column occurrences. In the case of perfect separation of 0/1 values, an `NA` value is assigned. Results are reported as \eqn{p} values for each row and column.
 #' 
 #' @param obj A seriated binary matrix.
-#' @returns A `list` containing results in frames for row and column elements:
+#' @returns A \code{list} containing results in data frames for row and column elements:
 #' 
 #' * `RowFit` a data frame containing
 #'   * `id` Row element
@@ -85,10 +118,17 @@ kappa.coef <- function(obj) {
 #' 
 #' @examples 
 #' data("quattrofontanili")
-#' element.eval(quattrofontanili)
+#' element_eval(quattrofontanili)
 #' 
 #' @export
-element.eval <- function(obj) {
+element_eval <- function(obj) {
+    UseMethod("element_eval")
+}
+
+#' @rdname element_eval
+#' @method element_eval incidence_matrix
+#' @export
+element_eval.incidence_matrix <- function(obj) {
     dev.c <- numeric(ncol(obj))
     dev.c[] <- NA
     for (j in 1:ncol(obj)) {
@@ -136,8 +176,10 @@ element.eval <- function(obj) {
     RowFit <- RowFit[order(RowFit$p.val, decreasing = TRUE) , ]
 
     results <- list(RowFit = RowFit, ColFit = ColFit)
+    class(results) <- c("list")
     return(results)
 }
+
 
 
 
@@ -148,8 +190,7 @@ element.eval <- function(obj) {
 #' 
 #' From a `list` of strands produced by \code{\link[lakhesis]{ca.procrustes.curve}}, extract two matrices containing the ranks of the rows and columns. The row/column elements are contained in the rows, and the strands are contained in the columns. NA values are entered where a given row/column element is missing from that strand.
 #' 
-#' @param strands A list of `strands`, which are data frames returned by \code{\link[lakhesis]{ca.procrustes.curve}}.
-#' @param obj The intial incidence matrix.
+#' @param strands A \code{list} of class \code{strands}.
 #' 
 #' @return A list of two matrices: 
 #' * `Row` A matrix of the ranks of the row elements.
@@ -158,10 +199,21 @@ element.eval <- function(obj) {
 #' @examples
 #' data("quattrofontanili")
 #' data("qfStrands")
-#' strand.extract(qfStrands, quattrofontanili)
+#' strand_extract(qfStrands)
 #' 
 #' @export
-strand.extract <- function(strands, obj) {
+strand_extract <- function(strands, ...) {
+    UseMethod("strand_extract")
+}  
+
+#' @rdname strand_extract 
+#' @method strand_extract strands
+#' @export
+strand_extract.strands <- function(strands) {
+    obj <- strands[[1]]$im_seriated
+    for (i in 2:length(strands)) {
+        obj <- im_merge(obj, strands[[i]]$im_seriated)
+    }
 
     rowranks <- matrix(NA, nrow = nrow(obj),  ncol = length(strands)) 
     rownames(rowranks) <- rownames(obj)
@@ -170,7 +222,7 @@ strand.extract <- function(strands, obj) {
     rownames(colranks) <- colnames(obj)
 
     for (i in 1:length(strands)) {
-        strand <- strands[[i]]
+        strand <- strands[[i]]$dat
 
         strand.r <- strand[strand$Type == "row", ]
         strand.c <- strand[strand$Type == "col",]
@@ -194,8 +246,7 @@ strand.extract <- function(strands, obj) {
 #' 
 #' Given a list of strands, remove a row or column element and re-run seriation by correspondence analysis with Procrustes fitting (\code{\link[lakhesis]{ca.procrustes.curve}}) to generate a new list of strands that exclude the specified elements. If the resulting strand lacks sufficient points to perform correspondence analysis, that strand is deleted in the output.
 #' 
-#' @param strands A list of strands, which are data frames returned by \code{\link[lakhesis]{ca.procrustes.curve}}.
-#' @param obj The intial incidence matrix.
+#' @param strands A \code{list} of class \code{strands}.
 #' @param elements A vector of one or more row or column ids to suppress.
 #' 
 #' @return A list of the strands.
@@ -203,16 +254,35 @@ strand.extract <- function(strands, obj) {
 #' @examples
 #' data("quattrofontanili")
 #' data("qfStrands")
-#' strand.suppress(qfStrands, quattrofontanili, "QF II 15-16")
+#' strand_suppress(qfStrands, "QF II 15-16")
 #' 
-#' strand.suppress(qfStrands, quattrofontanili, c("QF II 15-16", "I", "XIV"))
+#' strand_suppress(qfStrands, c("QF II 15-16", "I", "XIV"))
 #' 
 #' @export
-strand.suppress <- function(strands, obj, elements) {
+strand_suppress <- function(strands, ...) {
+    UseMethod("strand_suppress")
+}
+
+#' @rdname strand_suppress
+#' @method strand_suppress strands
+#' @export
+strand_suppress.strands <- function(strands, ...) {
+    strand_suppress.default(strands, ...)
+}
+
+#' @rdname strand_suppress
+#' @method strand_suppress default
+#' @export
+strand_suppress.default <- function(strands, elements) {
     new <- list()
+        obj <- strands[[1]]$im_seriated
+        for (i in 2:length(strands)) {
+            obj <- im_merge(obj, strands[[i]]$im_seriated)
+        }
     for (i in 1:length(strands)) {
-        rows <- rownames(strands[[i]])[ !(rownames(strands[[i]]) %in% elements) & (strands[[i]]$Type == "row") ]
-        cols <- rownames(strands[[i]])[ !(rownames(strands[[i]]) %in% elements) & (strands[[i]]$Type == "col") ]
+        strand <- strands[[i]]$dat
+        rows <- rownames(strand)[ !(rownames(strand) %in% elements) & (strand$Type == "row") ]
+        cols <- rownames(strand)[ !(rownames(strand) %in% elements) & (strand$Type == "col") ]
         obj.copy <- obj
         obj.copy <- obj.copy[rows, ]
         obj.copy <- obj.copy[ ,cols]
@@ -220,13 +290,40 @@ strand.suppress <- function(strands, obj, elements) {
         obj.copy <- obj.copy[ , colSums(obj.copy) !=0]
         newstrand <- NULL
         suppressWarnings({
-            newstrand <- ca.procrustes.curve(obj.copy)
+            newstrand <- ca_procrustes_ser(obj.copy)
         })
         if (!is.null(newstrand)) { 
            new[[i]] <- newstrand
         }
     }
+    class(new) <- c("strands", "list")
     return(new)
+}
+
+
+
+
+#' Add Strand to List of Strands
+#' 
+#' Given a list of strands, remove a row or column element and re-run seriation by correspondence analysis with Procrustes fitting (\code{\link[lakhesis]{ca.procrustes.curve}}) to generate a new list of strands that exclude the specified elements. If the resulting strand lacks sufficient points to perform correspondence analysis, that strand is deleted in the output.
+#' 
+#' @param strand An object of class \code{strand} returned by \code{\link[lakhesis]{ca.procrustes.curve}}.
+#' @param strands A \code{list} of strands.
+#'
+#' @return A \code{list} of class \code{strands}.
+#' 
+#' @export 
+strand_add <- function(strand, ...) {
+    UseMethod("strand_add")
+}
+
+#' @rdname strand_add
+#' @method strand_add strand
+#' @export
+strand_add.strand <- function(strand, strands) {
+    strands[[length(strands) + 1]] <- strand
+    class(strands) <- c("strands, list")
+    return(strands)
 }
 
 

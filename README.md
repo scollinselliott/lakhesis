@@ -6,9 +6,9 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The `R` package `lakhesis` provides a heuristic-critical platform for
-seriating binary data matrices through the exploration, selection, and
-consensus of partially seriated sequences.
+The `R` package `lakhesis` provides an interactive platform and critical
+measures for seriating binary data matrices through the exploration,
+selection, and consensus of partially seriated sequences.
 
 In brief, seriation (sequencing, ordination) involves putting a set of
 things in an optimal order. In archaeology, seriation can be used to
@@ -57,13 +57,15 @@ calculator include the following:
   seriated incidence matrix is also displayed in this panel.
 - **Criteria** (Bottom left) Critical coefficients to determine whether
   discordant strands should be removed and/or row or column elements
-  should be suppressed from consideration. Agreement expresses whether a
-  strand agrees with consensus seriation. Concentration expresses how
-  well seriated the strand is with respect to both row and column
-  values. Tabs marked deviance report on the goodness-of-fit of row and
-  column elements in the consensus seriation using deviance with a
-  quadratic-logistic model. Higher $p$ values will indicate poorer fit
-  for a particular row or column element.
+  should be suppressed from consideration.
+  - **Agreement** expresses whether a strand agrees with consensus
+    seriation.
+  - **Concentration** expresses how well seriated the strand is with
+    respect to both row and column values.
+  - Tabs marked **Deviance** report on the goodness-of-fit of row and
+    column elements in the consensus seriation using deviance with a
+    quadratic-logistic model. Higher $p$ values will indicate poorer fit
+    for a particular row or column element.
 - **Modify** (Bottom right) Temporarily suppress row or column values
   from correspondence analysis, including recomputing the seriations
   from previously selected strands. Strands which have low agreement or
@@ -103,14 +105,12 @@ The sidebar contains the following commands:
   elements is contained in the Criteria panel. The function
   `element.eval()` performs this task.
 - **Export Data** Will download results in a single `.rds` file, which
-  is a `list` containing the following objects:
-  - `results` The results of `lakhesize()`, itself a `list` which
-    contains the consensus seriation, the row and column PCA, and
-    coefficients of agreement and concentration.
+  is a `list` class object containing the following:
+  - `consensus` The results of `lakhesize()`, a `lakhesis` class object
+    containing row and column consensus seriations, the row and column
+    PCA, coefficients of agreement and concentration, and the seriated
+    incidence matrix.
   - `strands` The strands selected to produce `results`.
-  - `im.seriated` The seriated incidence matrix (this matrix only
-    includes row and column elements selected in the strands, not all
-    rows and columns of the initial dataset).
 
 ## Installation
 
@@ -133,10 +133,36 @@ LC()
 
 Note that in uploading a `csv` file for analysis inside the Lakhesis
 Calculator, the file should consist of just two columms without headers.
-If data are already in incidence matrix format, the `im.long()` function
+If data are already in incidence matrix format, the `im_long()` function
 in `lakhesis` can be used to convert an incidence matrix to be exported
 into the necessary long format, using the `write.table()` function to
-export (see documentation on `im.long()`).
+export (see documentation on `im_long()`).
+
+The core of `lakhesis` lies in singular value decomposition (SVD), as it
+does with both PCA and CA, and so the same caveats apply in terms of the
+rotation of axes in the graphical display of principal scores. The
+Lakhesis Calculator enables the temprorary suppression of row or column
+elements from the plots, with zero rows/columns automatically removed.
+As such, unexpected results may be elicited if key elements are
+supressed. All elements can easily be re-added and the starting
+incidence matrix re-initialized.
+
+As Lakhesis analysis uses simulation to derive a consensus seration, it
+is recommended that one check for the potential of an even more optimal
+conensus seriation by running the `lakhesize()` function using the
+method `"optimize"`, especially if there are a high number of `strands`:
+
+``` r
+data("qfStrands")
+
+# exploratory method is used in the calculator to reduce computing time (iterations = 100)
+x <- lakhesize(qfStrands, method = "exporatory", iter = 100, sim = 1)
+summary(x)
+
+# optimal method may reduce the number of iterations and use more simulation runs. The output comprises the consensus seriation with the lowest concentration measure attained:
+y <- lakhesize(qfStrands, method = "optimize", iter = 20, sim = 20)
+summary(y)
+```
 
 ## Bibliography
 

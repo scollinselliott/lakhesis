@@ -4,37 +4,50 @@
 \alias{lakhesize}
 \title{Lakhesize}
 \usage{
-lakhesize(strands, obj)
+lakhesize(strands, ...)
 }
 \arguments{
-\item{strands}{A \code{list} of strands, which are data frames returned by \code{\link[lakhesis]{ca.procrustes.curve}}.}
+\item{strands}{A \code{list} of the \code{strands} class, comprised of \code{strand} objects returned by \code{\link[lakhesis]{ca.procrustes.curve}}.}
 
 \item{obj}{The intial incidence matrix.}
+
+\item{method}{Either \code{"exploratory"} or \code{"optimized"}. The \code{"exploratory"} method is teh default, used in the Lakhesis Calculator (\code{\link[lakhesis]{LC}}).}
+
+\item{iter}{The number of iterations to use in lakhesizing the \code{strands}. The default is set at 100, also used for \code{"exploratory"}.}
+
+\item{sim}{The number of simulation runs of iterations. The default is set at 1, also used for \code{"exploratory"}. Increasing the number of simulations will better ensure an optin}
 }
 \value{
-A \code{list} of the following:
+A \code{list} of class \code{lakhesis} containing the following:
 \itemize{
-\item \code{RowConsensus} Data frame of the consensus seriation of the row elements in the order of their projection on the first principal axis. Contains one column, \code{Row}.
-\item \code{ColConsensus} Data frame of the consensus seriation of the column elements in the order of their project onto the first principal axis. Contains one column, \code{Column}.
-\item \code{RowPCA} The results of \verb{\link[stats]\{prcomp\}} performed on the row elements of strands.
-\item \code{ColPCA} The results of \verb{\link[stats]\{prcomp\}} performed on the column elements of strands.
-\item \code{Coef}  A data frame containing the coefficients of agreement and concentration:
+\item \code{row} A seriated vector of row elements.
+\item \code{col} A seriated vector of column elements
+\item \code{rowPCA} The results of \code{\link[stats]{prcomp}} performed on the row elements of \code{strands}.
+\item \code{colPCA} The results of \code{\link[stats]{prcomp}} performed on the column elements of \code{strands}.
+\item \code{coef}  A \code{data frame} containing the following columns:
 \itemize{
 \item \code{Strand} The number of the strand.
-\item \code{Consensus.Spearman.Sq} the measure of agreement, i.e., how well each strand accords with the consensus seriation. Using the square of Spearman's rank correlation coefficient, \eqn{\rho^2}, between each strand and the consensus ranking, agreement is computed as the product of \eqn{\rho^2} for their row and column rankings, \eqn{\rho_r^2}\eqn{\rho_c^2}.
-\item \code{Concentration.Kappa} the concentration coefficient \eqn{\kappa}, which provides a measure of the optimality of each strand (see \code{\link[lakhesis]{kappa.coef}}).
+\item \code{Agreement} The measure of agreement, i.e., how well each strand accords with the consensus seriation. Using the square of Spearman's rank correlation coefficient, \eqn{\rho^2}, between each strand and the consensus ranking, agreement is computed as the product of \eqn{\rho^2} for their row and column rankings, \eqn{\rho_r^2}\eqn{\rho_c^2}.
+\item \code{Concentration} the concentration coefficient \eqn{\kappa}, which provides a measure of the optimality of each strand (see \code{\link[lakhesis]{kappa.coef}}).
 }
+\item \code{im_seriated} The seriated incidence matrix, of class \code{incidence_matrix}.
 }
 }
 \description{
-This function returns the row and column consensus seriation for a \code{list} of strands, containing their rankings, the results of their PCA, and coefficients of association and concentration.
+This function returns the exploratory row and column consensus seriation for a \code{list} object of the \code{strands} class, containing their rankings, the results of their PCA, and coefficients of association and concentration.
 }
 \details{
-Consensus seriation is achieved by iterative, multi-step linear regression using simulation. On one iteration, strands are chosen at random, omitting incomplete or missing pairs, using PCA to determine the best-fitting line for their rankings. Both strands' rankings are then regressed onto that line to determine missing values, and then re-ranked, repeating until all strands have been regressed. PCA of the simulated rankings is then used to determine the final sequence of the row and column elements.
+Consensus seriation is achieved by iterative, multi-step linear regression using random simulation. On one iteration, strands are chosen at random, omitting incomplete or missing pairs, using PCA to determine the best-fitting line for their rankings. Both strands' rankings are then regressed onto that line to determine missing values, and then re-ranked, repeating until all strands have been regressed. PCA of the simulated rankings is then used to determine the final sequence of the row and column elements.
+
+Two \code{method} options are available:
+\itemize{
+\item \code{"exploratory"} is used in the Lakhesis calculator (\code{\link[lakhesis]{LC}}), with 100 iterations (\code{sim = 100, opt = 1}).
+\item \code{"optimize"} is recommended for post-exploratory analysis, to determine if a more optimal seriations can be found for the initial "exploratory" result. The number of iterations (\code{iter}) and simulation runs of iterations (\code{sim}) can be increased. The seriation obtained which yields the lowest (most optimal) measure of concentration \eqn{\kappa} (see \code{\link[lakhesis]{conc_kappa}}) chosen as the output.
+}
 }
 \examples{
-data("quattrofontanili")
 data("qfStrands")
-lakhesize(qfStrands, quattrofontanili)
+x <- lakhesize(qfStrands, method = "exploratory")
+# summary(x) 
 
 }

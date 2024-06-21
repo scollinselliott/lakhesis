@@ -1,33 +1,41 @@
 #' Correspondence Analysis with Procrustes Fitting
 #'
-#' Fit scores of correspondence analysis on an incidence matrix to those produced by reference matrix which contain an ideal seriation using a Procrustes method (on the reference matrix, see \code{\link[lakhesis]{im.ref}}). Rotation is determined by minimizing Euclidean distance from each row score to the nearest reference row score. Correspondence analysis is performed using the \code{\link[ca]{ca}} package \insertCite{nenadic_correspondence_2007}{lakhesis}.
+#' Fit scores of correspondence analysis on an incidence matrix to those produced by reference matrix which contain an ideal seriation using a Procrustes method (on the reference matrix, see \code{\link[lakhesis]{im_ref}}). Rotation is determined by minimizing Euclidean distance from each row score to the nearest reference row score. Correspondence analysis is performed using the \code{\link[ca]{ca}} package \insertCite{nenadic_correspondence_2007}{lakhesis}.
 #'
 #' @param obj An incidence matrix of size n x k.
-#' @returns A list of the following:.
-#' 
+#' @returns A \code{list} object of class \code{strand} containing the following:
 #' * `ref` The Procrustes-fit coordinates of the scores of the reference seriation.
 #' * `x` The Procrustes-fit coordinates of the row scores of the data.
-#' * `x.dat` A data frame containing the following information related to the fit of the row score after Procrustes fitting: `index`, the row name, `match`, the reference point nearest to the row score, and `dist`, the Euclidean distance between the row score and reference score point.
 #' * `y` The Procrustes-fit coordinates of the column scores of the data.
-#' * `y.dat` A data frame containing the same information as `x.dat`, but with respect to the column scores.
 #' 
 #' @examples 
 #' data("quattrofontanili")
-#' ca.procrustes(quattrofontanili)
+#' s <- ca_procrustes(quattrofontanili)
+#' # print(s)
 #' 
 #' @references
 #'   \insertAllCited{}
 #' 
 #' @export
 #' @importFrom Rdpack reprompt
-ca.procrustes <- function(obj) {
+ca_procrustes <- function(obj) {
+    UseMethod("ca_procrustes")
+}
+#'
+#' @export
+ca_procrustes.default <- function(obj) {
+    stop(paste('ca_procrustes cannot take input of class "', class(obj), '" ', sep =''))
+}
+
+#' @export
+ca_procrustes.matrix <- function(obj) {
     transposed = FALSE
     if (nrow(obj) > ncol(obj)) {
         obj <- t(obj)
         transposed = TRUE
     }
 
-    ref <- im.ref(obj)
+    ref <- im_ref(obj)
 
     G.r <- ca::ca(obj)$rowcoord[,1:2]
     G.c <- ca::ca(obj)$colcoord[,1:2]
@@ -81,170 +89,144 @@ ca.procrustes <- function(obj) {
     x.r.rot <- x.r %*% rotate
     x.c.rot <- x.c %*% rotate
 
-    argmin <- c()
-    rss <- c()
-    for (k in 1:nrow(x.r)) {
-        rss1 <- min( rowSums(( t(matrix(x.r.rot[k,],  nrow = 2, ncol = nrow(ref.r)))  - ref.r)^2) )
-        idx <- which.min(rowSums(( t(matrix(x.r.rot[k,],  nrow = 2, ncol = nrow(ref.r)))  - ref.r)^2))
-
-        argmin <- c(argmin, idx)
-        rss <- c(rss, rss1)
-    }
-
-    dat.x <- data.frame(index = rownames(x.r.rot), match = argmin, dist = rss)
-
-    argmin.c <- c()
-    rss.c <- c()
-    for (k in 1:nrow(x.c)) {
-        rss1 <- min( rowSums(( t(matrix(x.c.rot[k,],  nrow = 2, ncol = nrow(ref.r)))  - ref.r)^2) )
-        idx <- which.min(rowSums(( t(matrix(x.c.rot[k,],  nrow = 2, ncol = nrow(ref.r)))  - ref.r)^2))
-
-        argmin.c <- c(argmin.c, idx)
-        rss.c <- c(rss.c, rss1)
-    }
-
-    dat.y <- data.frame(index = rownames(x.c.rot), match = argmin.c, dist = rss.c)
-
     results <- list()
 
     results[['ref']] <- ref.r
     if (transposed == FALSE) {
-    results[['x']] <- x.r.rot
-    results[['y']] <- x.c.rot
-    results[['x.dat']] <- dat.x
-    results[['y.dat']] <- dat.y
+        results[['x']] <- x.r.rot
+        results[['y']] <- x.c.rot
+        #results[['x.dat']] <- dat.x
+        #results[['y.dat']] <- dat.y
     }
     if (transposed == TRUE) {
-    results[['y']] <- x.r.rot
-    results[['x']] <- x.c.rot
-    results[['y.dat']] <- dat.x
-    results[['x.dat']] <- dat.y
+        results[['y']] <- x.r.rot
+        results[['x']] <- x.c.rot
+        #results[['y.dat']] <- dat.x
+        #results[['x.dat']] <- dat.y
     }
+
+    class(results) <- c("procrustean", "list")
 
     return(results)
 }
 
-
-
-#' Projection onto Reference Curve
-#'
-#' Performs a polynomial regression on the row reference scores and orthogonally projects data points on to the reference curve. Sampling can be increased to refine ranking and avoid ties, but default is largely sufficient. Correspondence analysis is performed using the \code{\link[ca]{ca}} package \insertCite{nenadic_correspondence_2007}{lakhesis}.
-#'
-#' @param obj An incidence matrix of size n x k.
-#' @param resolution Number of samples to use for plotting points along polynomial curve (default is 10000).
-#' @returns A list of the following:.
-#' * `ref`` The Procrustes-fit coordinates of the scores of the reference seriation.
-#' * `x` The Procrustes-fit coordinates of the row scores of the data.
-#' * `x.dat` A data frame containing the following information related to the fit of the row score after Procrustes fitting: `index`, the row name, `match`, the reference point nearest to the row score, and `dist`, the Euclidean distance between the row score and reference score point.
-#' * `y` The Procrustes-fit coordinates of the column scores of the data.
-#' * `y.dat` A data frame containing the same information as `x.dat`, but with respect to the column scores.
-#' 
-#' @examples
-#' data("quattrofontanili")
-#' ca.procrustes.poly(quattrofontanili)
-#' 
-#' @references
-#'   \insertAllCited{}
-#' 
 #' @export
-#' @importFrom Rdpack reprompt
-ca.procrustes.poly <- function(obj, resolution = 10000) {
-    obj.procca <- ca.procrustes(obj)    
-    ref.r <- obj.procca$ref
-    x.r.rot <- obj.procca$x
-    x.c.rot <- obj.procca$y
-    x <- ref.r[,1]
-    y <- ref.r[,2]
-
-    # polynomial fitting
-    xx <- seq(-1, 1, length.out = resolution)
-    fit <- stats::lm(y ~ x + I(x^2))
-    yy <- stats::predict(fit, data.frame(x = xx))
-    ref2.r <- as.matrix(cbind(xx,yy))
-
-    # row points
-    index <- c()
-    rss <- c()
-    x.prc <- c()
-    y.prc <- c()
-    for (k in 1:nrow(x.r.rot)) {
-        rss1 <- min( rowSums(( t(matrix(x.r.rot[k,],  nrow = 2, ncol = nrow(ref2.r)))  - ref2.r)^2) )
-        idx <- which.min(rowSums(( t(matrix(x.r.rot[k,],  nrow = 2, ncol = nrow(ref2.r)))  - ref2.r)^2))
-        index <- c(index, idx)
-        x.prc <- c(x.prc, ref2.r[idx,1])
-        y.prc <- c(y.prc, ref2.r[idx,2])
-        rss <- c(rss, rss1)
-    }
-    x.dat <- data.frame(index = index, x.prc = x.prc, y.prc = y.prc, dist = rss)
-    rownames(x.dat) <- rownames(obj)
-
-    # col points
-    index <- c()
-    rss <- c()
-    x.prc <- c()
-    y.prc <- c()
-    for (k in 1:nrow(x.c.rot)) {
-        rss1 <- min( rowSums(( t(matrix(x.c.rot[k,],  nrow = 2, ncol = nrow(ref2.r)))  - ref2.r)^2) )
-        idx <- which.min(rowSums(( t(matrix(x.c.rot[k,],  nrow = 2, ncol = nrow(ref2.r)))  - ref2.r)^2))
-        index <- c(index, idx)
-        x.prc <- c(x.prc, ref2.r[idx,1])
-        y.prc <- c(y.prc, ref2.r[idx,2])
-        rss <- c(rss, rss1)
-    }
-    y.dat <- data.frame(index = index, x.prc = x.prc, y.prc = y.prc, dist = rss)
-    rownames(y.dat) <- colnames(obj)
-
-    results <- list()
-    results$proc <- obj.procca
-    results$fit <- fit
-    results$rank.x <- x.dat
-    results$rank.y <- y.dat
-    return(results)
+ca_procrustes.incidence_matrix <- function(obj) {
+    ca_procrustes.matrix(obj)
 }
 
 
 
-#' Seriate Using Reference Curve
+#' Seriate Using Reference Curve for Procrustes-Fit CA Scores
 #' 
 #' Obtain a ranking of row and column scores projected onto a reference curve of an ideal seriation (row and column scores are ranked separately). Scores of correspondence analysis have been fit to those produced by reference matrix contain an ideal seriation using a Procrustes method, projecting them. Rotation is determined by minimizing Euclidean distance from each row score to the nearest reference row score. Correspondence analysis is performed using the \code{\link[ca]{ca}} package \insertCite{nenadic_correspondence_2007}{lakhesis}.
 #'
 #' @param obj An incidence matrix of size n x k.
-#' @param resolution Number of samples to use for plotting points along polynomial curve (default is 10000).
-#' @return A data frame of the following:.
-#' * `Procrustes1,Procrustes2` The location of the point on the biplot after fitting.
-#' * `CurveIndex` The orthogonal projection of the point onto the reference curve, given as the index of the point sampled along \eqn{y = \beta_2 x^2 + \beta_0}. 
-#' * `Distance` The squared Euclidean distance of the point to the nearest point on the reference curve.
-#' * `Rank` The ranking of the row or column, a range of `1:nrow`` and `1:ncol``.
-#' * `Type` Either `row` or `col`.
-#' * `sel` Data frame column used in `shiny` app to indicate whether point is selected in biplot/curve projection.
-#'
+#' @param samples Number of samples to use for plotting points along polynomial curve. Default is \code{10^5}.
+#' @return A \code{list} of class \code{strand} containing the following:.
+#' * \code{$dat} A data frame with the following columns:
+#'   * \code{Procrustes1, Procrustes2} The location of the point on the biplot after fitting.
+#'   * \code{CurveIndex} The orthogonal projection of the point onto the reference curve, given as the index of the point sampled along \eqn{y = \beta_2 x^2 + \beta_0}. 
+#'   * \code{Distance} The squared Euclidean distance of the point to the nearest point on the reference curve.
+#'   * \code{Rank} The ranking of the row or column, a range of `1:nrow`` and `1:ncol``.
+#'   * \code{Type} Either `row` or `col`.
+#'   * \code{sel} Data frame column used in \code{shiny} app to indicate whether point is selected in biplot/curve projection.
+#' * \code{$im_seriated} The seriated incidence matrix, of class \code{incidence_matrix}.
+#' 
 #' @examples
 #' data("quattrofontanili")
-#' ca.procrustes.curve(quattrofontanili)
+#' s <- ca_procrustes_ser(quattrofontanili)
+#' # print(s)
+#' # summary(s)
 #' 
 #' @references
 #'   \insertAllCited{}
 #' 
 #' @export
 #' @importFrom Rdpack reprompt
-ca.procrustes.curve <- function(obj, resolution = 10000) {
+ca_procrustes_ser <- function(obj, samples = 10^5) {
+    UseMethod("ca_procrustes_ser")
+}
+
+#' @export
+ca_procrustes_ser.incidence_matrix <- function(obj, samples = 10^5) {
+    ca_procrustes_ser.matrix(obj, samples = 10^5)
+}
+
+#' @export
+ca_procrustes_ser.matrix <- function(obj, samples = 10^5) {
     if ((nrow(obj) > 2 ) & (ncol(obj) > 2) ) {
-        mat.proc.poly <- ca.procrustes.poly(obj, resolution)
-        mat.procca <- mat.proc.poly$proc
-        r.idx <- mat.proc.poly$rank.x$index
-        c.idx <- mat.proc.poly$rank.y$index
+
+        obj.procca <- ca_procrustes(obj)
+        ref.r <- obj.procca$ref
+        x.r.rot <- obj.procca$x
+        x.c.rot <- obj.procca$y
+        x <- ref.r[,1]
+        y <- ref.r[,2]
+
+        # polynomial fitting
+        xx <- seq(-1, 1, length.out = samples)
+        fit <- stats::lm(y ~ x + I(x^2))
+        yy <- stats::predict(fit, data.frame(x = xx))
+        ref2.r <- as.matrix(cbind(xx,yy))
+
+        # row points
+        index <- c()
+        rss <- c()
+        x.prc <- c()
+        y.prc <- c()
+        for (k in 1:nrow(x.r.rot)) {
+            rss1 <- min( rowSums(( t(matrix(x.r.rot[k,],  nrow = 2, ncol = nrow(ref2.r)))  - ref2.r)^2) )
+            idx <- which.min(rowSums(( t(matrix(x.r.rot[k,],  nrow = 2, ncol = nrow(ref2.r)))  - ref2.r)^2))
+            index <- c(index, idx)
+            x.prc <- c(x.prc, ref2.r[idx,1])
+            y.prc <- c(y.prc, ref2.r[idx,2])
+            rss <- c(rss, rss1)
+        }
+        x.dat <- data.frame(index = index, x.prc = x.prc, y.prc = y.prc, dist = rss)
+        rownames(x.dat) <- rownames(obj)
+
+        # col points
+        index <- c()
+        rss <- c()
+        x.prc <- c()
+        y.prc <- c()
+        for (k in 1:nrow(x.c.rot)) {
+            rss1 <- min( rowSums(( t(matrix(x.c.rot[k,],  nrow = 2, ncol = nrow(ref2.r)))  - ref2.r)^2) )
+            idx <- which.min(rowSums(( t(matrix(x.c.rot[k,],  nrow = 2, ncol = nrow(ref2.r)))  - ref2.r)^2))
+            index <- c(index, idx)
+            x.prc <- c(x.prc, ref2.r[idx,1])
+            y.prc <- c(y.prc, ref2.r[idx,2])
+            rss <- c(rss, rss1)
+        }
+        y.dat <- data.frame(index = index, x.prc = x.prc, y.prc = y.prc, dist = rss)
+        rownames(y.dat) <- colnames(obj)
+
+        r.idx <- x.dat$index
+        c.idx <- y.dat$index
+
         r.rank <- rank(r.idx)
         c.rank <- rank(c.idx)
-        ord.row1 <- data.frame(Procrustes1 = mat.procca$x[,1], Procrustes2 = mat.procca$x[,2], CurveIndex = r.idx, Distance = mat.proc.poly$rank.x$dist, Rank = r.rank)
-        rownames(ord.row1) <- rownames(mat.proc.poly$rank.x)
+        ord.row1 <- data.frame(Procrustes1 = obj.procca$x[,1], Procrustes2 = obj.procca$x[,2], CurveIndex = r.idx, Distance = x.dat$dist, Rank = r.rank)
+        rownames(ord.row1) <- rownames(x.dat)
         ord.row1$Type <- factor("row")
-        ord.col1 <- data.frame(Procrustes1 = mat.procca$y[,1], Procrustes2 = mat.procca$y[,2], CurveIndex = c.idx, Distance = mat.proc.poly$rank.y$dist, Rank = c.rank)
-        rownames(ord.col1) <- rownames(mat.proc.poly$rank.y)
+        ord.col1 <- data.frame(Procrustes1 = obj.procca$y[,1], Procrustes2 = obj.procca$y[,2], CurveIndex = c.idx, Distance = y.dat$dist, Rank = c.rank)
+        rownames(ord.col1) <- rownames(y.dat)
         ord.col1$Type <- factor("col")
         proc.ranking <- rbind(ord.row1,ord.col1)
         proc.ranking$sel <- FALSE
-        return(proc.ranking)
+        class(proc.ranking) <- c("data.frame")
+        R <- rownames(x.dat)[order(r.rank)]
+        C <- rownames(y.dat)[order(c.rank)]
+        im_seriated <- obj[R, C]
+        class(im_seriated) <- c("incidence_matrix", "matrix", "array")
+        strand <- list(dat = proc.ranking, im_seriated = im_seriated)
+        class(strand) <- c("strand", "list")
+        return(strand)
     } else {
-        message("Insufficient points for correspondence analysis.")
+        message("Insufficient rows and columns for correspondence analysis.")
     }
 }
+
+
+
