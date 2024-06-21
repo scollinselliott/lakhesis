@@ -140,7 +140,7 @@ plot.lakhesis <- function(result, display = "im_seriated") {
         k <- conc_kappa(im_seriated)
         ttl <- paste(format(nrow(im_seriated))," x ",format(ncol(im_seriated)),"; kappa = ",format(k), sep = "")
         im_Image <- t(im_seriated[nrow(im_seriated):1 , ])
-        image(im_Image, col=c('white','black'), xaxt='n', yaxt='n', main = ttl)
+        graphics::image(im_Image, col=c('white','black'), xaxt='n', yaxt='n', main = ttl)
     } else if (display == "rowPCA") {
         biplot(result$rowPCA)
     } else if (display == "colPCA") {
@@ -168,6 +168,6 @@ plot.incidence_matrix <- function(im_seriated) {
     k <- conc_kappa(im_seriated)
     ttl <- paste(format(nrow(im_seriated))," x ",format(ncol(im_seriated)),"; kappa = ",format(k), sep = "")
     im_Image <- t(im_seriated[nrow(im_seriated):1 , ])
-    image(im_Image, col=c('white','black'), xaxt='n', yaxt='n', main = ttl)
+    graphics::image(im_Image, col=c('white','black'), xaxt='n', yaxt='n', main = ttl)
 }
 

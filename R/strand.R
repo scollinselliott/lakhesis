@@ -88,7 +88,7 @@ conc_kappa.matrix <- function(obj) {
 
 #' @export
 conc_kappa.incidence_matrix <- function(obj) {
-    conc_kappa.incidence_matrix(obj)
+    conc_kappa.matrix(obj)
 }
 
 
