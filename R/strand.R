@@ -177,7 +177,7 @@ element_eval.incidence_matrix <- function(obj) {
 
 #' Strand Extract
 #' 
-#' From a `list` of strands produced by \code{\link[lakhesis]{ca.procrustes.curve}}, extract two matrices containing the ranks of the rows and columns. The row/column elements are contained in the rows, and the strands are contained in the columns. NA values are entered where a given row/column element is missing from that strand.
+#' From a `list` of strands produced by \code{\link[lakhesis]{ca_procrustes_ser}}, extract two matrices containing the ranks of the rows and columns. The row/column elements are contained in the rows, and the strands are contained in the columns. NA values are entered where a given row/column element is missing from that strand.
 #' 
 #' @param strands A \code{list} of class \code{strands}.
 #' 
@@ -231,7 +231,7 @@ strand_extract.strands <- function(strands) {
 
 #' Suppress Element from Strands
 #' 
-#' Given a list of strands, remove a row or column element and re-run seriation by correspondence analysis with Procrustes fitting (\code{\link[lakhesis]{ca.procrustes.curve}}) to generate a new list of strands that exclude the specified elements. If the resulting strand lacks sufficient points to perform correspondence analysis, that strand is deleted in the output.
+#' Given a list of strands, remove a row or column element and re-run seriation by correspondence analysis with Procrustes fitting (\code{\link[lakhesis]{ca_procrustes_ser}}) to generate a new list of strands that exclude the specified elements. If the resulting strand lacks sufficient points to perform correspondence analysis, that strand is deleted in the output.
 #' 
 #' @param strands A \code{list} of class \code{strands}.
 #' @param elements A vector of one or more row or column ids to suppress.
@@ -291,9 +291,9 @@ strand_suppress.default <- function(strands, elements) {
 
 #' Add Strand to List of Strands
 #' 
-#' Given a list of strands, remove a row or column element and re-run seriation by correspondence analysis with Procrustes fitting (\code{\link[lakhesis]{ca.procrustes.curve}}) to generate a new list of strands that exclude the specified elements. If the resulting strand lacks sufficient points to perform correspondence analysis, that strand is deleted in the output.
+#' Given a list of strands, remove a row or column element and re-run seriation by correspondence analysis with Procrustes fitting (\code{\link[lakhesis]{ca_procrustes_ser}}) to generate a new list of strands that exclude the specified elements. If the resulting strand lacks sufficient points to perform correspondence analysis, that strand is deleted in the output.
 #' 
-#' @param strand An object of class \code{strand} returned by \code{\link[lakhesis]{ca.procrustes.curve}}.
+#' @param strand An object of class \code{strand} returned by \code{\link[lakhesis]{ca_procrustes_ser}}.
 #' @param strands A \code{list} of strands.
 #'
 #' @return A \code{list} of class \code{strands}.
