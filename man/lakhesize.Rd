@@ -9,20 +9,20 @@
 \usage{
 lakhesize(strands, ...)
 
-\method{lakhesize}{strands}(strands, method = "exploratory", iter = 100, sim = 1)
+\method{lakhesize}{strands}(strands, iter = 100, sim = 1, pbar = TRUE)
 
-\method{lakhesize}{default}(strands, method = "exploratory", iter = 100, sim = 1)
+\method{lakhesize}{default}(strands, iter = 100, sim = 1, pbar = TRUE)
 
 \method{plot}{lakhesis}(result, display = "im_seriated")
 }
 \arguments{
-\item{strands}{A \code{list} of the \code{strands} class, comprised of \code{strand} objects returned by \code{\link[lakhesis]{ca.procrustes.curve}}.}
+\item{strands}{A \code{list} of the \code{strands} class (see \code{\link[lakhesis]{add_strand}}).}
 
-\item{method}{Either \code{"exploratory"} or \code{"optimized"}. The \code{"exploratory"} method is teh default, used in the Lakhesis Calculator (\code{\link[lakhesis]{LC}}).}
+\item{iter}{The number of iterations to use in lakhesizing the \code{strands}. The default is set at 100.}
 
-\item{iter}{The number of iterations to use in lakhesizing the \code{strands}. The default is set at 100, also used for \code{"exploratory"}.}
+\item{sim}{The number of simulation runs of iterations. The default is set at 1. Increasing the number of simulations will better ensure an optimal ordering.}
 
-\item{sim}{The number of simulation runs of iterations. The default is set at 1, also used for \code{"exploratory"}. Increasing the number of simulations will better ensure an optin}
+\item{pbar}{Displaying a progress bar. Default is \code{TRUE}.}
 
 \item{obj}{The intial incidence matrix.}
 }
@@ -43,20 +43,16 @@ A \code{list} of class \code{lakhesis} containing the following:
 }
 }
 \description{
-This function returns the exploratory row and column consensus seriation for a \code{list} object of the \code{strands} class, containing their rankings, the results of their PCA, and coefficients of association and concentration.
+This function returns the row and column consensus seriation for a \code{list} object of the \code{strands} class, containing their rankings, the results of their PCA, and coefficients of association and concentration.
 }
 \details{
-Consensus seriation is achieved by iterative, multi-step linear regression using random simulation. On one iteration, strands are chosen at random, omitting incomplete or missing pairs, using PCA to determine the best-fitting line for their rankings. Both strands' rankings are then regressed onto that line to determine missing values, and then re-ranked, repeating until all strands have been regressed. PCA of the simulated rankings is then used to determine the final sequence of the row and column elements.
+Consensus seriation is achieved by iterative linear regression using random simulation. On one iteration, strands are chosen at random, omitting incomplete or missing pairs, using PCA to determine the best-fitting line for their rankings. Both strands' rankings are then regressed onto that line to determine missing values, and then re-ranked, repeating until all strands have been regressed. PCA of the simulated rankings is then used to determine the final sequence of the row and column elements.
 
-Two \code{method} options are available:
-\itemize{
-\item \code{"exploratory"} is used in the Lakhesis calculator (\code{\link[lakhesis]{LC}}), with 100 iterations (\code{sim = 100, opt = 1}).
-\item \code{"optimize"} is recommended for post-exploratory analysis, to determine if a more optimal seriations can be found for the initial "exploratory" result. The number of iterations (\code{iter}) and simulation runs of iterations (\code{sim}) can be increased. The seriation obtained which yields the lowest (most optimal) measure of concentration \eqn{\kappa} (see \code{\link[lakhesis]{conc_kappa}}) chosen as the output.
-}
+A default setting of 100 iterations (\code{iter = 100, sim = 1}) is used in the Lakhesis calculator (\code{\link[lakhesis]{LC}}). Increasing simulations is recommended for post-exploratory analysis, to determine if a more optimal seriations can be found than the estimate yielded from the initial "exploratory" result. The number of iterations (\code{iter}) and simulation runs of iterations (\code{sim}) can be increased. The simultation run which yields the lowest (most optimal) measure of concentration \eqn{\kappa} (see \code{\link[lakhesis]{conc_kappa}}) chosen as the output.
 }
 \examples{
 data("qfStrands")
-x <- lakhesize(qfStrands, method = "exploratory")
+x <- lakhesize(qfStrands, pbar = FALSE)
 # summary(x) 
 
 }
