@@ -36,7 +36,7 @@ lakhesize <- function(strands, ...) {
 #' @rdname lakhesize
 #' @export 
 lakhesize.strands <- function(strands, iter = 100, sim = 1, pbar = TRUE) {
-    lakhesize.default(strands, method, iter, sim)
+    lakhesize.default(strands, iter, sim)
 }
 
 #' @rdname lakhesize
