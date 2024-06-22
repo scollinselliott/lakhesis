@@ -161,7 +161,7 @@ server <- function(input, output, session) {
             results$strand_backup <- isolate(results$strands)
             m <- isolate(mats$mat_initial)
             suppressWarnings({
-                results$lakhesis_results <- lakhesize(s, method = "exploratory") 
+                results$lakhesis_results <- lakhesize(s, pbar = FALSE) 
             })
             results$lakhesized <- TRUE
             selections$biplot[] <- FALSE
@@ -254,7 +254,7 @@ server <- function(input, output, session) {
 
             mats$mat <- mats$mat_initial
             suppressWarnings({
-               results$lakhesis_results <- lakhesize(isolate(results$strands), method = "exploratory") 
+               results$lakhesis_results <- lakhesize(isolate(results$strands), pbar = FALSE) 
             })
             selections$biplot[] <- FALSE
             selections$curve[] <- FALSE
@@ -283,7 +283,7 @@ server <- function(input, output, session) {
 
             mats$mat <- mats$mat_initial
             suppressWarnings({
-            results$lakhesis_results <- lakhesize(isolate(results$strands), method = "exploratory") 
+            results$lakhesis_results <- lakhesize(isolate(results$strands), pbar = FALSE) 
             })
             selections$biplot[] <- FALSE
             selections$curve[] <- FALSE
@@ -332,7 +332,7 @@ server <- function(input, output, session) {
             # lakhesize to ensure that all row/col elements from strands are in results if user has not performed this action
             s <- isolate(results$strands)
             suppressWarnings({
-            results$lakhesis_results <- lakhesize(s, method = "exploratory") 
+            results$lakhesis_results <- lakhesize(s, pbar = FALSE) 
             })
             lr <- isolate(results$lakhesis_results)
             results <- list(consensus = lr, strands = s)
