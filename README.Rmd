@@ -67,20 +67,22 @@ Note that in uploading a `csv` file for analysis inside the Lakhesis Calculator,
 
 The core of `lakhesis` lies in singular value decomposition (SVD), as it does with both PCA and CA, and so the same caveats apply in terms of the rotation of axes in the graphical display of principal scores. The Lakhesis Calculator enables the temporary suppression of row or column elements from the plots, with zero rows/columns automatically removed. As such, unexpected results may be elicited if key elements are suppressed. All elements can easily be re-added and the starting incidence matrix re-initialized.
 
-As Lakhesis analysis uses simulation to derive a consensus seriation, it is recommended that one check for the potential of an even more optimal consensus seriation by running the `lakhesize()` function using the method `"optimize"`, especially if there are a high number of `strands`:
+As Lakhesis analysis uses simulation to derive a consensus seriation, it is recommended that one check for the potential of an even more optimal consensus seriation by running the `lakhesize()` function using more simulation runs, especially if there are a high number of `strands`:
 
 ``` r
 data("qfStrands")
 
-# exploratory method is used in the calculator to reduce computing time (iterations = 100)
-x <- lakhesize(qfStrands, method = "exporatory", iter = 100, sim = 1)
+# 1 simulation is used in the calculator to reduce computing time
+x <- lakhesize(qfStrands, iter = 100, sim = 1)
 summary(x)
 
-# optimal method may reduce the number of iterations and use more simulation runs 
-# to attain consensus seriation with the lowest concentration measure 
-y <- lakhesize(qfStrands, method = "optimize", iter = 20, sim = 20)
+# post-exploratory check with lower iterations and use more simulation runs 
+# to attain consensus seriation with a lower concentration measure 
+y <- lakhesize(qfStrands, iter = 20, sim = 20)
 summary(y)
 ```
+
+The vignette "A Guide to Lakhesis" contains more information on usage.
 
 ## Bibliography
 
