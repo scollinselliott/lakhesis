@@ -149,21 +149,23 @@ incidence matrix re-initialized.
 
 As Lakhesis analysis uses simulation to derive a consensus seriation, it
 is recommended that one check for the potential of an even more optimal
-consensus seriation by running the `lakhesize()` function using the
-method `"optimize"`, especially if there are a high number of `strands`:
+consensus seriation by running the `lakhesize()` function using more
+simulation runs, especially if there are a high number of `strands`:
 
 ``` r
 data("qfStrands")
 
-# exploratory method is used in the calculator to reduce computing time (iterations = 100)
-x <- lakhesize(qfStrands, method = "exporatory", iter = 100, sim = 1)
+# 1 simulation is used in the calculator to reduce computing time
+x <- lakhesize(qfStrands, iter = 100, sim = 1)
 summary(x)
 
-# optimal method may reduce the number of iterations and use more simulation runs 
-# to attain consensus seriation with the lowest concentration measure 
-y <- lakhesize(qfStrands, method = "optimize", iter = 20, sim = 20)
+# post-exploratory check with lower iterations and use more simulation runs 
+# to attain consensus seriation with a lower concentration measure 
+y <- lakhesize(qfStrands, iter = 20, sim = 20)
 summary(y)
 ```
+
+The vignette “A Guide to Lakhesis” contains more information on usage.
 
 ## Bibliography
 
