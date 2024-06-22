@@ -36,7 +36,7 @@ lakhesize <- function(strands, ...) {
 #' @rdname lakhesize
 #' @export 
 lakhesize.strands <- function(strands, iter = 100, sim = 1, pbar = TRUE) {
-    lakhesize.default(strands, iter, sim)
+    lakhesize.default(strands, iter, sim, pbar)
 }
 
 #' @rdname lakhesize
@@ -142,7 +142,7 @@ lakhesize.default <- function(strands, iter = 100, sim = 1, pbar = TRUE) {
         }
 
         if (pbar == TRUE) {
-            utils::close(pb)
+            close(pb)
         }
 
         # concentration of each strand

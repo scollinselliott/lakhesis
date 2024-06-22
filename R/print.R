@@ -2,8 +2,9 @@
 #' @export 
 print.procrustean <- function(result) {
     cat("Procrustes-fit CA scores of class", class(result), "\n")
-    cat("$ref : matrix of reference matrix scores\n")
-    cat("$x, $y : principal scores\n")
+    cat("  $ref : principal scores: reference points\n")
+    cat("  $x : principal scores: row points\n")
+    cat("  $y : principal scores: column points\n")
 }
 
 
@@ -69,13 +70,20 @@ plot.strand <- function(strand, display = "ca") {
     #ref <- im_ref( matrix(NA, nrow = sum(strand$Type == 'row'),  ncol = sum(strand$Type == 'col')  ))
     #refcurve <- ca_procrustes_curve(ref)
     if (display == "ca") {
-        dat <- strand$dat
-        curve.plot <- ggplot2::ggplot() +
-            ggplot2::geom_point(data = dat, ggplot2::aes(x = Procrustes1, y = Procrustes2, color = Type), size = 2) +
-            ggplot2::geom_text(data = dat, ggplot2::aes(x = Procrustes1, y = Procrustes2, color = Type ), label = rownames(dat), size = 3, hjust = 0.025, nudge_x = 0.015, check_overlap = TRUE) + 
-            ggplot2::theme_bw() + ggplot2::theme(aspect.ratio = 1, legend.position="none") 
-            #ggplot2::geom_line(data = refcurve,  ggplot2::aes(x = Procrustes1, y = Procrustes2), linewidth=1, alpha=0.4, linetype=1) 
-        print(curve.plot)
+        plot(ca_procrustes(strand$im_seriated))
+    #         ref <- data.frame(Procrustes1 = result$ref[,1], Procrustes2 = result$ref[,2])
+    # r.dat <- data.frame(Procrustes1 = result$x[,1], Procrustes2 = result$x[,2])
+    # c.dat <- data.frame(Procrustes1 = result$y[,1], Procrustes2 = result$y[,2])
+    # Type <- c(rep("row", nrow(result$x)), rep("col", nrow(result$y)) )
+    # dat <- cbind( rbind(r.dat, c.dat), Type)
+
+    #     dat <- strand$dat
+    #     curve.plot <- ggplot2::ggplot() +
+    #         ggplot2::geom_point(data = dat, ggplot2::aes(x = Procrustes1, y = Procrustes2, color = Type), size = 2) +
+    #         ggplot2::geom_text(data = dat, ggplot2::aes(x = Procrustes1, y = Procrustes2, color = Type ), label = rownames(dat), size = 3, hjust = 0.025, nudge_x = 0.015, check_overlap = TRUE) + 
+    #         ggplot2::geom_line(data = ref,  ggplot2::aes(x = Procrustes1, y = Procrustes2), linewidth=1, alpha=0.4, linetype=1) +
+    #         ggplot2::theme_bw() + ggplot2::theme(aspect.ratio = 1, legend.position="none") 
+    #     print(curve.plot)
     } else if (display == "ref") {
         dat <- strand$dat
         ord.plot <- ggplot2::ggplot() + 

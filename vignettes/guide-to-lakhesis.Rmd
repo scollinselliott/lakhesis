@@ -31,15 +31,15 @@ While there are already a number of approaches and tools to perform seriations, 
 
 Given that well seriated matrices are not a given for every data set, it is expedient for users to select their own seriations quickly via an interactive graphical interface, rather than slicing matrices and re-running commands via the console. Investigators can select multiple seriations, moreover, which can then be harmonized into a single seriated matrix.
 
-The `lakhesis` package, named for the ancient Greek goddess who measured the thread of one's life, provides this functionality, to explore and select well seriated sequences as "strands" that are then "threaded" togeher into a single consensus seriation. The package can either be installed from (CRAN)[https://CRAN.R-project.org/package=lakhesis], or from (GitHub)[https://github.com/scollinselliott/lakhesis], the latter of which hosts the most recent development version. To install from GitHub, the library `devtools` is needed:
-```{r, eval  =FALSE}
+The `lakhesis` package, named for the ancient Greek goddess who measured the thread of one's life, provides this functionality, to explore and select well seriated sequences as "strands" that are then "threaded" together into a single consensus seriation. The package can either be installed from [CRAN](https://CRAN.R-project.org/package=lakhesis), or from [GitHub](https://github.com/scollinselliott/lakhesis), the latter of which hosts the most recent development version. To install from GitHub, the library `devtools` is needed:
+```{r, eval = FALSE}
 library(devtools)
 install_github("scollinselliott/lakhesis") 
 ```
 
-This vignette showcases the primary functions of the package side-by-side with the Lakhesis Calucator, a `shiny` app whose interface offers the means to perform and critically examine seriated sequences from an input. Command-line functions to prepare 
+This vignette showcases the primary functions of the package side-by-side with the Lakhesis Calculator, a `shiny` app whose interface offers the means to perform and critically examine seriated sequences from an input. Command-line functions to prepare 
 
-## Getting Started: Formating Data
+## Getting Started: Formatting Data
 
 The calculator is designed to import `csv` files directly from the user's file directory. The `csv` file must be formatted in a "long" formamt where row and column incidences are listed in rows, pair by pair. To convert data that is already in the form of a matrix, the `im_long()` function can used.  The `"quattrofontanili"` data can serve as an example, which comprises a matrix of 81 rows and 82 columns, recording the incidence of a particular artifact-type (column) in a tomb (row) from Early Iron Age necropoleis in Southern Etruria (see `?quattrofontanili`).
 ```{r}
@@ -69,15 +69,14 @@ im_merge(qf1, qf2)
 
 ## Procrustes-Fit Correspondence Analysis
 
-The method developed here uses correspondence analysis (CA), a popular method used for seriation above all in the form of detrended correspondence analysis (DCA). Unlike DCA, this package seriates observations according to a "reference curve," since the principal scores of well seriated rows and columns will have the form of an arch or horsehoe in the CA biplot. A well-seriated "reference matrix" of the same size is also plotted with CA, and the principal scores of the data are fit to the scores of the reference matrix using a Procrustes method (center, scale, rotate). The axes are properly labelled "Procrustes1" and "Procrustes2" since they no longer represent the principal scores of the data. Procrustes fitting is done without "landmark points" by minimizing the distance of scores to those of the reference curve in a one-to-many mapping.
+The method developed here uses correspondence analysis (CA), a popular method used for seriation above all in the form of detrended correspondence analysis (DCA). Unlike DCA, this package seriates observations according to a "reference curve," since the principal scores of well seriated rows and columns will have the form of an arch or horseshoe in the CA biplot. A well-seriated "reference matrix" of the same size is also plotted with CA, and the principal scores of the data are fit to the scores of the reference matrix using a Procrustes method (center, scale, rotate). The axes are properly labelled "Procrustes1" and "Procrustes2" since they no longer represent the principal scores of the data. Procrustes fitting is done without "landmark points" by minimizing the distance of scores to those of the reference curve in a one-to-many mapping.
 
 This is accomplished with the function `ca_procrustes()`, which takes an incidence matrix as an input and returns an object `procrustean` that contains the reference and data scores. The reference matrix is generated internal to `ca_procrustes()` using the `im_ref()` function. The `plot` function automatically illustrates the fit of the points to the reference curve:
-```{r}
+```{r,  fig.align = 'center'}
 data("quattrofontanili")
 qf_caproc <- ca_procrustes(quattrofontanili)
 class(qf_caproc)
 print(qf_caproc)
-summary(qf_caproc)
 plot(qf_caproc)
 ```
 
@@ -93,37 +92,39 @@ Three different plot types are available for a `strand` object, set in the `plot
 
 * `"ca"` produces a Procrustes-fit CA plot as above, with axes $\text{Procrustes1}$ and $\text{Procrustes2}$. This is the default setting.
 * `"ref"` produces a plot showing the distance of each row and column point from the reference curve. The indices of the reference curve are shown on the $x$ axis while the distance of each point from the curve is shown on the $y$ axis.
-* `"im_serated"` produces a matrix plot of the seriated incidence matrix, showing the measure of concentration $\kappa$ (on which see below).
+* `"im_seriated"` produces a matrix plot of the seriated incidence matrix, showing the measure of concentration $\kappa$ (on which see below).
 
-```{r}
+```{r, fig.align = 'center'}
 plot(qf_ser, display = "ca")
 plot(qf_ser, display = "ref")
 plot(qf_ser, display = "im_seriated")
 ```
 
-The resulting incidence matrix itself may be extracted from the `strand` by calling `$im_seriated`:
+The resulting incidence matrix may be extracted from the `strand` by calling `$im_seriated`:
 
-```{r, eval = FALSE}
+```{r}
 quattrofontanili.caproc <- qf_ser$im_seriated
 ```
 
 ## Lakhesis Analysis
 
-In the process of exploring matrices for seriated sequences, an investigator is liable to come across many sequences which appear to be well seriated. The question then arises as to how to harmonize or reconcile several partial, seriated sequencess, some or may of which may pose disagreement. This is a non-trivial problem analogous to other problems involving discrepant and/or partial ranking but is not identical given the goal is a consensus seriation.
+In the process of exploring matrices for seriated sequences, an investigator is liable to come across many sequences which appear to be well seriated. The question then arises as to how to harmonize or reconcile several partial, seriated sequences, some or many of which may disagree. How to reconcile these is non-trivial, analogous to other problems in e.g. ranked-choice or preference voting, but it is not strictly identical.
 
 The strategy adopted here, called a "Lakhesis" method, is to iterate regressions of partial sequences onto best-fitting sequence in an agglomerative fashion. The procedure consists of the followings steps:
 
 1. Randomly choose two strands (partial sequences) which have at least 4 joint elements.
-  a. Remove all elements for which both strands have `NA` values.
-  b. Temporarily suppress the elements for which at least one strand has an `NA` value, leaving just elements which have rankings in both strands.
+    a. Remove all elements for which both strands have `NA` values.
+    b. Temporarily suppress the elements for which at least one strand has an `NA` value, leaving just elements which have rankings in both strands.
 2. Perform eigendecomposition (unscaled PCA) on the rankings of the stands to find a best fitting line with respect to both rankings.
 3. Restore the elements which were temporarily suppressed in either strand, and perform simple linear regression separately for either strand onto that best fitting line.
-  a. If the same element in eiher strand is regressed onto different points along the best fitting line, the mean of their regression is used.
-  b. The elements are re-ranked along the regressison line, providing a single "harmonized" ranking from the two strands.
+    a. If the same element in either strand is regressed onto different points along the best fitting line, the mean of their regression is used.
+    b. The elements are re-ranked along the regression line, providing a single "harmonized" ranking from the two strands.
 4. Take this harmonized ranking as the next strand and choose another strand at random that has at least 4 joint elements with the harmonized ranking, and repeat the above Steps 1a - 3b.
-5. Steps 1a - 4 are repeated untill all strands have been harmonized, producing a single ranking.
+5. Steps 1a - 4 are repeated until all strands have been harmonized, producing a single ranking.
 
-Because the order in which strands have been randomly selected will bear on the estimation of their single, harmonized seration, these steps are repeated for a number of iterations. The resulting set of harmonized rankings are then subjected to a final eigendecomposition, with points projected onto the first principal component axis to determine their consensus ranking. The use of PCA/linear regression has its virtue in that partial rankings which may be identical in their relative order but which may run in reverse sequence, will be regressed into the same order but merely with an opposite eigenvector or negative slope.
+Because the order in which strands have been randomly selected will bear on the estimation of their single, harmonized seriation, these steps are repeated for a number of iterations. The resulting set of harmonized rankings are then subjected to a final eigendecomposition, with points projected onto the first principal component axis to determine their consensus ranking. The use of PCA/linear regression has its virtue in that partial rankings which may be identical in their relative order but which may run in reverse sequence, will be regressed into the same order but merely with an opposite eigenvector or negative slope.
+
+### The `lakhesize()` Function
 
 This task is performed for a set of strands by the `lakhesize()` function, which takes as its input a `strands` object (i.e., a `list` of individual `strand`s produced by `ca_procrustes_ser()`).
 
@@ -133,14 +134,20 @@ The `lakhesize()` function has the following options:
 * `sim` The number of consensus seriations produced via simulation (the default exploratory option is 1).
 * `pbar` Turns the progress bar on or off. Default is `TRUE`.
 
-The selection of strands is performed by the investigator via the Lakhesis Calculator (on which see below), but a predefined `strands` object is included in the data of the package to illustrate functionality of the `lakhesize()` function. The `qfStrands` object contains three strands from the `quattrofontanili` data:
+The default setting of 100 iterations using 1 simulation run in the Lakhesis Calculator provides an approximation for an optimal consensus seriation, determined by the selection of strands by the investigator. Adjusting `iter` and `sim` afterwards can be used to determine if there is an even more optimal seriation.
+
+A predefined `strands` object is included in the data of the package to illustrate functionality of the `lakhesize()` function. The `qfStrands` object contains three strands from the `quattrofontanili` data:
 
 ```{r}
 data("qfStrands")
 print(qfStrands)
 
 set.seed(42)
-L.exp <- lakhesize(qfStrands)
+
+# the default used in the Lakhesis Calculator
+L.exp <- lakhesize(qfStrands, pbar = FALSE)
+
+# employing more simulations to detect a more optimal solution
 L.opt <- lakhesize(qfStrands, iter = 20, sim = 20, pbar = FALSE)
 
 summary(L.exp)
@@ -159,7 +166,7 @@ The `lakhesis` package employs three methods to critically evaluate a seriated i
 
 ### Concentration ($\kappa$)
 
-As discussed in the paper at the start of this vignette, there are a number of optimality measures for seriated matrices. Here, a measure of concentration has been defined, $\kappa$, which is a loss measure with a minimum of 1. Concentration measures the number of non-contiguous values of 1 attested in the seriated matrix across both columns and rows. The intervals of the index from the lowest-ranked 1 and that of the highest ranked 1 is summed for each row and column, and then divided by twice total sum of the matrix. A seriated matrix that has perfect concentration will thus have $\kappa = 1$, and should there occur 0s in between values of 1, the measure of $\kappa$ will increase. This is performed using the function `conc_kappa()`, whose documentation contains more information, which takes as input an incidence matrix.
+As discussed in the paper at the start of this vignette, there are a number of optimality measures for seriated matrices. In this package, a measure of concentration has been defined, $\kappa$, which is a loss measure with a minimum of 1. Concentration is based on the number of non-contiguous values of 1 attested in the seriated matrix across both columns and rows. The intervals of the index from the lowest-ranked 1 and that of the highest ranked 1 is summed for each row and column, and then divided by twice total sum of the matrix. A seriated matrix that has perfect concentration will thus have $\kappa = 1$, and should there occur 0s in between values of 1, the measure of $\kappa$ will increase. This is performed using the function `conc_kappa()`, whose documentation contains more information, which takes as input an incidence matrix.
 
 First, we can create two objects of the seriated incidence matrices, one from the results of Lakhesis analysis using `"exploratory"` option (`L.exp`) and the other using the `"optimize"` option:
 ```{r}
@@ -168,22 +175,26 @@ quattrofontanili.L.opt <- L.opt$im_seriated
 ```
 Then, we can assess the concentration measure $\kappa$ for each seriated matrix:
 ```{r}
+# the original seriation
 conc_kappa(quattrofontanili)
+# using procrustes-fit ca
 conc_kappa(quattrofontanili.caproc)
+# default lakhesis
 conc_kappa(quattrofontanili.L.exp)
+# optimized lakhesis
 conc_kappa(quattrofontanili.L.opt)
 ```
-As can be seen, the optimized Lakhesis analysis has produced a more optimal seriation according to the concentration principle. The aforementioned paper contains discussion of other optimality measures.
+Lower concentration measures inidicate more optimal seriations. As can be seen, the optimized Lakhesis analysis has arrived at a slightly more optimal seriation according to the concentration principle. The number of iterations and simulation runs can be based on the size of the incidence matrix. Here, 20 iterations with 20 simulation runs is more than sufficient to explore all possible consensus serations for 3 strands.
 
 ### Agreement ($\rho_r^2 \rho_c^2$)
 
-The agreement of each strand's ranking with that of the resulting consensus seriation also serves as a useful diagnostic to determine if any one strand is in severe disagreement and should be removed before re-running Lakhesis. Agreement is defined as the product of Spearman's rank correlation coefficient squared for the row and column elements between one seriated matrix and another. In the `lakhesize()` function, agreement is computed for each strand's seriation in connection with the consensus seration, using the function `spearman_sq()`, which removes `NA` values automatically and takes a numerical input of the rankings.
+The agreement of each strand's ranking with that of the resulting consensus seriation also serves as a useful diagnostic to determine if any one strand is in severe disagreement and should be removed before re-running Lakhesis. Agreement is defined as the product of Spearman's rank correlation coefficient squared for the row and column elements between one seriated matrix and another. In the `lakhesize()` function, agreement is computed for each strand's seriation in connection with the consensus seriation, using the function `spearman_sq()`, which removes `NA` values automatically and takes a numerical input of the rankings.
 
-### Deviance for Goodness-of-Fit Testing
+### Deviance Test for Goodness-of-Fit
 
-The use of a quadratic-logistic model for determining seriations has a long history in ecology, but as a measure for optimality it poses a challenge in that an optimally concentrated seriation would elicit `NA` results for a logistc regression, owing to the perfect separation of 0/1 values in the columns and rows. However, such testing row by row and column by column 
+The use of a quadratic-logistic model for determining seriations has a long history in ecology, but as a measure for optimality it poses a challenge in that an optimally concentrated seriation would elicit `NA` results for a logistic regression, owing to the perfect separation of 0/1 values in the columns and rows. However, such testing row by row and column by column 
 
-While a deviance-based test for goodness-of-fit is often performed for (nested) models upon the same data, here it is used as an exploratory method to evaluate which specific row and column elements might not fit well, and which one may wish to exclude when prior to performing correspondence analyis. The function `element_eval()` takes a seriated matrix as its input and will return a `list` of two `data.frame`s sorted from highest to lowest in terms of the resulting $p$ value from a deviance test using the quadratic-logistic model. Elements which contain higher $p$ values will have a less optimal fit. The 
+While a deviance-based test for goodness-of-fit is often performed for (nested) models upon the same data, here it is used as an exploratory method to evaluate which specific row and column elements might not fit well, and which one may wish to exclude when prior to performing correspondence analysis. The function `element_eval()` takes a seriated matrix as its input and will return a `list` of two `data.frame`s sorted from highest to lowest in terms of the resulting $p$ value from a deviance test using the quadratic-logistic model. Elements which contain higher $p$ values will have a less optimal fit. The 
 ```{r}
 qf_eval <- element_eval(quattrofontanili)
 head(qf_eval$RowFit)
@@ -192,14 +203,14 @@ head(qf_eval$ColFit)
 
 ## Plotting Strands
 
-Plotting the results of `lakhesize()` can be accomplished by stipulating different options for the `display` argument in a `plot()` function, taking a `lakhesis` object as input. The default
+Plotting the results of `lakhesize()` can be accomplished by stipulating different options for the `display` argument in a `plot()` function, taking a `lakhesis` object as input.
 
-* `"im_seriated"` will produce a matrix plot of the consensus seriation, also displaying the concentration measure $\kappa$
+* `"im_seriated"` will produce a matrix plot of the consensus seriation, also displaying the concentration measure $\kappa$. This is the default.
 * `"rowPCA"` and `"colPCA"` will produce a biplot of the row and column element PCA. The closer the eigenvectors lie along the same trajectory, the more the strands will agree with one aother.
-* `"agreement"` will produce a bar graph showing the measures of agreement of each strand with the consensus. Higher values indicate better agreeement.
+* `"agreement"` will produce a bar graph showing the measures of agreement of each strand with the consensus. Higher values indicate better agreement.
 * `"concentration"` will produce a bar graph of each strand's concentration measure $\kappa$. Lower values indicate more optimal seriations.
 
-```{r}
+```{r, fig.align = 'center'}
 plot(L.exp, display = "im_seriated") 
 plot(L.exp, display = "agreement") 
 plot(L.exp, display = "concentration") 
@@ -209,7 +220,7 @@ These plots are all incorporated into the Lakhesis Calculator, and are generated
 
 ## Lakhesis Calculator
 
-The commands above can all be used in the console, and, as recommended, performing `lakhesize()` with more simulations will help to ensure that the most optimal consensus seration will be identified. That said the functionality of the `lakhesis` package is best articulated via the interactive Lakhesis Calculator, written using `shiny`, which is initialized by the function `LC()`:
+The commands above can all be used in the console, and, as recommended, performing `lakhesize()` with more simulations will help to ensure that the most optimal consensus seriation will be identified. That said the functionality of the `lakhesis` package is best articulated via the interactive Lakhesis Calculator, written using `shiny`, which is initialized by the function `LC()`:
 ```{r, eval = FALSE}
 LC()
 ```
@@ -250,9 +261,13 @@ After one has selected at least two strands, a consensus seriation can be produc
 
 ### Modifying Data
 
+#### Deleting Strands
+
 In the process of performing exploratory seriations, it might become clear that one or more strands are poorly seriated, and hence eliminating them might improve the resulting seriated matrix. 
 
 On the Modify panel to the bottom right, one can use the input box labelled **Delete Strand (Indices Will Resort Automatically, Undo Will Re-Add as Last Strand)**, to type in the number of strand to be deleted. Pressing the **Delete** button will remove that strand and automatically readjust the the consensus seriation. The numbering of the strands automatically adjusts. One can add the deleted strand back in, by pressing the **Undo** button. The deleted strand is returned to the end of the strand list, and again the consensus seriation is adjusted automatically.
+
+#### Suppressing Row/Column Elements
 
 There likewise might be a consistent row or column element which appears to be poorly seriated, which the investigator would like to suppress from selection. Following the execution of **Lakhesize Strands**, one can press the **Run Deviance Test** button on the sidebar. The tabs marked "Deviance (Rows)" and "Deviance (Columns)" are now populated with a table of the top ten row and column elements which have the highest $p$~values per the hypothesis test. In the Modify panel, any elements can be entered into the input boxes marked **Select Rows/Columns to Suppress,** either by selecting them from a list or by typing. The Seriation Explorer will automatically remove the row or column elements from the plot. Suppressing row or column elements does not affect previously selected strands. To restore elements, simply delete them from the suppression list in the Modify panel.
 
@@ -260,7 +275,7 @@ There likewise might be a consistent row or column element which appears to be p
 
 Exporting results can be done at any time following the command of **Lakhesize Strands**, either in the course of analysis or at the end. The **Export Data** button will download a \code{list} object in \code{rds} format which contains the following objects:
 
-* `$consensus` An object of the `lakhesis` class that contains the information on the consensus seration (see above on the `lakhesize()` function)
+* `$consensus` An object of the `lakhesis` class that contains the information on the consensus seriation (see above on the `lakhesize()` function)
 * `$strands` An object the `strands` class, the inputs used to produce the `lakhesis` class object
 
 The default filename is automatically timestamped. The \code{rds} file can then be read back into R for further analysis. 
