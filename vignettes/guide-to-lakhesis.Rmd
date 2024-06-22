@@ -192,9 +192,9 @@ The agreement of each strand's ranking with that of the resulting consensus seri
 
 ### Deviance Test for Goodness-of-Fit
 
-The use of a quadratic-logistic model for determining seriations has a long history in ecology, but as a measure for optimality it poses a challenge in that an optimally concentrated seriation would elicit `NA` results for a logistic regression, owing to the perfect separation of 0/1 values in the columns and rows. However, such testing row by row and column by column 
+The use of a quadratic-logistic model for determining seriations has a long history in ecology, but as a measure for optimality it poses a challenge in that an optimally concentrated seriation would elicit `NA` results for a logistic regression, owing to the perfect separation of 0/1 values in the columns and rows.
 
-While a deviance-based test for goodness-of-fit is often performed for (nested) models upon the same data, here it is used as an exploratory method to evaluate which specific row and column elements might not fit well, and which one may wish to exclude when prior to performing correspondence analysis. The function `element_eval()` takes a seriated matrix as its input and will return a `list` of two `data.frame`s sorted from highest to lowest in terms of the resulting $p$ value from a deviance test using the quadratic-logistic model. Elements which contain higher $p$ values will have a less optimal fit. The 
+While a deviance-based test for goodness-of-fit is often performed for (nested) models upon the same data, here it is used as an exploratory method to evaluate which specific row and column elements might not fit well, and which one may wish to exclude when prior to performing correspondence analysis. The function `element_eval()` takes a seriated matrix as its input and will return a `list` of two `data.frame`s sorted from highest to lowest in terms of the resulting $p$ value from a deviance test using the quadratic-logistic model. Any rows or columns which exhibit perfect separation are first assigned a result of `NA`. Then, the deviance test is run on the remaining rows and columns. Elements which contain higher $p$ values will have a less optimal fit. 
 ```{r}
 qf_eval <- element_eval(quattrofontanili)
 head(qf_eval$RowFit)
@@ -216,7 +216,7 @@ plot(L.exp, display = "agreement")
 plot(L.exp, display = "concentration") 
 ```
 
-These plots are all incorporated into the Lakhesis Calculator, and are generated automatically every time the **Lakhesize** command is given.
+These plots are incorporated into the Lakhesis Calculator, and are generated automatically.
 
 ## Lakhesis Calculator
 

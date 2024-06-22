@@ -30,10 +30,10 @@ ca_procrustes.default <- function(obj) {
 #' @rdname ca_procrustes
 #' @export
 ca_procrustes.matrix <- function(obj) {
-    transposed = FALSE
+    transposed <- FALSE
     if (nrow(obj) > ncol(obj)) {
         obj <- t(obj)
-        transposed = TRUE
+        transposed <- TRUE
     }
 
     ref <- im_ref(obj)
@@ -82,6 +82,11 @@ ca_procrustes.matrix <- function(obj) {
         rss <- c(rss, rss1)
     }
 
+
+
+
+
+
     # rotate data using row points
     idx <- which.min(rss)
 
@@ -96,14 +101,10 @@ ca_procrustes.matrix <- function(obj) {
     if (transposed == FALSE) {
         results[['x']] <- x.r.rot
         results[['y']] <- x.c.rot
-        #results[['x.dat']] <- dat.x
-        #results[['y.dat']] <- dat.y
     }
     if (transposed == TRUE) {
         results[['y']] <- x.r.rot
         results[['x']] <- x.c.rot
-        #results[['y.dat']] <- dat.x
-        #results[['x.dat']] <- dat.y
     }
 
     class(results) <- c("procrustean", "list")
