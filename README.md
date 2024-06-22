@@ -110,7 +110,7 @@ The sidebar contains the following commands:
     containing row and column consensus seriations, the row and column
     PCA, coefficients of agreement and concentration, and the seriated
     incidence matrix.
-  - `strands` The strands selected to produce `results`.
+  - `strands` The strands selected to produce `consensus`.
 
 ## Installation
 

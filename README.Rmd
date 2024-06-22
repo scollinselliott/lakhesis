@@ -43,7 +43,7 @@ The sidebar contains the following commands:
 * **Run Deviance Test** Performs a goodness-of-fit test using deviance, treating the distribution of the row and column incidences with a quadratic-logistic model. The largest $p$ values of the row and column elements is contained in the Criteria panel.  The function `element_eval()` performs this task.
 * **Export Data** Will download results in a single `.rds` file, which is a `list` class object containing the following:
   * `consensus` The results of `lakhesize()`, a `lakhesis` class object containing row and column consensus seriations, the row and column PCA, coefficients of agreement and concentration, and the seriated incidence matrix.
-  * `strands` The strands selected to produce `results`.
+  * `strands` The strands selected to produce `consensus`.
 
 ## Installation
 
