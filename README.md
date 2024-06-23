@@ -119,7 +119,7 @@ install from GitHub in the `R` command line with:
 
 ``` r
 library(devtools)
-install_github("scollinselliott/lakhesis") 
+install_github("scollinselliott/lakhesis", dependencies = TRUE, build_vignettes = TRUE) 
 ```
 
 ## Usage

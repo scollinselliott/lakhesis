@@ -51,7 +51,7 @@ To obtain the current development version of `lakhesis` from GitHub, install fro
 
 ``` r
 library(devtools)
-install_github("scollinselliott/lakhesis") 
+install_github("scollinselliott/lakhesis", dependencies = TRUE, build_vignettes = TRUE) 
 ```
 
 ## Usage

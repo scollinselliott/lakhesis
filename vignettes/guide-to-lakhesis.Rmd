@@ -30,7 +30,7 @@ Given that well seriated matrices are not a given for every data set, it is expe
 The `lakhesis` package, named for the ancient Greek goddess who measured the thread of one's life, provides this functionality, to explore and select well seriated sequences as "strands" that are then "threaded" together into a single consensus seriation. The package can either be installed from [CRAN](https://CRAN.R-project.org/package=lakhesis), or from [GitHub](https://github.com/scollinselliott/lakhesis), the latter of which hosts the most recent development version. To install from GitHub, the library `devtools` is needed:
 ```{r, eval = FALSE}
 library(devtools)
-install_github("scollinselliott/lakhesis") 
+install_github("scollinselliott/lakhesis", dependencies = TRUE, build_vignettes = TRUE) 
 ```
 
 This vignette showcases the primary functions of the package side-by-side with the Lakhesis Calculator, a `shiny` app whose interface offers the means to perform and critically examine seriated sequences from an input. Command-line functions to prepare 
