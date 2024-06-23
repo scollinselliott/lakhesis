@@ -30,6 +30,7 @@ ca_procrustes.default <- function(obj) {
 #' @rdname ca_procrustes
 #' @export
 ca_procrustes.matrix <- function(obj) {
+    obj <- obj[sort(rownames(obj)), sort(colnames(obj))]
     transposed <- FALSE
     if (nrow(obj) > ncol(obj)) {
         obj <- t(obj)
@@ -82,11 +83,6 @@ ca_procrustes.matrix <- function(obj) {
         rss <- c(rss, rss1)
     }
 
-
-
-
-
-
     # rotate data using row points
     idx <- which.min(rss)
 
@@ -101,10 +97,14 @@ ca_procrustes.matrix <- function(obj) {
     if (transposed == FALSE) {
         results[['x']] <- x.r.rot
         results[['y']] <- x.c.rot
+        #results[['x.dat']] <- dat.x
+        #results[['y.dat']] <- dat.y
     }
     if (transposed == TRUE) {
         results[['y']] <- x.r.rot
         results[['x']] <- x.c.rot
+        #results[['y.dat']] <- dat.x
+        #results[['x.dat']] <- dat.y
     }
 
     class(results) <- c("procrustean", "list")
@@ -161,7 +161,7 @@ ca_procrustes_ser.incidence_matrix <- function(obj, samples = 10^5) {
 #' @export
 ca_procrustes_ser.matrix <- function(obj, samples = 10^5) {
     if ((nrow(obj) > 2 ) & (ncol(obj) > 2) ) {
-
+        obj <- obj[sort(rownames(obj)), sort(colnames(obj))]
         obj.procca <- ca_procrustes(obj)
         ref.r <- obj.procca$ref
         x.r.rot <- obj.procca$x

@@ -168,12 +168,12 @@ The `lakhesis` package employs three methods to critically evaluate a seriated i
 
 As discussed in the paper at the start of this vignette, there are a number of optimality measures for seriated matrices. In this package, a measure of concentration has been defined, $\kappa$, which is a loss measure with a minimum of 1. Concentration is based on the number of non-contiguous values of 1 attested in the seriated matrix across both columns and rows. The intervals of the index from the lowest-ranked 1 and that of the highest ranked 1 is summed for each row and column, and then divided by twice total sum of the matrix. A seriated matrix that has perfect concentration will thus have $\kappa = 1$, and should there occur 0s in between values of 1, the measure of $\kappa$ will increase. This is performed using the function `conc_kappa()`, whose documentation contains more information, which takes as input an incidence matrix.
 
-First, we can create two objects of the seriated incidence matrices, one from the results of Lakhesis analysis using `"exploratory"` option (`L.exp`) and the other using the `"optimize"` option:
+First, one can create two objects of the seriated incidence matrices, one from the results of Lakhesis analysis using `"exploratory"` option (`L.exp`) and the other using the `"optimize"` option:
 ```{r}
 quattrofontanili.L.exp <- L.exp$im_seriated
 quattrofontanili.L.opt <- L.opt$im_seriated
 ```
-Then, we can assess the concentration measure $\kappa$ for each seriated matrix:
+Then, one can assess the concentration measure $\kappa$ for each seriated matrix:
 ```{r}
 # the original seriation
 conc_kappa(quattrofontanili)
