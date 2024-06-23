@@ -14,10 +14,6 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
-library(lakhesis)
-```
-
 This vignette provides a guide to the R package `lakhesis`. Please refer to the paper, "Lakhesis: Consensus Seriation via Iterative Regression of Partial Rankings for Binary Data," for details.
 
 ## Introduction
@@ -45,11 +41,11 @@ The calculator is designed to import `csv` files directly from the user's file d
 ```{r}
 library(lakhesis)
 data("quattrofontanili")
-qf <- im_long(quattrofontanili)
+qf_long <- im_long(quattrofontanili)
 ```
-The `data.frame` `qf` can then be exported to a `csv` file using the `write.table()` function, in order to avoid writing row and column headers:
+The `data.frame` `qf_long` can then be exported to a `csv` file using the `write.table()` function, in order to avoid writing row and column headers:
 ```{r, eval = FALSE}
-write.table(qf, file = "qf.csv", row.names = FALSE, col.names = FALSE, sep = ",")
+write.table(qf_long, file = "qf.csv", row.names = FALSE, col.names = FALSE, sep = ",")
 ```
 The file `qf.csv` is then ready to be uploaded into the Lakhesis Calculator.
 
@@ -273,11 +269,11 @@ There likewise might be a consistent row or column element which appears to be p
 
 ### Exporting Results
 
-Exporting results can be done at any time following the command of **Lakhesize Strands**, either in the course of analysis or at the end. The **Export Data** button will download a \code{list} object in \code{rds} format which contains the following objects:
+Exporting results can be done at any time following the command of **Lakhesize Strands**, either in the course of analysis or at the end. The **Export Data** button will download a `list` object in `rds` format which contains the following objects:
 
 * `$consensus` An object of the `lakhesis` class that contains the information on the consensus seriation (see above on the `lakhesize()` function)
 * `$strands` An object the `strands` class, the inputs used to produce the `lakhesis` class object
 
-The default filename is automatically timestamped. The \code{rds} file can then be read back into R for further analysis. 
+The default filename is automatically timestamped. The `rds` file can then be read back into R for further analysis. 
 
 
