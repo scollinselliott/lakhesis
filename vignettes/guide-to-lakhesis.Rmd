@@ -1,6 +1,6 @@
 ---
 title: "A Guide to Lakhesis"
-output: pdf_document
+output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{A Guide to Lakhesis}
   %\VignetteEngine{knitr::rmarkdown}
@@ -215,7 +215,7 @@ This executes a `shinyApp()` function that will launch the calculator in the sys
 
 The calculator initializes with an ideally seriated reference matrix $20 \times 20$ in size, with row elements labeled "R" and column elements labeled "C." This reference matrix is produced using the function `im_ref()`:
 ```{r, eval = FALSE}
-i_.ref( matrix(NA, nrow = 20, ncol = 20) )
+im_ref( matrix(NA, nrow = 20, ncol = 20) )
 ```
 
 ### Uploading Data
