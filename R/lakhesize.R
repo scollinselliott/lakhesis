@@ -39,8 +39,9 @@ lakhesize.default <- function(strands, pbar = TRUE) {
     for (i in 2:length(strands)) {
         obj <- im_merge(obj, strands[[i]]$im_seriated)
     }
-    if (length(strands) > 1) {
-        ns <- length(strands)
+    ns <- length(strands)
+
+    if (ns > 1) {
 
 
         strand.mat <- strand_extract(strands)
@@ -62,7 +63,11 @@ lakhesize.default <- function(strands, pbar = TRUE) {
             }
         }
 
-        check <- colSums(kappa_matrix[ ,2:ncol(kappa_matrix)], na.rm = TRUE) 
+        if (ns > 2) {
+            check <- colSums(kappa_matrix[ ,2:ncol(kappa_matrix)], na.rm = TRUE) 
+        } else if (ns == 2)
+            check <- kappa_matrix[1,1]
+
         if (0 %in% check ) {
             stop("Error: all strands must share at least four joint elements.")
         }

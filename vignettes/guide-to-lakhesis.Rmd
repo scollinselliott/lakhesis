@@ -141,7 +141,6 @@ data("qfStrands")
 print(qfStrands)
 
 L <- lakhesize(qfStrands, pbar = FALSE)
-
 summary(L)
 ```
 
