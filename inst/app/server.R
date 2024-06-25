@@ -150,8 +150,8 @@ server <- function(input, output, session) {
     # record the observed seriation as a strand
     observeEvent(input$log, {
         results$strands <- strand_add(isolate(mats$caproc), results$strands)
-        # results$strands[[length(results$strands) + 1]] <- isolate(mats$caproc)
         results$strand_backup <- isolate(results$strands)
+        #print(isolate(results$strands))
     })
 
     # lachesize strands
@@ -159,11 +159,13 @@ server <- function(input, output, session) {
         if (length(isolate(results$strands)) > 1) {
             s <- isolate(results$strands)
             results$strand_backup <- isolate(results$strands)
-            m <- isolate(mats$mat_initial)
-            suppressWarnings({
-                results$lakhesis_results <- lakhesize(s, pbar = FALSE) 
-            })
-            results$lakhesized <- TRUE
+
+            results$lakhesis_results <- lakhesize(s, pbar = FALSE) 
+
+            if ("lakhesis" %in% class(isolate(results$lakhesis_results))) {
+                results$lakhesized <- TRUE
+            }
+
             selections$biplot[] <- FALSE
             selections$curve[] <- FALSE
 
@@ -174,6 +176,7 @@ server <- function(input, output, session) {
 
             selections$biplot <- rep(FALSE, mats$nr)
             selections$curve <- rep(FALSE, mats$nr)
+            
         }
     })
 
@@ -200,12 +203,7 @@ server <- function(input, output, session) {
         if (results$lakhesized == TRUE) {
             L <- results$lakhesis_results
             plot(L, display = "im_seriated")
-        # m <- isolate(mats$mat_initial)
-        # m <- m[results$lakhesis_results$row, ]
-        # m <- m[, results$lakhesis_results$col]
-        # mk <- conc_kappa(m)
-        # ttl <- paste(format(nrow(m))," x ",format(ncol(m)),"; kappa = ",format(mk), sep = "")
-        # image(t(m), col=c('white','black'), xaxt="n", yaxt="n", main = ttl)
+
         } else {
             plot(0,0, pch = " ", xlab = "Lakhesize to produce consensus matrix plot.", ylab = " " )
         }
@@ -218,8 +216,6 @@ server <- function(input, output, session) {
             #lakhcoef$Strand <- factor(lakhcoef$Strand, levels = lakhcoef$Strand[order(lakhcoef$Agreement, decreasing = FALSE)]) 
             suppressWarnings({
                 plot(L, display = "agreement")
-                # ggplot2::ggplot(lakhcoef, ggplot2::aes(x=Strand, y=Agreement)) + 
-                # ggplot2::geom_bar(stat = "identity") + ggplot2::theme_bw() 
             })
             } else {
                 plot(0,0, pch = " ", xlab = "Lakhesize to render plot of Lakhesis coefficents for strands.", ylab = " " )
@@ -229,11 +225,8 @@ server <- function(input, output, session) {
     output$kappaplot <- renderPlot({
         if (results$lakhesized == TRUE) {
             L <- results$lakhesis_results
-            #lakhcoef$Strand <- factor(lakhcoef$Strand, levels = lakhcoef$Strand[order(lakhcoef$Concentration, decreasing = TRUE)]) 
             suppressWarnings({
                 plot(L, display = "concentration")
-            #ggplot2::ggplot(lakhcoef, ggplot2::aes(x=Strand, y=Concentration)) + ggplot2::theme_bw() + 
-            #    ggplot2::geom_bar(stat = "identity") + ggplot2::theme_bw()
             })
             } else {
                 plot(0,0, pch = " ", xlab = "Lakhesize to render plot of Lakhesis coefficents for strands.", ylab = " " )
@@ -301,12 +294,7 @@ server <- function(input, output, session) {
     # deviance test results
     observeEvent(input$deviancetest, {
         if (results$lakhesized == TRUE) {
-
-            #m <- isolate(mats$mat_initial)
-
             L <- isolate(results$lakhesis_results)
-            #m <- m[lr$row, ]
-            #m <- m[, lr$col]
 
             dev <- element_eval(L$im_seriated)
             mats$devc <- head(dev$Col, n = 10L)

@@ -47,32 +47,37 @@ lakhesize.default <- function(strands, pbar = TRUE) {
         rowranks <- strand.mat[["Row"]]
         colranks <- strand.mat[["Col"]]
 
-        if (pbar == TRUE) {
-            pb <- utils::txtProgressBar(min = 0, max = ns, style = 3)
-        }
-
-        kappa_matrix <- matrix(NA, ns, ns)
+        check_matrix <- matrix(NA, ns, ns)
         for (i in 1:ns) {
             for (j in i:ns) {
                 if (i != j) {
                     dat <- rowranks[,c(i,j)]
-                    kappa_matrix[i,j] <- nrow( dat[!is.na(rowSums(dat)),] ) 
+                    check_matrix[i,j] <- nrow( dat[!is.na(rowSums(dat)),] ) 
                 }
             }
         }
 
+        check_matrix <- check_matrix > 3
+
         if (ns > 2) {
-            check <- colSums(kappa_matrix[ ,2:ncol(kappa_matrix)], na.rm = TRUE) 
-        } else if (ns == 2) {
-            check <- kappa_matrix[1,2]
+            check <- colSums(check_matrix[ ,2:ncol(check_matrix)], na.rm = TRUE) + rowSums(check_matrix[1:(ncol(check_matrix)-1) ,], na.rm = TRUE) 
         }
 
-        kappa_matrix[,] <- NA
+        if (ns == 2) {
+            check <- check_matrix[1,2]
+        }
+
 
         if (0 %in% check ) {
             warning("Each strand must share at least four joint elements with another strand.")
+            return(NULL)
         } else {
+            if (pbar == TRUE) {
+                pb <- utils::txtProgressBar(min = 0, max = ns, style = 3)
+            }   
             regressed <- c()
+            kappa_matrix <- matrix(NA, ns, ns)
+
             for (i in 1:ns) {
                 for (j in i:ns) {
                     if (!(i == j)) {
