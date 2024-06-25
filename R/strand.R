@@ -202,6 +202,10 @@ strand_extract.strands <- function(strands) {
     for (i in 2:length(strands)) {
         obj <- im_merge(obj, strands[[i]]$im_seriated)
     }
+    if (sum(is.na(match(rownames(obj), colnames(obj)))) != nrow(obj))  {
+        stop("Strands improperly produced. Row names and column names of input matrix be unique.")
+    }
+
 
     rowranks <- matrix(NA, nrow = nrow(obj),  ncol = length(strands)) 
     rownames(rowranks) <- rownames(obj)

@@ -80,8 +80,8 @@ im_ref.matrix <- function(obj) {
             }
         }
         if (is.null(colnames(ref))) {
-            rownames(ref) <- paste("R", 1:nrow(ref), sep = '')
-            colnames(ref) <- paste("C", 1:ncol(ref), sep = '')
+            rownames(ref) <- paste("R", sprintf("%02.0f", 1:nrow(ref)), sep = '')
+            colnames(ref) <- paste("C", sprintf("%02.0f", 1:ncol(ref)), sep = '')
         }
     class(ref) <- c("incidence_matrix", "matrix", "array")
     return(ref)

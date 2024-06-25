@@ -30,6 +30,10 @@ ca_procrustes.default <- function(obj) {
 #' @rdname ca_procrustes
 #' @export
 ca_procrustes.matrix <- function(obj) {
+    if (sum(is.na(match(rownames(obj), colnames(obj)))) != nrow(obj))  {
+        stop("Row names and column names of input matrix be unique.")
+    }
+
     obj <- obj[sort(rownames(obj)), sort(colnames(obj))]
     transposed <- FALSE
     if (nrow(obj) > ncol(obj)) {
