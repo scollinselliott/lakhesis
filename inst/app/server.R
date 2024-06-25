@@ -177,24 +177,24 @@ server <- function(input, output, session) {
         }
     })
 
-    # plots output after lakhesize() is run
-    output$consensusrowplot <- renderPlot({
-        if (results$lakhesized == TRUE) {
-            L <- results$lakhesis_results
-            plot(L, display = "rowPCA")
-        } else {
-            plot(0,0, pch = " ", xlab = "Lakhesize to produce consensus PCA biplot.", ylab = " " )
-        }
-    })
+    # # plots output after lakhesize() is run
+    # output$consensusrowplot <- renderPlot({
+    #     if (results$lakhesized == TRUE) {
+    #         L <- results$lakhesis_results
+    #         plot(L, display = "rowPCA")
+    #     } else {
+    #         plot(0,0, pch = " ", xlab = "Lakhesize to produce consensus PCA biplot.", ylab = " " )
+    #     }
+    # })
 
-    output$consensuscolplot <- renderPlot({
-        if (results$lakhesized == TRUE) {
-            L <- results$lakhesis_results
-            plot(L, display = "colPCA")
-        } else {
-            plot(0,0, pch = " ", xlab = "Lakhesize to produce consensus PCA biplot.", ylab = " " )
-        }
-    })
+    # output$consensuscolplot <- renderPlot({
+    #     if (results$lakhesized == TRUE) {
+    #         L <- results$lakhesis_results
+    #         plot(L, display = "colPCA")
+    #     } else {
+    #         plot(0,0, pch = " ", xlab = "Lakhesize to produce consensus PCA biplot.", ylab = " " )
+    #     }
+    # })
 
     output$consensusmatrixplot <- renderPlot({
         if (results$lakhesized == TRUE) {

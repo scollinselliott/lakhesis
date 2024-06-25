@@ -106,19 +106,23 @@ quattrofontanili.caproc <- qf_ser$im_seriated
 
 In the process of exploring matrices for seriated sequences, an investigator is liable to come across many sequences which appear to be well seriated. The question then arises as to how to harmonize or reconcile several partial, seriated sequences, some or many of which may disagree. How to reconcile these is non-trivial, analogous to other problems in e.g. ranked-choice or preference voting, but it is not strictly identical.
 
-The strategy adopted here, called a "Lakhesis" method, is to iterate regressions of partial sequences onto best-fitting sequence in an agglomerative fashion. The procedure consists of the followings steps:
+The strategy adopted here, called a "Lakhesis" method, is to iterate simple linear regressions in an agglomerative fashion. The procedure consists of the followings steps:
 
-1. Randomly choose two strands (partial sequences) which have at least 4 joint elements.
-    a. Remove all elements for which both strands have `NA` values.
-    b. Temporarily suppress the elements for which at least one strand has an `NA` value, leaving just elements which have rankings in both strands.
-2. Perform eigendecomposition (unscaled PCA) on the rankings of the stands to find a best fitting line with respect to both rankings.
-3. Restore the elements which were temporarily suppressed in either strand, and perform simple linear regression separately for either strand onto that best fitting line.
-    a. If the same element in either strand is regressed onto different points along the best fitting line, the mean of their regression is used.
-    b. The elements are re-ranked along the regression line, providing a single "harmonized" ranking from the two strands.
-4. Take this harmonized ranking as the next strand and choose another strand at random that has at least 4 joint elements with the harmonized ranking, and repeat the above Steps 1a - 3b.
-5. Steps 1a - 4 are repeated until all strands have been harmonized, producing a single ranking.
+1. To initialize, perform pairwise linear regression on all strands (each strand must have at least 4 joint elements with at least one other strand), for row and column elements separately.
+    a. For any two strands, select one as the dependent ($y$) and another as the independent ($x$) variate.
+    b. Remove all elements for there is an `NA` value in either strand.
+    c. Use the regression line, $f(x) = \beta_1 x + \beta_0$, to project the ranks of the independent variate onto the dependent (thereby supplying rankings for any `NA` values in the dependent variate).
+    d. If $y \neq f(x)$, the mean of $y$ and $f(x)$ is used for that element.
+    e. The values of the dependent and regressed independent variates are re-ranked.
+2. The concentration coefficient $\kappa$ (on which see below) is computed for each pairwise regression.
+3. The pair of strands is chosen that elicits the lowest concentration measure. The regression from this pair is then selected as the dependent variate for the next iteration.
+4. Perform pairwise regression with all remaining strands as the independent variate and the regression from the previous iteration, repeating Steps 1b-2.
+5. The strand which elicits the lowest concentration measure is again chosen.
+6. Repeat Steps 4-5 until all strands have been regressed, resulting in a single consensus seration.
 
-Because the order in which strands have been randomly selected will bear on the estimation of their single, harmonized seriation, these steps are repeated for a number of iterations. The resulting set of harmonized rankings are then subjected to a final eigendecomposition, with points projected onto the first principal component axis to determine their consensus ranking. The use of PCA/linear regression has its virtue in that partial rankings which may be identical in their relative order but which may run in reverse sequence, will be regressed into the same order but merely with an opposite eigenvector or negative slope.
+The use of linear regression has its virtue in that partial rankings which may be identical in their relative order but which may run in reverse sequence, will be regressed into the same order but merely with a negative slope.
+
+Given that the order in which strands are regressed has a bearing on the resulting consensus seriation, the use of the concentration principle to determine that order is necessary. Especially if the number of strands were to exceed 10, all possible permutations of the order of strand regression could not be evaluated in a reasonable amount of time. Similarly, PCA (which was initially explored as a method of harmonizing rankings) would only work as a method of ranking imputation if there were at least four elements jointly shared across all strands, a restriction which was undesirable given a potential need to perform consensus seration on a large set of data in piecemeal fashion.
 
 ### The `lakhesize()` Function
 
@@ -126,8 +130,6 @@ This task is performed for a set of strands by the `lakhesize()` function, which
 
 The `lakhesize()` function has the following options:
 
-* `iter` The number of iterations to produce a consensus seriation (the default exploratory option is 100).
-* `sim` The number of consensus seriations produced via simulation (the default exploratory option is 1).
 * `pbar` Turns the progress bar on or off. Default is `TRUE`.
 
 The default setting of 100 iterations using 1 simulation run in the Lakhesis Calculator provides an approximation for an optimal consensus seriation, determined by the selection of strands by the investigator. Adjusting `iter` and `sim` afterwards can be used to determine if there is an even more optimal seriation.
@@ -138,21 +140,14 @@ A predefined `strands` object is included in the data of the package to illustra
 data("qfStrands")
 print(qfStrands)
 
-set.seed(42)
+L <- lakhesize(qfStrands, pbar = FALSE)
 
-# the default used in the Lakhesis Calculator
-L.exp <- lakhesize(qfStrands, pbar = FALSE)
-
-# employing more simulations to detect a more optimal solution
-L.opt <- lakhesize(qfStrands, iter = 20, sim = 20, pbar = FALSE)
-
-summary(L.exp)
+summary(L)
 ```
 
 The output is contained in a `lakhesis` object, which includes the following objects as described in the `summary()` above:
 
 * seriated sequences of the row and column elements according to the consensus seriation of the input strands
-* PCA results of the final consensus seriation
 * the seriated incidence matrix
 * coefficients of concentration and agreement (on which see below)
 
@@ -166,8 +161,7 @@ As discussed in the paper at the start of this vignette, there are a number of o
 
 First, one can create two objects of the seriated incidence matrices, one from the results of Lakhesis analysis using `"exploratory"` option (`L.exp`) and the other using the `"optimize"` option:
 ```{r}
-quattrofontanili.L.exp <- L.exp$im_seriated
-quattrofontanili.L.opt <- L.opt$im_seriated
+quattrofontanili.L <- L$im_seriated
 ```
 Then, one can assess the concentration measure $\kappa$ for each seriated matrix:
 ```{r}
@@ -175,10 +169,8 @@ Then, one can assess the concentration measure $\kappa$ for each seriated matrix
 conc_kappa(quattrofontanili)
 # using procrustes-fit ca
 conc_kappa(quattrofontanili.caproc)
-# default lakhesis
-conc_kappa(quattrofontanili.L.exp)
-# optimized lakhesis
-conc_kappa(quattrofontanili.L.opt)
+# using lakhesis
+conc_kappa(quattrofontanili.L)
 ```
 Lower concentration measures inidicate more optimal seriations. As can be seen, the optimized Lakhesis analysis has arrived at a slightly more optimal seriation according to the concentration principle. The number of iterations and simulation runs can be based on the size of the incidence matrix. Here, 20 iterations with 20 simulation runs is more than sufficient to explore all possible consensus serations for 3 strands.
 
@@ -202,14 +194,13 @@ head(qf_eval$ColFit)
 Plotting the results of `lakhesize()` can be accomplished by stipulating different options for the `display` argument in a `plot()` function, taking a `lakhesis` object as input.
 
 * `"im_seriated"` will produce a matrix plot of the consensus seriation, also displaying the concentration measure $\kappa$. This is the default.
-* `"rowPCA"` and `"colPCA"` will produce a biplot of the row and column element PCA. The closer the eigenvectors lie along the same trajectory, the more the strands will agree with one aother.
 * `"agreement"` will produce a bar graph showing the measures of agreement of each strand with the consensus. Higher values indicate better agreement.
 * `"concentration"` will produce a bar graph of each strand's concentration measure $\kappa$. Lower values indicate more optimal seriations.
 
 ```{r, fig.align = 'center'}
-plot(L.exp, display = "im_seriated") 
-plot(L.exp, display = "agreement") 
-plot(L.exp, display = "concentration") 
+plot(L, display = "im_seriated") 
+plot(L, display = "agreement") 
+plot(L, display = "concentration") 
 ```
 
 These plots are incorporated into the Lakhesis Calculator, and are generated automatically.
@@ -253,7 +244,7 @@ After selecting points of interest, the investigator then clicks **Recompute wit
 
 ### Creating Consensus Seriation
 
-After one has selected at least two strands, a consensus seriation can be produced. To do so, click on the **Lakhesize Strands** button in the sidebar, which will perform function `lakhesize()` on the selected strands. Plots will automatically appear in Consensus Seriation and Criteria panels. In the Consensus Seriation panel are included tabs of the biplots of the row and column PCA, along with a matrix plot that gives the size and concentration coefficient of the seriated matrix (not all row and column elements in the input data must be included). In the bottom left Criteria panel, the coefficients of agreement and concentration of each strand are displayed on separate tabs. 
+After one has selected at least two strands, a consensus seriation can be produced. To do so, click on the **Lakhesize Strands** button in the sidebar, which will perform function `lakhesize()` on the selected strands. Plots will automatically appear in Consensus Seriation and Criteria panels. In the Consensus Seriation panel is shown a matrix plot that gives the size and concentration coefficient of the matrix according to the consensus (not all row and column elements in the input data must be included). In the bottom left Criteria panel, the coefficients of agreement and concentration of each strand are displayed on separate tabs. 
 
 ### Modifying Data
 

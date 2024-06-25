@@ -9,30 +9,22 @@
 \usage{
 lakhesize(strands, ...)
 
-\method{lakhesize}{strands}(strands, iter = 100, sim = 1, pbar = TRUE)
+\method{lakhesize}{strands}(strands, pbar = TRUE)
 
-\method{lakhesize}{default}(strands, iter = 100, sim = 1, pbar = TRUE)
+\method{lakhesize}{default}(strands, pbar = TRUE)
 
 \method{plot}{lakhesis}(result, display = "im_seriated")
 }
 \arguments{
 \item{strands}{A \code{list} of the \code{strands} class (see \code{\link[lakhesis]{add_strand}}).}
 
-\item{iter}{The number of iterations to use in lakhesizing the \code{strands}. The default is set at 100.}
-
-\item{sim}{The number of simulation runs of iterations. The default is set at 1. Increasing the number of simulations will better ensure an optimal ordering.}
-
 \item{pbar}{Displaying a progress bar. Default is \code{TRUE}.}
-
-\item{obj}{The intial incidence matrix.}
 }
 \value{
 A \code{list} of class \code{lakhesis} containing the following:
 \itemize{
 \item \code{row} A seriated vector of row elements.
 \item \code{col} A seriated vector of column elements
-\item \code{rowPCA} The results of \code{\link[stats]{prcomp}} performed on the row elements of \code{strands}.
-\item \code{colPCA} The results of \code{\link[stats]{prcomp}} performed on the column elements of \code{strands}.
 \item \code{coef}  A \code{data frame} containing the following columns:
 \itemize{
 \item \code{Strand} The number of the strand.
@@ -43,12 +35,10 @@ A \code{list} of class \code{lakhesis} containing the following:
 }
 }
 \description{
-This function returns the row and column consensus seriation for a \code{list} object of the \code{strands} class, containing their rankings, the results of their PCA, and coefficients of association and concentration.
+This function returns the row and column consensus seriation for a \code{list} object of the \code{strands} class, containing their rankings and coefficients of association and concentration.
 }
 \details{
-Consensus seriation is achieved by iterative linear regression using random simulation. On one iteration, strands are chosen at random, omitting incomplete or missing pairs, using PCA to determine the best-fitting line for their rankings. Both strands' rankings are then regressed onto that line to determine missing values, and then re-ranked, repeating until all strands have been regressed. PCA of the simulated rankings is then used to determine the final sequence of the row and column elements.
-
-A default setting of 100 iterations (\code{iter = 100, sim = 1}) is used in the Lakhesis calculator (\code{\link[lakhesis]{LC}}). Increasing simulations is recommended for post-exploratory analysis, to determine if a more optimal seriations can be found than the estimate yielded from the initial "exploratory" result. The number of iterations (\code{iter}) and simulation runs of iterations (\code{sim}) can be increased. The simultation run which yields the lowest (most optimal) measure of concentration \eqn{\kappa} (see \code{\link[lakhesis]{conc_kappa}}) chosen as the output.
+Consensus seriation is achieved by iterative simple linear regression to handle \code{NA} vales in each strand. To initialize, a regression is performed pairwise, with every strand as the dependent \eqn{y} variate and every other strand as the independent \eqn{x} variate. The independent variate's rankings are then regressed onto \eqn{f(x) = \hat{\beta}_1 x + \hat{\beta}_0}. If \eqn{y \neq f(x)}, the mean of \eqn{y} and \eqn{f(x)} is used. Then, the values of dependent variate and those of regressed independent are re-ranked, which serves as the dependent variate on the next iteration. The process is repeated, regressing each strand which yields the lowest concentration measure.
 }
 \examples{
 data("qfStrands")

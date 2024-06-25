@@ -53,9 +53,9 @@ displayed in the calculator:
 - **Consensus Seriation** (Top right) Displays the results of
   harmonizing selected partial seriations, which have been identified as
   “strands.” The process of deriving a consensus seriation entails a
-  process of iterative regressions on partially seriated sequences which
-  are harmonized via PCA, separately on row and column elements. The
-  seriated incidence matrix is also displayed in this panel.
+  process of iterative regressions on partially seriated sequences,
+  optimzed using the concentration measure. The seriated incidence
+  matrix is also displayed in this panel.
 - **Criteria** (Bottom left) Critical coefficients to determine whether
   discordant strands should be removed and/or row or column elements
   should be suppressed from consideration.
@@ -90,15 +90,13 @@ The sidebar contains the following commands:
   curve which projects a sequence of ideally seriated data in the same
   dimensional space.
 - **Lakhesize Strands** Constructs a consensus seriation of the selected
-  strands using an iterative process of orthogonal and linear regression
-  of partial rankings, with PCA to harmonize sequences. Results are
-  displayed in the Consensus Seriation panel, which displays the PCA
-  biplot of the row and column consensus seriations separately. The
-  matrix plot displays the incidence matrix of the resulting consensus
-  seriation, with its coefficient of concentration. The agreement of the
-  seriation in each strand with that of the consensus seriation as well
-  as its concentration coefficient is displayed in the Criteria panel.
-  The function `lakhesize()` performs this task.
+  strands using an iterative process of linear regression of partial
+  rankings in an agglomeratieve fahsion. The matrix plot displays the
+  incidence matrix of the resulting consensus seriation, with its
+  coefficient of concentration. The agreement of the seriation in each
+  strand with that of the consensus seriation as well as its
+  concentration coefficient is displayed in the Criteria panel. The
+  function `lakhesize()` performs this task.
 - **Run Deviance Test** Performs a goodness-of-fit test using deviance,
   treating the distribution of the row and column incidences with a
   quadratic-logistic model. The largest $p$ values of the row and column
@@ -107,9 +105,8 @@ The sidebar contains the following commands:
 - **Export Data** Will download results in a single `.rds` file, which
   is a `list` class object containing the following:
   - `consensus` The results of `lakhesize()`, a `lakhesis` class object
-    containing row and column consensus seriations, the row and column
-    PCA, coefficients of agreement and concentration, and the seriated
-    incidence matrix.
+    containing row and column consensus seriations, coefficients of
+    agreement and concentration, and the seriated incidence matrix.
   - `strands` The strands selected to produce `consensus`.
 
 ## Installation
@@ -138,31 +135,21 @@ in `lakhesis` can be used to convert an incidence matrix to be exported
 into the necessary long format, using the `write.table()` function to
 export (see documentation on `im_long()`).
 
-The core of `lakhesis` lies in singular value decomposition (SVD), as it
-does with both PCA and CA, and so the same caveats apply in terms of the
-rotation of axes in the graphical display of principal scores. The
-Lakhesis Calculator enables the temporary suppression of row or column
-elements from the plots, with zero rows/columns automatically removed.
-As such, unexpected results may be elicited if key elements are
+The Lakhesis Calculator enables the temporary suppression of row or
+column elements from the plots, with zero rows/columns automatically
+removed. As such, unexpected results may be elicited if key elements are
 suppressed. All elements can easily be re-added and the starting
 incidence matrix re-initialized.
 
-As Lakhesis analysis uses simulation to derive a consensus seriation, it
-is recommended that one check for the potential of an even more optimal
-consensus seriation by running the `lakhesize()` function using more
-simulation runs, especially if there are a high number of `strands`:
+Console fuctions can also be used to perform consensus serations. For
+example, using the built-in selection of three strands in the data
+object `qfStrands`, a consensus seration is performed using the
+`lakhesize()` function:
 
 ``` r
 data("qfStrands")
-
-# 1 simulation is used in the calculator to reduce computing time
-x <- lakhesize(qfStrands, iter = 100, sim = 1)
+x <- lakhesize(qfStrands)
 summary(x)
-
-# post-exploratory check with lower iterations and use more simulation runs 
-# to attain consensus seriation with a lower concentration measure 
-y <- lakhesize(qfStrands, iter = 20, sim = 20)
-summary(y)
 ```
 
 The vignette “A Guide to Lakhesis” contains more information on usage.

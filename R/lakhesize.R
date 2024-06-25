@@ -1,22 +1,15 @@
 #' Lakhesize
 #'
-#' This function returns the row and column consensus seriation for a `list` object of the `strands` class, containing their rankings, the results of their PCA, and coefficients of association and concentration.
+#' This function returns the row and column consensus seriation for a \code{list} object of the \code{strands} class, containing their rankings and coefficients of association and concentration.
 #' 
-#' Consensus seriation is achieved by iterative linear regression using random simulation. On one iteration, strands are chosen at random, omitting incomplete or missing pairs, using PCA to determine the best-fitting line for their rankings. Both strands' rankings are then regressed onto that line to determine missing values, and then re-ranked, repeating until all strands have been regressed. PCA of the simulated rankings is then used to determine the final sequence of the row and column elements.
-#' 
-#' A default setting of 100 iterations (\code{iter = 100, sim = 1}) is used in the Lakhesis calculator (\code{\link[lakhesis]{LC}}). Increasing simulations is recommended for post-exploratory analysis, to determine if a more optimal seriations can be found than the estimate yielded from the initial "exploratory" result. The number of iterations (\code{iter}) and simulation runs of iterations (\code{sim}) can be increased. The simultation run which yields the lowest (most optimal) measure of concentration \eqn{\kappa} (see \code{\link[lakhesis]{conc_kappa}}) chosen as the output. 
+#' Consensus seriation is achieved by iterative simple linear regression to handle \code{NA} vales in each strand. To initialize, a regression is performed pairwise, with every strand as the dependent \eqn{y} variate and every other strand as the independent \eqn{x} variate. The independent variate's rankings are then regressed onto \eqn{f(x) = \hat{\beta}_1 x + \hat{\beta}_0}. If \eqn{y \neq f(x)}, the mean of \eqn{y} and \eqn{f(x)} is used. Then, the values of dependent variate and those of regressed independent are re-ranked, which serves as the dependent variate on the next iteration. The process is repeated, regressing each strand which yields the lowest concentration measure. 
 #'
 #' @param strands A `list` of the `strands` class (see \code{\link[lakhesis]{add_strand}}).
-#' @param obj The intial incidence matrix.
-#' @param iter The number of iterations to use in lakhesizing the \code{strands}. The default is set at 100.
-#' @param sim The number of simulation runs of iterations. The default is set at 1. Increasing the number of simulations will better ensure an optimal ordering.
 #' @param pbar Displaying a progress bar. Default is \code{TRUE}.
 #' @return A `list` of class `lakhesis` containing the following:
 #' 
 #' * \code{row} A seriated vector of row elements. 
 #' * \code{col} A seriated vector of column elements
-#' * \code{rowPCA} The results of \code{\link[stats]{prcomp}} performed on the row elements of \code{strands}.
-#' * \code{colPCA} The results of \code{\link[stats]{prcomp}} performed on the column elements of \code{strands}.
 #' * \code{coef}  A \code{data frame} containing the following columns:
 #'   * \code{Strand} The number of the strand.
 #'   * \code{Agreement} The measure of agreement, i.e., how well each strand accords with the consensus seriation. Using the square of Spearman's rank correlation coefficient, \eqn{\rho^2}, between each strand and the consensus ranking, agreement is computed as the product of \eqn{\rho^2} for their row and column rankings, \eqn{\rho_r^2}\eqn{\rho_c^2}. 
@@ -35,111 +28,178 @@ lakhesize <- function(strands, ...) {
 
 #' @rdname lakhesize
 #' @export 
-lakhesize.strands <- function(strands, iter = 100, sim = 1, pbar = TRUE) {
-    lakhesize.default(strands, iter, sim, pbar)
+lakhesize.strands <- function(strands, pbar = TRUE) {
+    lakhesize.default(strands, pbar)
 }
 
 #' @rdname lakhesize
 #' @export
-lakhesize.default <- function(strands, iter = 100, sim = 1, pbar = TRUE) {    
+lakhesize.default <- function(strands, pbar = TRUE) {    
     obj <- strands[[1]]$im_seriated
     for (i in 2:length(strands)) {
         obj <- im_merge(obj, strands[[i]]$im_seriated)
     }
     if (length(strands) > 1) {
+        ns <- length(strands)
+
+
         strand.mat <- strand_extract(strands)
 
         rowranks <- strand.mat[["Row"]]
         colranks <- strand.mat[["Col"]]
 
         if (pbar == TRUE) {
-            pb <- utils::txtProgressBar(min = 0, max = sim, style = 3)
+            pb <- utils::txtProgressBar(min = 0, max = ns, style = 3)
         }
 
-        k <- 99999
-
-        for (mOpt in 1:sim) {
-
-            R <- matrix(NA, nrow = nrow(rowranks), ncol = 0)
-            C <- matrix(NA, nrow = nrow(colranks), ncol = 0)
-            
-            for (m in 1:iter) { 
-                remaining <- 1:ncol(rowranks)
-                start <- sample(remaining, 1)
-                regressed <- data.frame(Row = rowranks[,start])
-                remaining <- remaining[-start]
-                
-                while (length(remaining) != 0) {
-                    m2 <- sample(remaining, 1)
-                    dat <- data.frame(regressed$Row, rowranks[,m2])
-                    if (sum(!is.na(rowSums(dat))) > 3)  {
-                        dat2 <- dat[!is.na(rowSums(dat)),]
-                        y <- stats::prcomp(dat2)$x[,1]
-                        fit1 <- stats::lm(y ~ dat2[,1])
-                        fit2 <- stats::lm(y ~ dat2[,2])
-                        regr1 <- dat[,1] * fit1$coef[2] + fit1$coef[1]
-                        regr2 <- dat[,2] * fit2$coef[2] + fit2$coef[1]
-                        regr <- matrix(c(regr1,regr2), ncol = 2)
-                        merged <- rowMeans(regr, na.rm = TRUE)
-                        merged <- rank(merged, na.last = "keep")
-                        regressed$Row <- merged
-                        remaining <- remaining[!(remaining %in% m2)]
-                    }     
+        kappa_matrix <- matrix(NA, ns, ns)
+        for (i in 1:ns) {
+            for (j in i:ns) {
+                if (i != j) {
+                    dat <- rowranks[,c(i,j)]
+                    kappa_matrix[i,j] <- nrow( dat[!is.na(rowSums(dat)),] ) 
                 }
-                R <- cbind(R, regressed)
             }
-            R <- R[!is.na(rowSums(R)),]
+        }
 
-            for (m in 1:iter) { 
-                remaining <- 1:ncol(colranks)
-                start <- sample(remaining, 1)
-                regressed <- data.frame(Col = colranks[,start])
-                remaining <- remaining[-start]
+        check <- colSums(kappa_matrix[ ,2:ncol(kappa_matrix)], na.rm = TRUE) 
+        if (0 %in% check ) {
+            stop("Error: all strands must share at least four joint elements.")
+        }
 
-                while (length(remaining) != 0) {
-                    m2 <- sample(remaining, 1)
-                    dat <- data.frame(regressed$Col, colranks[,m2])
-                    if (sum(!is.na(rowSums(dat))) > 3)  {
-                        dat2 <- dat[!is.na(rowSums(dat)),]
-                        y <- stats::prcomp(dat2, scale. = FALSE)$x[,1]
-                        fit1 <- stats::lm(y ~ dat2[,1])
-                        fit2 <- stats::lm(y ~ dat2[,2])
-                        regr1 <- dat[,1] * fit1$coef[2] + fit1$coef[1]
-                        regr2 <- dat[,2] * fit2$coef[2] + fit2$coef[1]
-                        regr <- matrix(c(regr1,regr2), ncol = 2)
-                        merged <- rowMeans(regr, na.rm = TRUE)
-                        merged <- rank(merged, na.last = "keep")
-                        regressed$Col <- merged
-                        remaining <- remaining[!(remaining %in% m2)]
-                    }     
+        regressed <- c()
+        for (i in 1:ns) {
+            for (j in i:ns) {
+                if (!(i == j)) {
+                    rdat <- data.frame(rowranks[,i], rowranks[,j])
+                    rdat1 <- rdat[!is.na(rowSums(rdat)),]
+                    cdat <- data.frame(colranks[,i], colranks[,j])
+                    cdat1 <- cdat[!is.na(rowSums(cdat)),]
+                    if ((nrow(rdat1) > 3) & (nrow(cdat1) > 3) ) {
+                        ry <- rdat1[,2]
+                        rx <- rdat1[,1]
+                        rfit <- stats::lm(ry ~ rx)
+
+                        rdat[,1] <- rdat[,1] * rfit$coef[2] + rfit$coef[1]
+
+                        rdat <- rowMeans(rdat, na.rm = TRUE)
+                        rdat <- rank(rdat, na.last = "keep")
+
+                        cy <- cdat1[,2]
+                        cx <- cdat1[,1]
+                        cfit <- stats::lm(cy ~ cx)
+
+                        cdat[,1] <- cdat[,1] * cfit$coef[2] + cfit$coef[1]
+
+                        cdat <- rowMeans(cdat, na.rm = TRUE)
+                        cdat <- rank(cdat, na.last = "keep")
+
+                        R <- names(rdat)[order(rdat)]
+                        C <- names(cdat)[order(cdat)]
+                        K <- conc_kappa(obj[R, C])
+
+                        kappa_matrix[i,j] <- K
+                    }
                 }
-                C <- cbind(C, regressed)
             }
-            C <- C[!is.na(rowSums(C)),]        
+        }
 
-            consensus.row.pca <- stats::prcomp(R, scale. = FALSE)
-            consensus.col.pca <- stats::prcomp(C, scale. = FALSE)
-            consensus.r0 <- rank(consensus.row.pca$x[,1])
-            consensus.c0 <- rank(consensus.col.pca$x[,1])
+        regressed <- rev( arrayInd(which.min(kappa_matrix), dim(kappa_matrix)))
+        remaining <- 1:ns
+        remaining <- remaining[-regressed]
 
-            RL0 <- names(consensus.r0)[order(consensus.r0)]
-            CL0 <- names(consensus.c0)[order(consensus.c0)] 
+        rdat <- data.frame(rowranks[,regressed[2]], rowranks[,regressed[1]])
+        rdat1 <- rdat[!is.na(rowSums(rdat)),]
+        cdat <- data.frame(colranks[,regressed[2]], colranks[,regressed[1]])
+        cdat1 <- cdat[!is.na(rowSums(cdat)),]
 
-            k0 <- conc_kappa(obj[RL0, CL0])
+        ry <- rdat1[,2]
+        rx <- rdat1[,1]
+        rfit <- stats::lm(ry ~ rx)
 
-            if (k0 < k) {
-                k <- k0
-                Rpca <- consensus.row.pca
-                Cpca <- consensus.col.pca
-                RL <- RL0
-                CL <- CL0
-                consensus.r <- consensus.r0
-                consensus.c <- consensus.c0
+        rdat[,1] <- rdat[,1] * rfit$coef[2] + rfit$coef[1]
+
+        rdat <- rowMeans(rdat, na.rm = TRUE)
+        rdat_y <- rank(rdat, na.last = "keep")
+
+        cy <- cdat1[,2]
+        cx <- cdat1[,1]
+        cfit <- stats::lm(cy ~ cx)
+
+        cdat[,1] <- cdat[,1] * cfit$coef[2] + cfit$coef[1]
+
+        cdat <- rowMeans(cdat, na.rm = TRUE)
+        cdat_y <- rank(cdat, na.last = "keep")
+
+        while (length(remaining) > 0) {
+            kappa_check = numeric(ns)
+            kappa_check[] <- NA
+            for (i in remaining) {
+                rdat <- data.frame(rowranks[,i], rdat_y)
+                rdat1 <- rdat[!is.na(rowSums(rdat)),]
+                cdat <- data.frame(colranks[,i], cdat_y)
+                cdat1 <- cdat[!is.na(rowSums(cdat)),]
+                if ((nrow(rdat1) > 3) & (nrow(cdat1) > 3) ) {
+                    ry <- rdat1[,2]
+                    rx <- rdat1[,1]
+                    rfit <- stats::lm(ry ~ rx)
+
+                    rdat[,1] <- rdat[,1] * rfit$coef[2] + rfit$coef[1]
+
+                    rdat <- rowMeans(rdat, na.rm = TRUE)
+                    rdat <- rank(rdat, na.last = "keep")
+
+                    cy <- cdat1[,2]
+                    cx <- cdat1[,1]
+                    cfit <- stats::lm(cy ~ cx)
+
+                    cdat[,1] <- cdat[,1] * cfit$coef[2] + cfit$coef[1]
+
+                    cdat <- rowMeans(cdat, na.rm = TRUE)
+                    cdat <- rank(cdat, na.last = "keep")
+
+                    R <- names(rdat)[order(rdat)]
+                    C <- names(cdat)[order(cdat)]
+
+                    K <- conc_kappa(obj[R, C])
+
+                    kappa_check[i] <- K
+                }
             }
+            idx_next <- which.min(kappa_check)
+            regressed <- c(regressed, idx_next)
+            remaining <- remaining[-idx_next]
+
+            rdat <- data.frame(rowranks[,idx_next], rdat_y)
+            rdat1 <- rdat[!is.na(rowSums(rdat)),]
+            cdat <- data.frame(colranks[,idx_next], cdat_y)
+            cdat1 <- cdat[!is.na(rowSums(cdat)),]
+
+            ry <- rdat1[,2]
+            rx <- rdat1[,1]
+            rfit <- stats::lm(ry ~ rx)
+
+            rdat[,1] <- rdat[,1] * rfit$coef[2] + rfit$coef[1]
+
+            rdat <- rowMeans(rdat, na.rm = TRUE)
+            rdat_y <- rank(rdat, na.last = "keep")
+
+            cy <- cdat1[,2]
+            cx <- cdat1[,1]
+            cfit <- stats::lm(cy ~ cx)
+
+            cdat[,1] <- cdat[,1] * cfit$coef[2] + cfit$coef[1]
+
+            cdat <- rowMeans(cdat, na.rm = TRUE)
+            cdat_y <- rank(cdat, na.last = "keep")
+
             if (pbar == TRUE) {
-                utils::setTxtProgressBar(pb, mOpt)
-            }
+                utils::setTxtProgressBar(pb, length(regressed))
+            }   
         }
+
+        RL <- names(rdat_y)[order(rdat_y)]
+        CL <- names(cdat_y)[order(cdat_y)]
 
         if (pbar == TRUE) {
             close(pb)
@@ -160,8 +220,8 @@ lakhesize.default <- function(strands, iter = 100, sim = 1, pbar = TRUE) {
         # agreement with conensus seration
         assoc <- c()
         for (i in 1:length(strands)) {
-            sp.f <- spearman_sq( rowranks[,i], consensus.r )
-            sp.c <- spearman_sq( colranks[,i], consensus.c )
+            sp.f <- spearman_sq( rowranks[,i], rdat_y )
+            sp.c <- spearman_sq( colranks[,i], cdat_y )
             assoc <- c(assoc,  sp.f * sp.c)
         }
 
@@ -171,8 +231,6 @@ lakhesize.default <- function(strands, iter = 100, sim = 1, pbar = TRUE) {
 
         results[["row"]] <- RL #consensus.row.dat
         results[["col"]] <- CL #consensus.col.dat
-        results[["rowPCA"]] <- Rpca
-        results[["colPCA"]] <- Cpca
         results[["coef"]] <- coefs
         im <- obj[RL,CL]
         class(im) <- c("incidence_matrix", "matrix")

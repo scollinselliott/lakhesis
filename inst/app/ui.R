@@ -36,12 +36,6 @@ ui <- shinydashboard::dashboardPage(
             ),
             shinydashboard::tabBox(title = "Consensus Seriation",
                 id = "pcaplot", height = "600px",
-                shiny::tabPanel("Row PCA",
-                    shiny::plotOutput(outputId="consensusrowplot")
-                ),
-                shiny::tabPanel("Column PCA",
-                    shiny::plotOutput(outputId="consensuscolplot")
-                ),
                 shiny::tabPanel("Matrix",
                     shiny::plotOutput(outputId="consensusmatrixplot")
                 )

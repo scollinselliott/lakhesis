@@ -25,7 +25,7 @@ In a word, seriation (sequencing, ordination) involves putting a set of things i
 While command line functions can be run in `R`, the functionality of `lakhesis` is primarily achieved via the Lakhesis Calculator, a graphical platform in `shiny` that enables investigators to explore datasets for potential seriated sequences, select them, and then harmonize them into a single consensus seriation. Four panels are displayed in the calculator:
 
 * **Seriation Explorer** (Top left) Displays the correspondence analysis of a dataset which has been fit to the curve an "ideal" seriation. Two plots are available, the biplot of the row and column CA scores as they have been fit to an ideally seriated curve, and a plot showing the orthogonal projection of the row and column scores as they have been fit to the reference curve. Selections can be made on either the biplot or the reference plot.
-* **Consensus Seriation** (Top right) Displays the results of harmonizing selected partial seriations, which have been identified as "strands." The process of deriving a consensus seriation entails a process of iterative regressions on partially seriated sequences which are harmonized via PCA, separately on row and column elements. The seriated incidence matrix is also displayed in this panel.
+* **Consensus Seriation** (Top right) Displays the results of harmonizing selected partial seriations, which have been identified as "strands." The process of deriving a consensus seriation entails a process of iterative regressions on partially seriated sequences, optimzed using the concentration measure. The seriated incidence matrix is also displayed in this panel.
 * **Criteria** (Bottom left) Critical coefficients to determine whether discordant strands should be removed and/or row or column elements should be suppressed from consideration.
   * **Agreement** expresses whether a strand agrees with consensus seriation.
   * **Concentration** expresses how well seriated the strand is with respect to both row and column values.
@@ -39,10 +39,10 @@ The sidebar contains the following commands:
 * **Reinitialize** Resets the plots to their original, starting condition.
 * **Recompute with Selection** Upon the selection of row and column points from the Seriation Explorer panel, this command will perform and fit CA only on the selection. To return to the initial dataset, press the Reinitialize button. The function `ca_procrustes_ser()` performs this task.
 * **Save Selection as Strand** Record the displayed plot as a partial seriation, or "strand" (i.e., partial with respect to the initial data). Strands are sequenced according to their fit onto a reference curve which projects a sequence of ideally seriated data in the same dimensional space.
-* **Lakhesize Strands** Constructs a consensus seriation of the selected strands using an iterative process of orthogonal and linear regression of partial rankings, with PCA to harmonize sequences. Results are displayed in the Consensus Seriation panel, which displays the PCA biplot of the row and column consensus seriations separately. The matrix plot displays the incidence matrix of the resulting consensus seriation, with its coefficient of concentration. The agreement of the seriation in each strand with that of the consensus seriation as well as its concentration coefficient is displayed in the Criteria panel. The function `lakhesize()` performs this task.
+* **Lakhesize Strands** Constructs a consensus seriation of the selected strands using an iterative process of linear regression of partial rankings in an agglomeratieve fahsion.  The matrix plot displays the incidence matrix of the resulting consensus seriation, with its coefficient of concentration. The agreement of the seriation in each strand with that of the consensus seriation as well as its concentration coefficient is displayed in the Criteria panel. The function `lakhesize()` performs this task.
 * **Run Deviance Test** Performs a goodness-of-fit test using deviance, treating the distribution of the row and column incidences with a quadratic-logistic model. The largest $p$ values of the row and column elements is contained in the Criteria panel.  The function `element_eval()` performs this task.
 * **Export Data** Will download results in a single `.rds` file, which is a `list` class object containing the following:
-  * `consensus` The results of `lakhesize()`, a `lakhesis` class object containing row and column consensus seriations, the row and column PCA, coefficients of agreement and concentration, and the seriated incidence matrix.
+  * `consensus` The results of `lakhesize()`, a `lakhesis` class object containing row and column consensus seriations, coefficients of agreement and concentration, and the seriated incidence matrix.
   * `strands` The strands selected to produce `consensus`.
 
 ## Installation
@@ -65,21 +65,14 @@ LC()
 
 Note that in uploading a `csv` file for analysis inside the Lakhesis Calculator, the file should consist of just two columns without headers. If data are already in incidence matrix format, the `im_long()` function in `lakhesis` can be used to convert an incidence matrix to be exported into the necessary long format, using the `write.table()` function to export (see documentation on `im_long()`).
 
-The core of `lakhesis` lies in singular value decomposition (SVD), as it does with both PCA and CA, and so the same caveats apply in terms of the rotation of axes in the graphical display of principal scores. The Lakhesis Calculator enables the temporary suppression of row or column elements from the plots, with zero rows/columns automatically removed. As such, unexpected results may be elicited if key elements are suppressed. All elements can easily be re-added and the starting incidence matrix re-initialized.
+The Lakhesis Calculator enables the temporary suppression of row or column elements from the plots, with zero rows/columns automatically removed. As such, unexpected results may be elicited if key elements are suppressed. All elements can easily be re-added and the starting incidence matrix re-initialized.
 
-As Lakhesis analysis uses simulation to derive a consensus seriation, it is recommended that one check for the potential of an even more optimal consensus seriation by running the `lakhesize()` function using more simulation runs, especially if there are a high number of `strands`:
+Console fuctions can also be used to perform consensus serations. For example, using the built-in selection of three strands in the data object `qfStrands`, a consensus seration is performed using the `lakhesize()` function:
 
 ``` r
 data("qfStrands")
-
-# 1 simulation is used in the calculator to reduce computing time
-x <- lakhesize(qfStrands, iter = 100, sim = 1)
+x <- lakhesize(qfStrands)
 summary(x)
-
-# post-exploratory check with lower iterations and use more simulation runs 
-# to attain consensus seriation with a lower concentration measure 
-y <- lakhesize(qfStrands, iter = 20, sim = 20)
-summary(y)
 ```
 
 The vignette "A Guide to Lakhesis" contains more information on usage.

@@ -118,10 +118,9 @@ summary.lakhesis <- function(result) {
     cat("Ranking of column elements: \n")
     cat(result$col, fill = TRUE)
     cat("\n")
-    cat("PCA results contained in $rowPCA, $colPCA:\n")
     cat("Seriated incidience matrix in $im_seriated\n")
     cat("Coefficients in $coef\n")
-    cat("kappa = ", conc_kappa(result$im_seriated))
+    cat("kappa = ", conc_kappa(result$im_seriated), "\n")
 }
 
 
@@ -136,10 +135,6 @@ plot.lakhesis <- function(result, display = "im_seriated") {
         ttl <- paste(format(nrow(im_seriated))," x ",format(ncol(im_seriated)),"; kappa = ",format(k), sep = "")
         im_Image <- t(im_seriated[nrow(im_seriated):1 , ])
         graphics::image(im_Image, col=c('white','black'), xaxt='n', yaxt='n', main = ttl)
-    } else if (display == "rowPCA") {
-        biplot(result$rowPCA)
-    } else if (display == "colPCA") {
-        biplot(result$colPCA)
     } else if (display == "agreement") {
         lakhcoef$Strand <- factor(lakhcoef$Strand, levels = lakhcoef$Strand[order(lakhcoef$Agreement, decreasing = FALSE)]) 
         plot_agreement <- ggplot2::ggplot(lakhcoef, ggplot2::aes(x=Strand, y=Agreement)) + 
@@ -151,7 +146,7 @@ plot.lakhesis <- function(result, display = "im_seriated") {
             ggplot2::geom_bar(stat = "identity") + ggplot2::theme_bw()
         print( plot_concentration )
     } else {
-        stop("Choose a valid display option: im_seriated, rowPCA, colPCA, agreement, concentration")
+        stop("Choose a valid display option: im_seriated, agreement, concentration")
     }
 }
 
