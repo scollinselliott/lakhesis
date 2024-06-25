@@ -54,7 +54,7 @@ displayed in the calculator:
   harmonizing selected partial seriations, which have been identified as
   “strands.” The process of deriving a consensus seriation entails a
   process of iterative regressions on partially seriated sequences,
-  optimzed using the concentration measure. The seriated incidence
+  optimized using the concentration measure. The seriated incidence
   matrix is also displayed in this panel.
 - **Criteria** (Bottom left) Critical coefficients to determine whether
   discordant strands should be removed and/or row or column elements
@@ -91,7 +91,7 @@ The sidebar contains the following commands:
   dimensional space.
 - **Lakhesize Strands** Constructs a consensus seriation of the selected
   strands using an iterative process of linear regression of partial
-  rankings in an agglomeratieve fahsion. The matrix plot displays the
+  rankings in an agglomerative fashion. The matrix plot displays the
   incidence matrix of the resulting consensus seriation, with its
   coefficient of concentration. The agreement of the seriation in each
   strand with that of the consensus seriation as well as its
@@ -141,9 +141,9 @@ removed. As such, unexpected results may be elicited if key elements are
 suppressed. All elements can easily be re-added and the starting
 incidence matrix re-initialized.
 
-Console fuctions can also be used to perform consensus serations. For
+The console can also be used to perform consensus seriations. For
 example, using the built-in selection of three strands in the data
-object `qfStrands`, a consensus seration is performed using the
+object `qfStrands`, a consensus seriation is performed using the
 `lakhesize()` function:
 
 ``` r
