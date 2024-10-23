@@ -13,7 +13,7 @@
 #' * \code{coef}  A \code{data frame} containing the following columns:
 #'   * \code{Strand} The number of the strand.
 #'   * \code{Agreement} The measure of agreement, i.e., how well each strand accords with the consensus seriation. Using the square of Spearman's rank correlation coefficient, \eqn{\rho^2}, between each strand and the consensus ranking, agreement is computed as the product of \eqn{\rho^2} for their row and column rankings, \eqn{\rho_r^2}\eqn{\rho_c^2}. 
-#'   * \code{Concentration} the concentration coefficient \eqn{\kappa}, which provides a measure of the optimality of each strand (see \code{\link[lakhesis]{kappa.coef}}).
+#'   * \code{Concentration} the concentration coefficient \eqn{\kappa}, which provides a measure of the optimality of each strand (see \code{\link[lakhesis]{conc_kappa}}).
 #' * \code{im_seriated} The seriated incidence matrix, of class \code{incidence_matrix}.
 #' 
 #' @examples

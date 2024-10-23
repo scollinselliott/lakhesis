@@ -29,7 +29,7 @@ A \code{list} of class \code{lakhesis} containing the following:
 \itemize{
 \item \code{Strand} The number of the strand.
 \item \code{Agreement} The measure of agreement, i.e., how well each strand accords with the consensus seriation. Using the square of Spearman's rank correlation coefficient, \eqn{\rho^2}, between each strand and the consensus ranking, agreement is computed as the product of \eqn{\rho^2} for their row and column rankings, \eqn{\rho_r^2}\eqn{\rho_c^2}.
-\item \code{Concentration} the concentration coefficient \eqn{\kappa}, which provides a measure of the optimality of each strand (see \code{\link[lakhesis]{kappa.coef}}).
+\item \code{Concentration} the concentration coefficient \eqn{\kappa}, which provides a measure of the optimality of each strand (see \code{\link[lakhesis]{conc_kappa}}).
 }
 \item \code{im_seriated} The seriated incidence matrix, of class \code{incidence_matrix}.
 }

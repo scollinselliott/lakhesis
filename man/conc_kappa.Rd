@@ -13,7 +13,7 @@ conc_kappa(obj)
 The \eqn{\kappa} coefficient of concentration.
 }
 \description{
-The concentration coefficient \eqn{\kappa}, which extends the Kendall-Doran measure of concentration to include rows and then weights the total measure by the total sum of values in the matrix. See \code{\link[lakhesis]{concentration.col}}.
+The concentration coefficient \eqn{\kappa}, which extends the Kendall-Doran measure of concentration to include rows and then weights the total measure by the total sum of values in the matrix. See \code{\link[lakhesis]{conc_col}}.
 }
 \examples{
 data("quattrofontanili")

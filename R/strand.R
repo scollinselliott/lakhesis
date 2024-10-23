@@ -65,7 +65,7 @@ conc_col.incidence_matrix <- function(obj) {
 
 #' Kappa Concentration
 #'
-#' The concentration coefficient \eqn{\kappa}, which extends the Kendall-Doran measure of concentration to include rows and then weights the total measure by the total sum of values in the matrix. See \code{\link[lakhesis]{concentration.col}}.
+#' The concentration coefficient \eqn{\kappa}, which extends the Kendall-Doran measure of concentration to include rows and then weights the total measure by the total sum of values in the matrix. See \code{\link[lakhesis]{conc_col}}.
 #' 
 #' @param obj A seriated binary matrix.
 #' @returns The \eqn{\kappa} coefficient of concentration.
@@ -115,9 +115,10 @@ element_eval <- function(obj) {
     UseMethod("element_eval")
 }
 
+
 #' @rdname element_eval
 #' @export
-element_eval.incidence_matrix <- function(obj) {
+element_eval.matrix <- function(obj) {
     dev.c <- numeric(ncol(obj))
     dev.c[] <- NA
     for (j in 1:ncol(obj)) {
@@ -167,6 +168,12 @@ element_eval.incidence_matrix <- function(obj) {
     results <- list(RowFit = RowFit, ColFit = ColFit)
     class(results) <- c("list")
     return(results)
+}
+
+#' @rdname element_eval
+#' @export
+element_eval.incidence_matrix <- function(obj) {
+    element_eval.matrix(obj)
 }
 
 

@@ -2,10 +2,13 @@
 % Please edit documentation in R/strand.R
 \name{element_eval}
 \alias{element_eval}
+\alias{element_eval.matrix}
 \alias{element_eval.incidence_matrix}
 \title{Evaluating Element Fit}
 \usage{
 element_eval(obj)
+
+\method{element_eval}{matrix}(obj)
 
 \method{element_eval}{incidence_matrix}(obj)
 }
