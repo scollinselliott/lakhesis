@@ -16,7 +16,7 @@ server <- function(input, output, session) {
     sup$colsel <- colnames(isolate(mats$mat_initial))
 
     observeEvent(input$datafile, {
-        mats$mat <- im_read_csv(input$datafile$datapath, remove.hapax = as.logical(input$hapax))
+        mats$mat <- im_read_csv(input$datafile$datapath, char = input$char, remove.hapax = as.logical(input$hapax))
         mats$mat_initial <- mats$mat
         mats$caproc <- ca_procrustes_ser(isolate(mats$mat))
         mats$caproc_ref <- ca_procrustes(isolate(mats$mat))

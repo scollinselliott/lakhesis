@@ -2,7 +2,8 @@ ui <- shinydashboard::dashboardPage(
   shinydashboard::dashboardHeader(title = "Lakhesis Calculator"),  
   shinydashboard::dashboardSidebar(
         shiny::column(12,align = "center",offset = 0,
-        shiny::radioButtons("hapax", label = "Before Uploading:", choices = c("Use All Data" = FALSE, "Remove Hapax" = TRUE)),
+        shiny::radioButtons("hapax", label = "Selection:", choices = c("Use All Data" = FALSE, "Remove Hapax" = TRUE)),
+        shiny::radioButtons("char", label = "Encoding:", choices = c("ISO-8859-1" = "iso-8859-1", "UTF-8" = "utf-8")),
         shiny::fileInput('datafile', 'Choose CSV File:',
                 accept=c('csv', 'comma-separated-values','.csv')),
         shiny::br(),

@@ -4,7 +4,7 @@
 #'  
 #' @param filename The filename to uploaded (must be in \code{.csv} format).
 #' @param header If the \code{.csv} file contains a header. Default is `FALSE`.
-#' @param characterencoding File encoding as used by \code{\link[readr]{locale}}. Default is `"iso-8859-1"` to handle special characters. 
+#' @param characterencoding File encoding as used by \code{\link[readr]{locale}}, which depends on the \code{csv} file. Default is \code{"iso-8859-1"} but \code{"utf-8"} is also recommended. 
 #' @param remove.hapax Remove any row or column which has a sum of 1 (i.e., is only attested once), since they do not directly contribute to the result of the seriation. Default is `FALSE`.
 #' @returns A matrix of binary values (0 = row/column occurrence is absence; 1 = row/column occurrence is present). 
 #' 
