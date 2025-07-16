@@ -5,7 +5,7 @@
 \alias{strand_add.strand}
 \title{Add Strand to List of Strands}
 \usage{
-strand_add(strand, ...)
+strand_add(strand, strands)
 
 \method{strand_add}{strand}(strand, strands)
 }

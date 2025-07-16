@@ -17,7 +17,7 @@ Input is done in the calculator, via a "long" format a two-column \code{.csv} fi
 
 Results can be downloaded from the calculator as an \code{.rds} file containing a \code{list} of the following:
 \itemize{
-\item \code{consensus} The consensus seriations, PCA, coefficients of agreement and concentration, and seriated incidence matrix.
+\item \code{consensus} The consensus seriations, diagnostic coefficients of agreement and optimality criterion, and seriated incidence matrix.
 (\code{\link[lakhesis]{lakhesize}}).
 \item \code{strands} The strands selected by the investigator.
 }

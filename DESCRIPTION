@@ -1,6 +1,6 @@
 Package: lakhesis
 Title: Consensus Seriation for Binary Data
-Version: 0.0.2
+Version: 1.0.0
 Authors@R: 
     person(c("Stephen", "A."), "Collins-Elliott", , "sce@utk.edu", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-5642-6903"))
@@ -8,6 +8,8 @@ Description: Determining consensus seriations for binary incidence matrices, usi
 License: GPL (>= 3)
 Imports:
     stats,
+    Rcpp,
+    RcppArmadillo,
     readr,
     ca,
     ggplot2,
@@ -19,6 +21,9 @@ RdMacros: Rdpack
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
+LinkingTo:
+    Rcpp,
+    RcppArmadillo
 Depends: 
     R (>= 2.10)
 LazyData: true

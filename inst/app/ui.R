@@ -6,7 +6,7 @@ ui <- shinydashboard::dashboardPage(
         shiny::radioButtons("char", label = "Encoding:", choices = c("ISO-8859-1" = "iso-8859-1", "UTF-8" = "utf-8")),
         shiny::fileInput('datafile', 'Choose CSV File:',
                 accept=c('csv', 'comma-separated-values','.csv')),
-        shiny::br(),
+        shiny::radioButtons("crits", label = "Criterion:", choices = c("cor_sp" = "cor_sp", "conc_wrc" = "conc_wrc")),
         shiny::actionButton("reinitialize", "Reinitialize", width = "90%"),
         shiny::actionButton("rerun", "Recompute with Selection", width = "90%"),
         shiny::actionButton("log", "Save Seriation as Strand", width = "90%"),
@@ -43,7 +43,7 @@ ui <- shinydashboard::dashboardPage(
             )
         ),
         shiny::fluidRow(
-            shinydashboard::tabBox(title = "Criteria",
+            shinydashboard::tabBox(title = "Diagnostics",
                 id = "results",
                 # shiny::tabPanel("Lakhesis Coefficient",   
                 #     shiny::plotOutput(outputId="lakhesiscoefplot")
@@ -51,13 +51,13 @@ ui <- shinydashboard::dashboardPage(
                 shiny::tabPanel("Agreement",   
                     shiny::plotOutput(outputId="consensusplot")
                 ),
-                shiny::tabPanel("Concentration",   
+                shiny::tabPanel("Criterion",   
                     shiny::plotOutput(outputId="kappaplot")
                 ),
                 shiny::tabPanel("Deviance (Rows)",   
                     shiny::tableOutput("deviancerows")
                 ),
-                shiny::tabPanel("Deviance (Columns)",   
+                shiny::tabPanel("Deviance (Columns)",
                     shiny::tableOutput("deviancecols")
                 )
             ),

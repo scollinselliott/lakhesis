@@ -71,21 +71,21 @@ ca_procrustes.matrix <- function(obj) {
     mid <- round(nrow(ref.r)/2)
     ref.mid.rad <- atan2(ref.r[mid,2], ref.r[mid,1])
 
-    rss <- c()
-    for (j in 1:nrow(x.r)) {
+    rss <- rss_rotation(x.r, ref.r, ref.mid.rad)
+    # for (j in 1:nrow(x.r)) {
 
-        theta <- atan2(x.r[j,2], x.r[j,1]) - ref.mid.rad
-        rotate <- matrix(c(cos(theta), sin(theta), -sin(theta), cos(theta)), nrow = 2, ncol = 2)
-        x.r.rot <- x.r %*% rotate
-        #x.c.rot <- x.c %*% rotate
+    #     theta <- atan2(x.r[j,2], x.r[j,1]) - ref.mid.rad
+    #     rotate <- matrix(c(cos(theta), sin(theta), -sin(theta), cos(theta)), nrow = 2, ncol = 2)
+    #     x.r.rot <- x.r %*% rotate
+    #     #x.c.rot <- x.c %*% rotate
 
-        rss1 <- 0
-        for (k in 1:nrow(x.r)) {
-        rss1 <- rss1 + min( rowSums(( t(matrix(x.r.rot[k,],  nrow = 2, ncol = nrow(x.r.rot)))  - ref.r)^2) )
-        }
+    #     rss1 <- 0
+    #     for (k in 1:nrow(x.r)) {
+    #     rss1 <- rss1 + min( rowSums(( t(matrix(x.r.rot[k,],  nrow = 2, ncol = nrow(x.r.rot)))  - ref.r)^2) )
+    #     }
 
-        rss <- c(rss, rss1)
-    }
+    #     rss <- c(rss, rss1)
+    # }
 
     # rotate data using row points
     idx <- which.min(rss)

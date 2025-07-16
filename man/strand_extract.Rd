@@ -2,12 +2,9 @@
 % Please edit documentation in R/strand.R
 \name{strand_extract}
 \alias{strand_extract}
-\alias{strand_extract.strands}
 \title{Strand Extract}
 \usage{
-strand_extract(strands, ...)
-
-\method{strand_extract}{strands}(strands)
+strand_extract(strands)
 }
 \arguments{
 \item{strands}{A \code{list} of class \code{strands}.}
@@ -24,7 +21,7 @@ From a \code{list} of strands produced by \code{\link[lakhesis]{ca_procrustes_se
 }
 \examples{
 data("quattrofontanili")
-data("qfStrands")
-strand_extract(qfStrands)
+data("qf_strands")
+strand_extract(qf_strands)
 
 }

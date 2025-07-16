@@ -131,12 +131,11 @@ The `lakhesize()` function has the following options:
 
 * `pbar` Turns the progress bar on or off. Default is `TRUE`.
 
-A predefined `qfStrands` data object is included in the package to illustrate functionality of the `lakhesize()` function, comprised of three strands from the `quattrofontanili` data:
+A predefined `qf_strands` data object is included in the package to illustrate functionality of the `lakhesize()` function, comprised of three strands from the `quattrofontanili` data:
 
 ```{r}
-data("qfStrands")
-print(qfStrands)
-L <- lakhesize(qfStrands, pbar = FALSE)
+print(qf_strands)
+L <- lakhesize(qf_strands, pbar = FALSE)
 summary(L)
 ```
 
@@ -146,13 +145,16 @@ The output is contained in a `lakhesis` object, which includes the following obj
 * the seriated incidence matrix
 * coefficients of concentration and agreement (on which see below)
 
-## Critical Measures
+## Optimality Criteria
 
 The `lakhesis` package employs three methods to critically evaluate a seriated incidence matrix.
 
-### Concentration ($\kappa$)
+### Spearman Correlation
 
-In this package, a measure of concentration has been defined, $\kappa$, which is a loss measure with a minimum of 1. Concentration is based on the number of non-contiguous values of 1 attested in the seriated matrix across both columns and rows. The intervals of the index from the lowest-ranked 1 and that of the highest ranked 1 is summed for each row and column, and then divided by twice total sum of the matrix. A seriated matrix that has perfect concentration will thus have $\kappa = 1$, and should there occur 0s in between values of 1, the measure of $\kappa$ will increase. This is performed using the function `conc_kappa()`, whose documentation contains more information, which takes as input an incidence matrix.
+
+### Concentration (Weighted Row-Column)
+
+In this package, a measure of concentration has been defined, $\kappa$, which is a loss measure with a minimum of 1. Concentration is based on the number of non-contiguous values of 1 attested in the seriated matrix across both columns and rows. The intervals of the index from the lowest-ranked 1 and that of the highest ranked 1 is summed for each row and column, and then divided by twice total sum of the matrix. A seriated matrix that has perfect concentration will thus have $\kappa = 1$, and should there occur 0s in between values of 1, the measure of $\kappa$ will increase. This is performed using the function `conc_wrc()`, whose documentation contains more information, which takes as input an incidence matrix.
 
 Here, we can can create an object that contains the matrix according to the consensus seriation via Lakhesis:
 ```{r}
@@ -161,11 +163,11 @@ quattrofontanili.L <- L$im_seriated
 Then, one can assess the concentration measure $\kappa$ for each seriated matrix, first according to the original sequence, second according to Procrustes-fit CA, and third according to the Lakhesis method employed for three investigator-selected strands:
 ```{r}
 # the original seriation
-conc_kappa(quattrofontanili)
+conc_wrc(quattrofontanili)
 # using procrustes-fit ca
-conc_kappa(quattrofontanili.caproc)
+conc_wrc(quattrofontanili.caproc)
 # using lakhesis
-conc_kappa(quattrofontanili.L)
+conc_wrc(quattrofontanili.L)
 ```
 Lower concentration measures inidicate more optimal seriations. Here, consensus via Lakhesis has arrived at a more optimal seriation according to the concentration principle than either just running one seriation using Procrustes-fit CA or the original sequence.
 
@@ -190,12 +192,12 @@ Plotting the results of `lakhesize()` can be accomplished by stipulating differe
 
 * `"im_seriated"` will produce a matrix plot of the consensus seriation, also displaying the concentration measure $\kappa$. This is the default.
 * `"agreement"` will produce a bar graph showing the measures of agreement of each strand with the consensus. Higher values indicate better agreement.
-* `"concentration"` will produce a bar graph of each strand's concentration measure $\kappa$. Lower values indicate more optimal seriations.
+* `"criterion"` will produce a bar graph of each strand's criterion. Lower values indicate more optimal seriations.
 
 ```{r, fig.align = 'center'}
 plot(L, display = "im_seriated") 
 plot(L, display = "agreement") 
-plot(L, display = "concentration") 
+plot(L, display = "criterion") 
 ```
 
 These plots are incorporated into the Lakhesis Calculator, and are generated automatically.

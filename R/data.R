@@ -25,14 +25,14 @@
 #' Three seriated strands selected from \code{\link[lakhesis]{quattrofontanili}} data, identified by the package author as an example for the documentation of functions.
 #'
 #' @format
-#' A list containing data frames output by \code{\link[lakhesis]{ca.procrustes.curve}}.
+#' A \code{strands} object containing strands output by \code{\link[lakhesis]{ca_procrustes}}.
 #' 
-#' @usage data("qfStrands")
+#' @usage data("qf_strands")
 #' @examples
-#' data("qfStrands")
-#' print(qfStrands)
+#' data("qf_strands")
+#' print(qf_strands)
 #' 
-"qfStrands"
+"qf_strands"
 
 
 

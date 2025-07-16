@@ -6,9 +6,9 @@
 \alias{strand_suppress.default}
 \title{Suppress Element from Strands}
 \usage{
-strand_suppress(strands, ...)
+strand_suppress(strands, elements)
 
-\method{strand_suppress}{strands}(strands, ...)
+\method{strand_suppress}{strands}(strands, elements)
 
 \method{strand_suppress}{default}(strands, elements)
 }
@@ -25,9 +25,9 @@ Given a list of strands, remove a row or column element and re-run seriation by 
 }
 \examples{
 data("quattrofontanili")
-data("qfStrands")
-strand_suppress(qfStrands, "QF II 15-16")
+data("qf_strands")
+strand_suppress(qf_strands, "QF II 15-16")
 
-strand_suppress(qfStrands, c("QF II 15-16", "I", "XIV"))
+strand_suppress(qf_strands, c("QF II 15-16", "I", "XIV"))
 
 }

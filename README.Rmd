@@ -26,9 +26,11 @@ While command line functions can be run in `R`, the functionality of `lakhesis` 
 
 * **Seriation Explorer** (Top left) Displays the correspondence analysis of a dataset which has been fit to the curve an "ideal" seriation. Two plots are available, the biplot of the row and column CA scores as they have been fit to an ideally seriated curve, and a plot showing the orthogonal projection of the row and column scores as they have been fit to the reference curve. Selections can be made on either the biplot or the reference plot.
 * **Consensus Seriation** (Top right) Displays the results of harmonizing selected partial seriations, which have been identified as "strands." The process of deriving a consensus seriation entails a process of iterative regressions on partially seriated sequences, optimized using the concentration measure. The seriated incidence matrix is also displayed in this panel.
-* **Criteria** (Bottom left) Critical coefficients to determine whether discordant strands should be removed and/or row or column elements should be suppressed from consideration.
+* **Diagnostics** (Bottom left) Critical coefficients to determine whether discordant strands should be removed and/or row or column elements should be suppressed from consideration.
   * **Agreement** expresses whether a strand agrees with consensus seriation.
-  * **Concentration** expresses how well seriated the strand is with respect to both row and column values.
+  * **Criteria** expresses how well seriated the strand is. Options for optimality criteria include:
+    * **Spearman's correlation coefficient** (`cor_sp`)
+    * **Weighted row-column concentration** (`conc_wrc`)
   * Tabs marked **Deviance** report on the goodness-of-fit of row and column elements in the consensus seriation using deviance with a quadratic-logistic model. Higher $p$ values will indicate poorer fit for a particular row or column element.
 * **Modify**  (Bottom right) Temporarily suppress row or column elements from correspondence analysis.
 Strands which have low agreement or high concentration may also be deleted in this panel.

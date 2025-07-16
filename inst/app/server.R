@@ -1,3 +1,5 @@
+options(shiny.maxRequestSize=50*1024^2)
+
 server <- function(input, output, session) { 
 
     # creating reactive values
@@ -160,7 +162,7 @@ server <- function(input, output, session) {
             s <- isolate(results$strands)
             results$strand_backup <- isolate(results$strands)
 
-            results$lakhesis_results <- lakhesize(s, pbar = FALSE) 
+            results$lakhesis_results <- lakhesize(s, crit = input$crits, pbar = FALSE) 
 
             if ("lakhesis" %in% class(isolate(results$lakhesis_results))) {
                 results$lakhesized <- TRUE
@@ -218,7 +220,7 @@ server <- function(input, output, session) {
                 plot(L, display = "agreement")
             })
             } else {
-                plot(0,0, pch = " ", xlab = "Lakhesize to render plot of Lakhesis coefficents for strands.", ylab = " " )
+                plot(0,0, pch = " ", xlab = "Lakhesize to render plot of coefficents for strands.", ylab = " " )
         } 
     })
 
@@ -226,10 +228,10 @@ server <- function(input, output, session) {
         if (results$lakhesized == TRUE) {
             L <- results$lakhesis_results
             suppressWarnings({
-                plot(L, display = "concentration")
+                plot(L, display = "criterion")
             })
             } else {
-                plot(0,0, pch = " ", xlab = "Lakhesize to render plot of Lakhesis coefficents for strands.", ylab = " " )
+                plot(0,0, pch = " ", xlab = "Lakhesize to render plot of coefficents for strands.", ylab = " " )
         }   
     })
 
@@ -247,7 +249,7 @@ server <- function(input, output, session) {
 
             mats$mat <- mats$mat_initial
             suppressWarnings({
-               results$lakhesis_results <- lakhesize(isolate(results$strands), pbar = FALSE) 
+               results$lakhesis_results <- lakhesize(isolate(results$strands), crit = input$crits, pbar = FALSE) 
             })
             selections$biplot[] <- FALSE
             selections$curve[] <- FALSE
@@ -276,7 +278,7 @@ server <- function(input, output, session) {
 
             mats$mat <- mats$mat_initial
             suppressWarnings({
-            results$lakhesis_results <- lakhesize(isolate(results$strands), pbar = FALSE) 
+            results$lakhesis_results <- lakhesize(isolate(results$strands), crit = input$crits, pbar = FALSE) 
             })
             selections$biplot[] <- FALSE
             selections$curve[] <- FALSE
@@ -320,7 +322,7 @@ server <- function(input, output, session) {
             # lakhesize to ensure that all row/col elements from strands are in results if user has not performed this action
             s <- isolate(results$strands)
             suppressWarnings({
-            results$lakhesis_results <- lakhesize(s, pbar = FALSE) 
+            results$lakhesis_results <- lakhesize(s, crit = input$crits, pbar = FALSE) 
             })
             lr <- isolate(results$lakhesis_results)
             results <- list(consensus = lr, strands = s)

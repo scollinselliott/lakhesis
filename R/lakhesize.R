@@ -1,40 +1,45 @@
 #' Lakhesize
 #'
-#' This function returns the row and column consensus seriation for a \code{list} object of the \code{strands} class, containing their rankings and coefficients of association and concentration.
-#' 
-#' Consensus seriation is achieved by iterative simple linear regression to handle \code{NA} vales in each strand. To initialize, a regression is performed pairwise, with every strand as the dependent \eqn{y} variate and every other strand as the independent \eqn{x} variate. The independent variate's rankings are then regressed onto \eqn{f(x) = \hat{\beta}_1 x + \hat{\beta}_0}. If \eqn{y \neq f(x)}, the mean of \eqn{y} and \eqn{f(x)} is used. Then, the values of dependent variate and those of regressed independent are re-ranked, which serves as the dependent variate on the next iteration. The process is repeated, regressing each strand which yields the lowest concentration measure. 
+#' This function returns the row and column consensus seriation for a \code{list} object of the \code{strands} class, containing their rankings, coefficients of association, and criterion. Consensus seriation is achieved by iterative simple linear regression to handle \code{NA} vales in each strand. To initialize, a regression is performed pairwise, with every strand as the dependent \eqn{y} variate and every other strand as the independent \eqn{x} variate. The independent variate's rankings are then regressed onto \eqn{f(x) = \hat{\beta}_1 x + \hat{\beta}_0}. If \eqn{y \neq f(x)}, the mean of \eqn{y} and \eqn{f(x)} is used. Then, the values of the dependent variate and those of the regressed independent varaite are re-ranked together, to form a combined ranking, which serves as the dependent variate on the next iteration. The pair of strands is chosen which minimizes a specified optimality criterion. The process is repeated until all strands have been regressed and re-ranked into a single consensus seriation.
 #'
-#' @param strands A `list` of the `strands` class (see \code{\link[lakhesis]{add_strand}}).
+#' @param strands A \code{list} of \code{strands} class (see \code{\link[lakhesis]{strand_add}}).
+#' @param crit The criterion used to assess the seration resulting from two strands \eqn{x} and \eqn{y}: 
+#'   * \code{"cor_sp"} Computes Spearman's correlation coefficent for the incidences of 1s as points \eqn{(i,j)}. See \code{\link[lakhesis]{cor_sp}}.  Higher values are more optimal. This is the default option.
+#'   * \code{"conc_wrc"} Computes weighted row-column concentration as the optimality criterion. See \code{\link[lakhesis]{conc_wrc}}. Lower values are more optimal.
+#' 
 #' @param pbar Displaying a progress bar. Default is \code{TRUE}.
-#' @return A `list` of class `lakhesis` containing the following:
+#' @return A \code{list} of class \code{lakhesis} containing the following:
 #' 
 #' * \code{row} A seriated vector of row elements. 
 #' * \code{col} A seriated vector of column elements
 #' * \code{coef}  A \code{data frame} containing the following columns:
 #'   * \code{Strand} The number of the strand.
 #'   * \code{Agreement} The measure of agreement, i.e., how well each strand accords with the consensus seriation. Using the square of Spearman's rank correlation coefficient, \eqn{\rho^2}, between each strand and the consensus ranking, agreement is computed as the product of \eqn{\rho^2} for their row and column rankings, \eqn{\rho_r^2}\eqn{\rho_c^2}. 
-#'   * \code{Concentration} the concentration coefficient \eqn{\kappa}, which provides a measure of the optimality of each strand (see \code{\link[lakhesis]{conc_kappa}}).
+#'   * \code{Criterion} Criterion of the optimality of each strand (per the \code{"crit"} option above).
 #' * \code{im_seriated} The seriated incidence matrix, of class \code{incidence_matrix}.
 #' 
 #' @examples
-#' data("qfStrands")
-#' x <- lakhesize(qfStrands, pbar = FALSE)
-#' # summary(x) 
+#' data("qf_strands")
+#' L <- lakhesize(qf_strands, pbar = FALSE)
+#' # summary(L) 
 #'
 #' @export
-lakhesize <- function(strands, ...) {
+lakhesize <- function(strands, crit = "cor_sp", pbar = TRUE) {
     UseMethod("lakhesize")
 }
 
 #' @rdname lakhesize
 #' @export 
-lakhesize.strands <- function(strands, pbar = TRUE) {
-    lakhesize.default(strands, pbar)
+lakhesize.strands <- function(strands, crit = "cor_sp", pbar = TRUE) {
+    lakhesize.default(strands, crit, pbar)
 }
 
 #' @rdname lakhesize
 #' @export
-lakhesize.default <- function(strands, pbar = TRUE) {    
+lakhesize.default <- function(strands, crit = "cor_sp", pbar = TRUE) {    
+    if (!(crit %in% c("cor_sp", "conc_wrc"))) {
+        stop('Criterion must be "cor_sp" or "conc_wrc".')
+    }
     obj <- strands[[1]]$im_seriated
     for (i in 2:length(strands)) {
         obj <- im_merge(obj, strands[[i]]$im_seriated)
@@ -106,8 +111,11 @@ lakhesize.default <- function(strands, pbar = TRUE) {
 
                             R <- names(rdat)[order(rdat)]
                             C <- names(cdat)[order(cdat)]
-                            K <- conc_kappa(obj[R, C])
-
+                            if (crit == "conc_wrc") {
+                                K <- conc_wrc(obj[R, C])
+                            } else if (crit == "cor_sp") {
+                                K <- cor_sp(obj[R, C])
+                            }
                             kappa_matrix[i,j] <- K
                         }
                     }
@@ -171,7 +179,11 @@ lakhesize.default <- function(strands, pbar = TRUE) {
                         R <- names(rdat)[order(rdat)]
                         C <- names(cdat)[order(cdat)]
 
-                        K <- conc_kappa(obj[R, C])
+                        if (crit == "conc_wrc") {
+                            K <- conc_wrc(obj[R, C])
+                        } else if (crit == "cor_sp") {
+                            K <- cor_sp(obj[R, C])
+                        }
 
                         kappa_check[i] <- K
                     }
@@ -215,16 +227,28 @@ lakhesize.default <- function(strands, pbar = TRUE) {
                 close(pb)
             }
 
-            # concentration of each strand
+            # criterion of each strand
             strand.k.c <- c()
-            for (i in 1:length(strands)) {
-                ctx <- stats::na.omit(rowranks[,i])
-                fnd <- stats::na.omit(colranks[,i])
-                roworder <- names(ctx)[order(ctx)]
-                colorder <- names(fnd)[order(fnd)]
-                strand.im <- obj[roworder,colorder]
-                k.c <- conc_kappa(strand.im)
-                strand.k.c <- c(strand.k.c, k.c)
+            if (crit == "conc_wrc") {
+                for (i in 1:length(strands)) {
+                    ctx <- stats::na.omit(rowranks[,i])
+                    fnd <- stats::na.omit(colranks[,i])
+                    roworder <- names(ctx)[order(ctx)]
+                    colorder <- names(fnd)[order(fnd)]
+                    strand.im <- obj[roworder,colorder]
+                    k.c <- conc_wrc(strand.im)
+                    strand.k.c <- c(strand.k.c, k.c)
+                }
+            } else if (crit == "cor_sp") {
+                for (i in 1:length(strands)) {
+                    ctx <- stats::na.omit(rowranks[,i])
+                    fnd <- stats::na.omit(colranks[,i])
+                    roworder <- names(ctx)[order(ctx)]
+                    colorder <- names(fnd)[order(fnd)]
+                    strand.im <- obj[roworder,colorder]
+                    k.c <- cor_sp(strand.im)
+                    strand.k.c <- c(strand.k.c, k.c)
+                }
             }
 
             # agreement with conensus seration
@@ -235,7 +259,7 @@ lakhesize.default <- function(strands, pbar = TRUE) {
                 assoc <- c(assoc,  sp.f * sp.c)
             }
 
-            coefs <- data.frame( Strand = 1:length(strands), Agreement = assoc, Concentration = strand.k.c)
+            coefs <- data.frame( Strand = 1:length(strands), Agreement = assoc, Criterion = strand.k.c)
 
             results <- list()
 

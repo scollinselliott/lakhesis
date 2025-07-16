@@ -4,9 +4,9 @@
 #' 
 #' Input is done in the calculator, via a "long" format a two-column \code{.csv} file giving pairs of row and column incidences. See \code{\link[lakhesis]{im_read_csv}} for details. Conversion of a pre-existing incidence matrix to long format can be performed with \code{\link[lakhesis]{im_long}}.
 #' 
-#' Results can be downloaded from the calculator as an \code{.rds} file containing a `list` of the following:
+#' Results can be downloaded from the calculator as an \code{.rds} file containing a \code{list} of the following:
 #' 
-#' * `consensus` The consensus seriations, PCA, coefficients of agreement and concentration, and seriated incidence matrix.
+#' * `consensus` The consensus seriations, diagnostic coefficients of agreement and optimality criterion, and seriated incidence matrix.
 #' (\code{\link[lakhesis]{lakhesize}}).
 #' * `strands` The strands selected by the investigator.
 #' 
