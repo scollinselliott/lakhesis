@@ -7,3 +7,9 @@ rss_rotation <- function(x_r, ref_r, ref_mid_rad) {
     .Call('_lakhesis_rss_rotation', PACKAGE = 'lakhesis', x_r, ref_r, ref_mid_rad)
 }
 
+#' @useDynLib lakhesis
+#' @importFrom Rcpp sourceCpp
+orth_proj_fit <- function(x_r_rot, ref_r) {
+    .Call('_lakhesis_orth_proj_fit', PACKAGE = 'lakhesis', x_r_rot, ref_r)
+}
+

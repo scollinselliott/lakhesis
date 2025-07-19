@@ -58,7 +58,7 @@ strand_extract.strands <- function(strands) {
 
 #' Suppress Element from Strands
 #' 
-#' Given a list of strands, remove a row or column element and re-run seriation by correspondence analysis with Procrustes fitting (\code{\link[lakhesis]{ca_procrustes_ser}}) to generate a new list of strands that exclude the specified elements. If the resulting strand lacks sufficient points to perform correspondence analysis, that strand is deleted in the output.
+#' Given a \code{list} of \code{strands} produced by correspondence analysis with Procrustes fitting (\code{\link[lakhesis]{ca_procrustes_ser}}), remove one or more row or column elements, re-seriating each strand. This generates a new list of strands that exclude the specified elements. If a resulting strand lacks sufficient points to perform correspondence analysis, that strand is deleted in the output.
 #' 
 #' @param strands A \code{list} of class \code{strands}.
 #' @param elements A vector of one or more row or column ids to suppress.
@@ -66,7 +66,6 @@ strand_extract.strands <- function(strands) {
 #' @return A list of the strands.
 #' 
 #' @examples
-#' data("quattrofontanili")
 #' data("qf_strands")
 #' strand_suppress(qf_strands, "QF II 15-16")
 #' 
@@ -87,25 +86,27 @@ strand_suppress.strands <- function(strands, elements) {
 #' @export
 strand_suppress.default <- function(strands, elements) {
     new <- list()
-        obj <- strands[[1]]$im_seriated
-        for (i in 2:length(strands)) {
-            obj <- im_merge(obj, strands[[i]]$im_seriated)
-        }
-    for (i in 1:length(strands)) {
-        strand <- strands[[i]]$dat
+    obj <- strands[[1]]$im_seriated
+    for (s in 2:length(strands)) {
+        obj <- im_merge(obj, strands[[s]]$im_seriated)
+    }
+    j <- 1
+    for (s in 1:length(strands)) {
+        strand <- strands[[s]]$dat
         rows <- rownames(strand)[ !(rownames(strand) %in% elements) & (strand$Type == "row") ]
         cols <- rownames(strand)[ !(rownames(strand) %in% elements) & (strand$Type == "col") ]
-        obj.copy <- obj
-        obj.copy <- obj.copy[rows, ]
-        obj.copy <- obj.copy[ ,cols]
-        obj.copy <- obj.copy[rowSums(obj.copy) !=0 , ]
-        obj.copy <- obj.copy[ , colSums(obj.copy) !=0]
+        obj_copy <- obj
+        obj_copy <- obj_copy[rows, ]
+        obj_copy <- obj_copy[ ,cols]
+        obj_copy <- obj_copy[rowSums(obj_copy) != 0 , ]
+        obj_copy <- obj_copy[ , colSums(obj_copy) != 0]
         newstrand <- NULL
         suppressWarnings({
-            newstrand <- ca_procrustes_ser(obj.copy)
+            newstrand <- ca_procrustes_ser(obj_copy)
         })
         if (!is.null(newstrand)) { 
-           new[[i]] <- newstrand
+           new[[j]] <- newstrand
+           j <- j + 1
         }
     }
     class(new) <- c("strands", "list")

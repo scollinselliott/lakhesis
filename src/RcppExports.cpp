@@ -24,9 +24,22 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// orth_proj_fit
+Rcpp::NumericVector orth_proj_fit(arma::mat& x_r_rot, arma::mat& ref_r);
+RcppExport SEXP _lakhesis_orth_proj_fit(SEXP x_r_rotSEXP, SEXP ref_rSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat& >::type x_r_rot(x_r_rotSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type ref_r(ref_rSEXP);
+    rcpp_result_gen = Rcpp::wrap(orth_proj_fit(x_r_rot, ref_r));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_lakhesis_rss_rotation", (DL_FUNC) &_lakhesis_rss_rotation, 3},
+    {"_lakhesis_orth_proj_fit", (DL_FUNC) &_lakhesis_orth_proj_fit, 2},
     {NULL, NULL, 0}
 };
 

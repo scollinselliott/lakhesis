@@ -166,70 +166,80 @@ ca_procrustes_ser.incidence_matrix <- function(obj, samples = 10^5) {
 ca_procrustes_ser.matrix <- function(obj, samples = 10^5) {
     if ((nrow(obj) > 2 ) & (ncol(obj) > 2) ) {
         obj <- obj[sort(rownames(obj)), sort(colnames(obj))]
-        obj.procca <- ca_procrustes(obj)
-        ref.r <- obj.procca$ref
-        x.r.rot <- obj.procca$x
-        x.c.rot <- obj.procca$y
-        x <- ref.r[,1]
-        y <- ref.r[,2]
+        obj_procca <- ca_procrustes(obj)
+        ref_r <- obj_procca$ref
+        x_r_rot <- obj_procca$x
+        x_c_rot <- obj_procca$y
+        x <- ref_r[,1]
+        y <- ref_r[,2]
 
         # polynomial fitting
         xx <- seq(-1, 1, length.out = samples)
         fit <- stats::lm(y ~ x + I(x^2))
         yy <- stats::predict(fit, data.frame(x = xx))
-        ref2.r <- as.matrix(cbind(xx,yy))
+        ref2_r <- as.matrix(cbind(xx,yy))
 
         # row points
-        index <- c()
-        rss <- c()
-        x.prc <- c()
-        y.prc <- c()
-        for (k in 1:nrow(x.r.rot)) {
-            rss1 <- min( rowSums(( t(matrix(x.r.rot[k,],  nrow = 2, ncol = nrow(ref2.r)))  - ref2.r)^2) )
-            idx <- which.min(rowSums(( t(matrix(x.r.rot[k,],  nrow = 2, ncol = nrow(ref2.r)))  - ref2.r)^2))
-            index <- c(index, idx)
-            x.prc <- c(x.prc, ref2.r[idx,1])
-            y.prc <- c(y.prc, ref2.r[idx,2])
-            rss <- c(rss, rss1)
-        }
-        x.dat <- data.frame(index = index, x.prc = x.prc, y.prc = y.prc, dist = rss)
-        rownames(x.dat) <- rownames(obj)
+
+        # index <- c()
+        # rss <- c()
+        # x.prc <- c()
+        # y.prc <- c()
+        # for (k in 1:nrow(x.r.rot)) {
+        #     rss1 <- min( rowSums(( t(matrix(x.r.rot[k,],  nrow = 2, ncol = nrow(ref2.r)))  - ref2.r)^2) )
+        #     idx <- which.min(rowSums(( t(matrix(x.r.rot[k,],  nrow = 2, ncol = nrow(ref2.r)))  - ref2.r)^2))
+        #     index <- c(index, idx)
+        #     x.prc <- c(x.prc, ref2.r[idx,1])
+        #     y.prc <- c(y.prc, ref2.r[idx,2])
+        #     rss <- c(rss, rss1)
+        # }
+        # x.dat <- data.frame(index = index, x.prc = x.prc, y.prc = y.prc, dist = rss)
+
+        x_ <- orth_proj_fit(x_r_rot, ref2_r)
+        x_dat <- data.frame(index = x_[,2], x_fit = x_[,3], y_fit = x_[,4], dist = x_[,1])
+        # x.dat <- data.frame(index = index, x.prc = x.prc, y.prc = y.prc, dist = rss)
+        rownames(x_dat) <- rownames(obj)
+
 
         # col points
-        index <- c()
-        rss <- c()
-        x.prc <- c()
-        y.prc <- c()
-        for (k in 1:nrow(x.c.rot)) {
-            rss1 <- min( rowSums(( t(matrix(x.c.rot[k,],  nrow = 2, ncol = nrow(ref2.r)))  - ref2.r)^2) )
-            idx <- which.min(rowSums(( t(matrix(x.c.rot[k,],  nrow = 2, ncol = nrow(ref2.r)))  - ref2.r)^2))
-            index <- c(index, idx)
-            x.prc <- c(x.prc, ref2.r[idx,1])
-            y.prc <- c(y.prc, ref2.r[idx,2])
-            rss <- c(rss, rss1)
-        }
-        y.dat <- data.frame(index = index, x.prc = x.prc, y.prc = y.prc, dist = rss)
-        rownames(y.dat) <- colnames(obj)
+        y_ <- orth_proj_fit(x_c_rot, ref2_r)
+        y_dat <- data.frame(index = y_[,2], x_fit = y_[,3], y_fit = y_[,4], dist = y_[,1])
+        rownames(y_dat) <- colnames(obj)
 
-        r.idx <- x.dat$index
-        c.idx <- y.dat$index
+        # index <- c()
+        # rss <- c()
+        # x.prc <- c()
+        # y.prc <- c()
+        # for (k in 1:nrow(x.c.rot)) {
+        #     rss1 <- min( rowSums(( t(matrix(x.c.rot[k,],  nrow = 2, ncol = nrow(ref2.r)))  - ref2.r)^2) )
+        #     idx <- which.min(rowSums(( t(matrix(x.c.rot[k,],  nrow = 2, ncol = nrow(ref2.r)))  - ref2.r)^2))
+        #     index <- c(index, idx)
+        #     x.prc <- c(x.prc, ref2.r[idx,1])
+        #     y.prc <- c(y.prc, ref2.r[idx,2])
+        #     rss <- c(rss, rss1)
+        # }
+        # y.dat <- data.frame(index = index, x.prc = x.prc, y.prc = y.prc, dist = rss)
+        # rownames(y.dat) <- colnames(obj)
 
-        r.rank <- rank(r.idx)
-        c.rank <- rank(c.idx)
-        ord.row1 <- data.frame(Procrustes1 = obj.procca$x[,1], Procrustes2 = obj.procca$x[,2], CurveIndex = r.idx, Distance = x.dat$dist, Rank = r.rank)
-        rownames(ord.row1) <- rownames(x.dat)
+        r_idx <- x_dat$index
+        c_idx <- y_dat$index
+
+        r_rank <- rank(r_idx)
+        c_rank <- rank(c_idx)
+        ord.row1 <- data.frame(Procrustes1 = obj_procca$x[,1], Procrustes2 = obj_procca$x[,2], CurveIndex = r_idx, Distance = x_dat$dist, Rank = r_rank)
+        rownames(ord.row1) <- rownames(x_dat)
         ord.row1$Type <- factor("row")
-        ord.col1 <- data.frame(Procrustes1 = obj.procca$y[,1], Procrustes2 = obj.procca$y[,2], CurveIndex = c.idx, Distance = y.dat$dist, Rank = c.rank)
-        rownames(ord.col1) <- rownames(y.dat)
+        ord.col1 <- data.frame(Procrustes1 = obj_procca$y[,1], Procrustes2 = obj_procca$y[,2], CurveIndex = c_idx, Distance = y_dat$dist, Rank = c_rank)
+        rownames(ord.col1) <- rownames(y_dat)
         ord.col1$Type <- factor("col")
-        proc.ranking <- rbind(ord.row1,ord.col1)
-        proc.ranking$sel <- FALSE
-        class(proc.ranking) <- c("data.frame")
-        R <- rownames(x.dat)[order(r.rank)]
-        C <- rownames(y.dat)[order(c.rank)]
+        proc_ranking <- rbind(ord.row1,ord.col1)
+        proc_ranking$sel <- FALSE
+        class(proc_ranking) <- c("data.frame")
+        R <- rownames(x_dat)[order(r_rank)]
+        C <- rownames(y_dat)[order(c_rank)]
         im_seriated <- obj[R, C]
         class(im_seriated) <- c("incidence_matrix", "matrix", "array")
-        strand <- list(dat = proc.ranking, im_seriated = im_seriated)
+        strand <- list(dat = proc_ranking, im_seriated = im_seriated)
         class(strand) <- c("strand", "list")
         return(strand)
     } else {

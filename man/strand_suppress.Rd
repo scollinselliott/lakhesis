@@ -21,10 +21,9 @@ strand_suppress(strands, elements)
 A list of the strands.
 }
 \description{
-Given a list of strands, remove a row or column element and re-run seriation by correspondence analysis with Procrustes fitting (\code{\link[lakhesis]{ca_procrustes_ser}}) to generate a new list of strands that exclude the specified elements. If the resulting strand lacks sufficient points to perform correspondence analysis, that strand is deleted in the output.
+Given a \code{list} of \code{strands} produced by correspondence analysis with Procrustes fitting (\code{\link[lakhesis]{ca_procrustes_ser}}), remove one or more row or column elements, re-seriating each strand. This generates a new list of strands that exclude the specified elements. If a resulting strand lacks sufficient points to perform correspondence analysis, that strand is deleted in the output.
 }
 \examples{
-data("quattrofontanili")
 data("qf_strands")
 strand_suppress(qf_strands, "QF II 15-16")
 
