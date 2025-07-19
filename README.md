@@ -216,10 +216,12 @@ Brief Introduction to Rcpp.” *The American Statistician* 72: 28–36.
 
 <div id="ref-eddelbuettel_rcpparmadillo_2014" class="csl-entry">
 
-Eddelbuettel, D., and C. Sanderson. 2014. “RcppArmadillo: Accelerating r
-with High-Performance c++ Linear Algebra.” *Computational Statistics and
-Data Analysis* 71: 1054–63.
-<https://doi.org/10.1016/j.csda.2013.02.005>.
+Eddelbuettel, D., and C. Sanderson. 2014. “RcppArmadillo: Accelerating R
+<span class="nocase">with</span>
+<span class="nocase">high</span>-<span class="nocase">performance</span>
+C++ <span class="nocase">linear</span>
+<span class="nocase">algebra</span>.” *Computational Statistics and Data
+Analysis* 71: 1054–63. <https://doi.org/10.1016/j.csda.2013.02.005>.
 
 </div>
 
