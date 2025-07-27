@@ -16,8 +16,8 @@ establish a chronological order of contexts and find-types on the basis
 of their similarity, i.e, that things come into and go out of fashion
 with a peak moment of popularity (Ihm 2005). In ecology, the
 distribution of a species may occur according to a preferred
-environmental condition that diminishes as that environment changes
-(Braak and Looman 1986). There are a number of R functions and packages,
+environmental condition that diminishes as that environment changes (ter
+Braak and Looman 1986). There are a number of R functions and packages,
 especially [`seriation`](https://github.com/mhahsler/seriation)
 (Hahsler, Hornik, and Buchcta 2008) and
 [`vegan`](https://CRAN.R-project.org/package=vegan) (Oksanen et al.
@@ -56,6 +56,31 @@ Four panels are displayed in the calculator:
   the orthogonal projection of the row and column scores as they have
   been fit to the reference curve. Selections can be made on either the
   biplot or the reference plot.
+  - Map options. To the left, users can choose either a **symmetric** or
+    an **asymmetric** plot.
+- **Save Strand** (Top middle) Records the displayed plot as a partial
+  seriation, or “strand” (i.e., partial with respect to the initial
+  data). Strands can be sequenced according to different projections:
+  - **CA1** / **CA2** Projection of scores along the first or second
+    principal CA axis.
+  - **Procrustes1** / **Procrustes2** Projection of scores along the
+    first or second axis after Procrustes fitting.
+  - **Curve** Projection along the reference curve of an ideal
+    seriation.
+  - **Lakhesize** Produce a consensus seriation (must have saved at
+    least two strands). Constructs a consensus seriation of the selected
+    strands using an iterative process of linear regression of partial
+    rankings in an agglomerative fashion. The matrix plot displays the
+    incidence matrix of the resulting consensus seriation, with
+    optimality criteria. The agreement of the seriation in each strand
+    with that of the consensus seriation as well as its criterion is
+    displayed in the Diganostics panel. The function `lakhesize()`
+    performs this task.
+  - **Run Deviance Test** Performs a goodness-of-fit test using
+    deviance, treating the distribution of the row and column incidences
+    with a quadratic-logistic model. The largest $p$ values of the row
+    and column elements is contained in the Diganostics panel. The
+    function `element_eval()` performs this task.
 - **Consensus Seriation** (Top right) Displays the results of
   harmonizing selected partial seriations, which have been identified as
   “strands.” The process of deriving a consensus seriation entails a
@@ -68,8 +93,9 @@ Four panels are displayed in the calculator:
   - **Agreement** expresses whether a strand agrees with consensus
     seriation.
   - **Criteria** expresses how well seriated the strand is. Options for
-    optimality criteria include:
-    - **Spearman’s correlation coefficient** (`cor_sp`)
+    optimality criteria are those which are used in Lakhesis,
+    comprising:
+    - **Squared correlation coefficient** (`cor_sq`)
     - **Weighted row-column concentration** (`conc_wrc`)
   - Tabs marked **Deviance** report on the goodness-of-fit of row and
     column elements in the consensus seriation using deviance with a
@@ -87,29 +113,11 @@ The sidebar contains the following commands:
   element of the incidence matrix.
 - **Reinitialize** Resets the plots to their original, starting
   condition.
-- **Recompute with Selection** Upon the selection of row and column
-  points from the Seriation Explorer panel, this command will perform
-  and fit CA only on the selection. To return to the initial dataset,
-  press the Reinitialize button. The function `ca_procrustes_ser()`
-  performs this task.
-- **Save Selection as Strand** Record the displayed plot as a partial
-  seriation, or “strand” (i.e., partial with respect to the initial
-  data). Strands are sequenced according to their fit onto a reference
-  curve which projects a sequence of ideally seriated data in the same
-  dimensional space.
-- **Lakhesize Strands** Constructs a consensus seriation of the selected
-  strands using an iterative process of linear regression of partial
-  rankings in an agglomerative fashion. The matrix plot displays the
-  incidence matrix of the resulting consensus seriation, with its
-  coefficient of concentration. The agreement of the seriation in each
-  strand with that of the consensus seriation as well as its
-  concentration coefficient is displayed in the Diganostics panel. The
-  function `lakhesize()` performs this task.
-- **Run Deviance Test** Performs a goodness-of-fit test using deviance,
-  treating the distribution of the row and column incidences with a
-  quadratic-logistic model. The largest $p$ values of the row and column
-  elements is contained in the Diganostics panel. The function
-  `element_eval()` performs this task.
+- **Replot with Selection** Upon the selection of row and column points
+  from the Seriation Explorer panel, this command will perform and fit
+  CA only on the selection. To return to the initial dataset, press the
+  Reinitialize button. The function `ca_procrustes_ser()` performs this
+  task.
 - **Export Data** Will download results in a single `.rds` file, which
   is a `list` class object containing the following:
   - `consensus` The results of `lakhesize()`, a `lakhesis` class object
@@ -136,11 +144,25 @@ library(lakhesis)
 LC()
 ```
 
-Note that in uploading a `csv` file for analysis inside the Lakhesis
-Calculator, the file should consist of just two columns without headers,
-in which each row represents the incidence of a row-column pair. If
-characters are not displyaing properly in the plot, make sure to check
-font encoding (UTF-8 is recommended).
+In uploading a `csv` file for analysis inside the Lakhesis Calculator,
+the incidence matrix should be in “long” format. That is, the file
+should consist of just two columns without headers, in which each row
+represents the incidence of a row-column pair. For example, an incidence
+matrix of
+
+$\begin{array} & C_1 & C_2 & C_3 \\\ R_1 & 1 & 0 & 0 \\\ R_2 & 0 & 1 & 1 \\\ & R_3 & 0 & 0 & 1 \end{array}$
+
+will have a corresponding long format of
+
+``` r
+R1, C1
+R2, C2 
+R2, C3 
+R3, C3
+```
+
+If characters are not displyaing properly in the plot, make sure to
+check font encoding (UTF-8 is recommended).
 
 Row and column elements must be unique (a row element cannot have the
 same name as a column element).
@@ -190,14 +212,6 @@ The vignette “A Guide to Lakhesis” contains more information on usage.
 
 <div id="refs" class="references csl-bib-body hanging-indent">
 
-<div id="ref-ter_braak_weighted_1986" class="csl-entry">
-
-Braak, C. J. F. ter, and C. W. N. Looman. 1986. “Weighted Averaging,
-Logistic Regression and the Gaussian Response Model.” *Vegetatio* 65:
-3–11. <https://doi.org/10.1007/BF00032121>.
-
-</div>
-
 <div id="ref-chang_shiny_2024" class="csl-entry">
 
 Chang, W., J. Cheng, J. J. Allaire, C. Sievert, B. Schloerke, Y. Xie, J.
@@ -246,6 +260,14 @@ C. Weihs and W. Gaul, 307–16. Berlin: Springer.
 Oksanen, J., G. L. Simpson, F. G Blanchet, R. Kindt, P. Legendre, P. R.
 Minchin, R. B. O’Hara, et al. 2024. “Vegan: Community Ecology Package.”
 <https://doi.org/10.32614/CRAN.package.vegan>.
+
+</div>
+
+<div id="ref-ter_braak_weighted_1986" class="csl-entry">
+
+ter Braak, C. J. F., and C. W. N. Looman. 1986. “Weighted Averaging,
+Logistic Regression and the Gaussian Response Model.” *Vegetatio* 65:
+3–11. <https://doi.org/10.1007/BF00032121>.
 
 </div>
 
