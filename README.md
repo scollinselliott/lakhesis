@@ -60,13 +60,14 @@ Four panels are displayed in the calculator:
     an **asymmetric** plot.
 - **Save Strand** (Top middle) Records the displayed plot as a partial
   seriation, or “strand” (i.e., partial with respect to the initial
-  data). Strands can be sequenced according to different projections:
-  - **CA1** / **CA2** Projection of scores along the first or second
-    principal CA axis.
-  - **Procrustes1** / **Procrustes2** Projection of scores along the
-    first or second axis after Procrustes fitting.
-  - **Curve** Projection along the reference curve of an ideal
-    seriation.
+  data).
+  - Strands can be sequenced according to different projections:
+    - **CA1** / **CA2** Projection of scores along the first or second
+      principal CA axis.
+    - **Procrustes1** / **Procrustes2** Projection of scores along the
+      first or second axis after Procrustes fitting.
+    - **Curve** Projection along the reference curve of an ideal
+      seriation.
   - **Lakhesize** Produce a consensus seriation (must have saved at
     least two strands). Constructs a consensus seriation of the selected
     strands using an iterative process of linear regression of partial
