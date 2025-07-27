@@ -27,7 +27,8 @@ While command line functions can be run in `R`, the functionality of `lakhesis` 
 
 * **Seriation Explorer** (Top left) Displays the correspondence analysis of a dataset which has been fit to the curve an "ideal" seriation. Two plots are available, the biplot of the row and column CA scores as they have been fit to an ideally seriated curve, and a plot showing the orthogonal projection of the row and column scores as they have been fit to the reference curve. Selections can be made on either the biplot or the reference plot.
   * Map options. To the left, users can choose either a **symmetric** or an **asymmetric** plot.
-* **Save Strand** (Top middle) Records the displayed plot as a partial seriation, or "strand" (i.e., partial with respect to the initial data). Strands can be sequenced according to different projections:
+* **Save Strand** (Top middle) Records the displayed plot as a partial seriation, or "strand" (i.e., partial with respect to the initial data).
+  * Strands can be sequenced according to different projections:
     * **CA1** / **CA2** Projection of scores along the first or second principal CA axis.
     * **Procrustes1** / **Procrustes2** Projection of scores along the first or second axis after Procrustes fitting.
     * **Curve** Projection along the reference curve of an ideal seriation.
