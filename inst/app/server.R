@@ -9,8 +9,8 @@ server <- function(input, output, session) {
 
     mats$mat <- im_ref(matrix(NA, 20, 20))
     mats$mat_initial <- im_ref(matrix(NA, 20, 20))
-    mats$caproc <- ca_procrustes_ser(isolate(mats$mat))
-    mats$caproc_ref <- ca_procrustes(isolate(mats$mat))
+    mats$caproc <- ca_procrustes_ser(isolate(mats$mat), symmetric = isolate(as.logical(input$sym)))
+    mats$caproc_ref <- ca_procrustes(isolate(mats$mat), symmetric = isolate(as.logical(input$sym)))
     mats$nr <- nrow(isolate(mats$caproc)$dat)
     mats$devr <- data.frame(Message = c("Lakhesize and run deviance test."))
     mats$devc <- data.frame(Message = c("Lakhesize and run deviance test."))
@@ -20,9 +20,10 @@ server <- function(input, output, session) {
     observeEvent(input$datafile, {
         mats$mat <- im_read_csv(input$datafile$datapath, char = input$char, remove.hapax = as.logical(input$hapax))
         mats$mat_initial <- mats$mat
-        mats$caproc <- ca_procrustes_ser(isolate(mats$mat))
-        mats$caproc_ref <- ca_procrustes(isolate(mats$mat))
+        mats$caproc <- ca_procrustes_ser(isolate(mats$mat), symmetric = isolate(as.logical(input$sym)))
+        mats$caproc_ref <- ca_procrustes(isolate(mats$mat), symmetric = isolate(as.logical(input$sym)))
         mats$nr <- nrow(isolate(mats$caproc)$dat)
+        selections$caplot <- rep(FALSE, isolate(mats$nr))
         selections$biplot <- rep(FALSE, isolate(mats$nr))
         selections$curve <- rep(FALSE, isolate(mats$nr))
 
@@ -51,9 +52,15 @@ server <- function(input, output, session) {
     )
 
     # interactive plots
-    selections <- reactiveValues(biplot = NULL, curve = NULL )
+    selections <- reactiveValues(caplot = NULL, biplot = NULL, curve = NULL )
+    selections$caplot <- rep(FALSE, isolate(mats$nr))
     selections$biplot <- rep(FALSE, isolate(mats$nr))
     selections$curve <- rep(FALSE, isolate(mats$nr))
+
+    observeEvent(input$plot_brush_caplot, {
+        brushed_caplot <- brushedPoints(mats$caproc$dat, input$plot_brush_caplot, allRows = TRUE)$selected_
+        selections$caplot <- (brushed_caplot | selections$caplot)
+    })
 
     observeEvent(input$plot_brush_biplot, {
         brushed_biplot <- brushedPoints(mats$caproc$dat, input$plot_brush_biplot, allRows = TRUE)$selected_
@@ -67,9 +74,21 @@ server <- function(input, output, session) {
 
     observeEvent(input$plot_reset, {
         nr <- mats$nr
+        selections$caplot <- rep(FALSE, nr)
         selections$biplot <- rep(FALSE, nr)
         selections$curve <- rep(FALSE, nr)
     })
+
+    output$caplot <- renderPlot({
+        dat <- mats$caproc$dat
+        dat$sel <- selections$caplot
+
+        ca_plot <- ggplot2::ggplot() +
+            ggplot2::geom_point(data = dat, ggplot2::aes(x = CA1, y = CA2, color = interaction(Type, sel, ":") ), size = 2) +
+            ggplot2::geom_text(data = dat, ggplot2::aes(x = CA1, y = CA2, color = interaction(Type, sel, ":") ), label = rownames(dat), size = 3, hjust = 0.025, nudge_x = 0.015, check_overlap = TRUE) + 
+            ggplot2::theme_bw() + ggplot2::theme(aspect.ratio = 1, legend.position="none")  
+        ca_plot
+    },  res = 96)
 
     output$biplot <- renderPlot({
         dat <- mats$caproc$dat
@@ -89,7 +108,6 @@ server <- function(input, output, session) {
 
     output$procrustesplot <- renderPlot({
         dat <- mats$caproc$dat
-    
         dat$sel <- selections$curve #selected_curve()
 
         ord.plot <- ggplot2::ggplot() + 
@@ -105,7 +123,7 @@ server <- function(input, output, session) {
         keepRow <- !(rownames(m) %in% input$removeRow)
         keepCol <- !(colnames(m) %in% input$removeCol)
         keep.rc <- c(keepRow, keepCol)
-        keep <- (selections$biplot  | selections$curve ) & keep.rc
+        keep <- ((selections$caplot | selections$biplot)  | selections$curve ) & keep.rc
         dat <- mats$caproc$dat
 
         if ((length(rownames(dat)[keep & (dat$Type == "row") ]) > 2) & (length(rownames(dat)[keep & (dat$Type == "col") ]) > 2)) {
@@ -117,10 +135,44 @@ server <- function(input, output, session) {
             if ( all( is.finite( tmp ) ) ) {
 
             mats$mat <- tmp
-            mats$caproc <- ca_procrustes_ser(mats$mat)
-            mats$caproc_ref <- ca_procrustes(isolate(mats$mat))
+            mats$caproc <- ca_procrustes_ser(mats$mat, symmetric = isolate(as.logical(input$sym)))
+            mats$caproc_ref <- ca_procrustes(isolate(mats$mat), symmetric = isolate(as.logical(input$sym)))
             mats$nr <- nrow(mats$caproc$dat)
 
+            selections$caplot <- rep(FALSE, isolate(mats$nr))
+            selections$biplot <- rep(FALSE, isolate(mats$nr))
+            selections$curve <- rep(FALSE, isolate(mats$nr))
+            } else {
+                message("Infinite values in selection.")
+            }
+        } else {
+            message("Insufficient number of points selected.")
+        }
+    })
+
+    # re-run CA on selected points
+    observeEvent(input$rerun, {
+        m <- mats$mat
+        keepRow <- !(rownames(m) %in% input$removeRow)
+        keepCol <- !(colnames(m) %in% input$removeCol)
+        keep.rc <- c(keepRow, keepCol)
+        keep <- ((selections$caplot | selections$biplot)  | selections$curve ) & keep.rc
+        dat <- mats$caproc$dat
+
+        if ((length(rownames(dat)[keep & (dat$Type == "row") ]) > 2) & (length(rownames(dat)[keep & (dat$Type == "col") ]) > 2)) {
+
+            tmp <- mats$mat[rownames(dat)[keep & (dat$Type == "row") ], rownames(dat)[keep & (dat$Type == "col") ] ]  
+            tmp <- tmp[rowSums(tmp) != 0 , ]
+            tmp <- tmp[,  colSums(tmp) != 0]
+
+            if ( all( is.finite( tmp ) ) ) {
+
+            mats$mat <- tmp
+            mats$caproc <- ca_procrustes_ser(mats$mat, symmetric = isolate(as.logical(input$sym)))
+            mats$caproc_ref <- ca_procrustes(isolate(mats$mat), symmetric = isolate(as.logical(input$sym)))
+            mats$nr <- nrow(mats$caproc$dat)
+
+            selections$caplot <- rep(FALSE, isolate(mats$nr))
             selections$biplot <- rep(FALSE, isolate(mats$nr))
             selections$curve <- rep(FALSE, isolate(mats$nr))
             } else {
@@ -133,13 +185,15 @@ server <- function(input, output, session) {
 
     # restart the Lakhesis Calculator with the starting matrix
     observeEvent(input$reinitialize, {
+        selections$caplot[] <- FALSE
         selections$biplot[] <- FALSE
         selections$curve[] <- FALSE
 
         mats$mat <- mats$mat_initial
-        mats$caproc <- ca_procrustes_ser(mats$mat)
-        mats$caproc_ref <- ca_procrustes(isolate(mats$mat))
+        mats$caproc <- ca_procrustes_ser(mats$mat, symmetric = isolate(as.logical(input$sym)))
+        mats$caproc_ref <- ca_procrustes(isolate(mats$mat), symmetric = isolate(as.logical(input$sym)))
         mats$nr <- nrow(mats$caproc$dat)
+        selections$caplot <- rep(FALSE, isolate(mats$nr))
         selections$biplot <- rep(FALSE, isolate(mats$nr))
         selections$curve <- rep(FALSE, isolate(mats$nr))
     })
@@ -150,7 +204,32 @@ server <- function(input, output, session) {
     results <- reactiveValues(strands = list(), strand_hold = list,  strand_backup = NULL, lakhesis_results = NULL, lakhesized = FALSE)
 
     # record the observed seriation as a strand
-    observeEvent(input$log, {
+    observeEvent(input$log_ca1, {
+        mats$caproc <- ca_procrustes_ser(mats$mat, projection = "ca1", symmetric = isolate(as.logical(input$sym)))
+        results$strands <- strand_add(isolate(mats$caproc), results$strands)
+        results$strand_backup <- isolate(results$strands)
+        #print(isolate(results$strands))
+    })
+    observeEvent(input$log_ca2, {
+        mats$caproc <- ca_procrustes_ser(mats$mat, projection = "ca2", symmetric = isolate(as.logical(input$sym)))
+        results$strands <- strand_add(isolate(mats$caproc), results$strands)
+        results$strand_backup <- isolate(results$strands)
+        #print(isolate(results$strands))
+    })
+    observeEvent(input$log_proc1, {
+        mats$caproc <- ca_procrustes_ser(mats$mat, projection = "procrustes1", symmetric = isolate(as.logical(input$sym)))
+        results$strands <- strand_add(isolate(mats$caproc), results$strands)
+        results$strand_backup <- isolate(results$strands)
+        #print(isolate(results$strands))
+    })
+    observeEvent(input$log_proc2, {
+        mats$caproc <- ca_procrustes_ser(mats$mat, projection = "procrustes2", symmetric = isolate(as.logical(input$sym)))
+        results$strands <- strand_add(isolate(mats$caproc), results$strands)
+        results$strand_backup <- isolate(results$strands)
+        #print(isolate(results$strands))
+    })
+    observeEvent(input$log_curve, {
+        mats$caproc <- ca_procrustes_ser(mats$mat, projection = "curve", symmetric = isolate(as.logical(input$sym)))
         results$strands <- strand_add(isolate(mats$caproc), results$strands)
         results$strand_backup <- isolate(results$strands)
         #print(isolate(results$strands))
@@ -168,14 +247,16 @@ server <- function(input, output, session) {
                 results$lakhesized <- TRUE
             }
 
+            selections$caplot[] <- FALSE
             selections$biplot[] <- FALSE
             selections$curve[] <- FALSE
 
             mats$mat <- mats$mat_initial
-            mats$caproc <- ca_procrustes_ser(mats$mat)
-            mats$caproc_ref <- ca_procrustes(isolate(mats$mat))
+            mats$caproc <- ca_procrustes_ser(mats$mat, symmetric = isolate(as.logical(input$sym)))
+            mats$caproc_ref <- ca_procrustes(isolate(mats$mat), symmetric = isolate(as.logical(input$sym)))
             mats$nr <- nrow(mats$caproc$dat)
 
+            selections$caplot <- rep(FALSE, mats$nr)
             selections$biplot <- rep(FALSE, mats$nr)
             selections$curve <- rep(FALSE, mats$nr)
             
@@ -251,19 +332,21 @@ server <- function(input, output, session) {
             suppressWarnings({
                results$lakhesis_results <- lakhesize(isolate(results$strands), crit = input$crits, pbar = FALSE) 
             })
+            selections$caplot[] <- FALSE
             selections$biplot[] <- FALSE
             selections$curve[] <- FALSE
 
             mats$mat <- mats$mat_initial
-            mats$caproc <- ca_procrustes_ser(mats$mat)
-            mats$caproc_ref <- ca_procrustes(isolate(mats$mat))
+            mats$caproc <- ca_procrustes_ser(mats$mat, symmetric = isolate(as.logical(input$sym)))
+            mats$caproc_ref <- ca_procrustes(isolate(mats$mat), symmetric = isolate(as.logical(input$sym)))
             mats$nr <- nrow(mats$caproc$dat)
             } else {
                 mats$mat <- mats$mat_initial
-                mats$caproc <- ca_procrustes_ser(mats$mat)
-                mats$caproc_ref <- ca_procrustes(isolate(mats$mat))
+                mats$caproc <- ca_procrustes_ser(mats$mat, symmetric = isolate(as.logical(input$sym)))
+                mats$caproc_ref <- ca_procrustes(isolate(mats$mat), symmetric = isolate(as.logical(input$sym)))
                 mats$nr <- nrow(mats$caproc$dat)
             }
+            selections$caplot[] <- FALSE
             selections$biplot <- rep(FALSE, mats$nr)
             selections$curve <- rep(FALSE, mats$nr)
         }
@@ -280,14 +363,16 @@ server <- function(input, output, session) {
             suppressWarnings({
             results$lakhesis_results <- lakhesize(isolate(results$strands), crit = input$crits, pbar = FALSE) 
             })
+            selections$caplot[] <- FALSE
             selections$biplot[] <- FALSE
             selections$curve[] <- FALSE
 
             mats$mat <- mats$mat_initial
-            mats$caproc <- ca_procrustes_ser(mats$mat)
-            mats$caproc_ref <- ca_procrustes(isolate(mats$mat))
+            mats$caproc <- ca_procrustes_ser(mats$mat, symmetric = isolate(as.logical(input$sym)))
+            mats$caproc_ref <- ca_procrustes(isolate(mats$mat), symmetric = isolate(as.logical(input$sym)))
             mats$nr <- nrow(mats$caproc$dat)
 
+            selections$caplot[] <- FALSE
             selections$biplot <- rep(FALSE, mats$nr)
             selections$curve <- rep(FALSE, mats$nr)
         }
@@ -316,6 +401,7 @@ server <- function(input, output, session) {
             # reset plot when exporting
             results$lakhesized <- TRUE
 
+            selections$caplot[] <- FALSE
             selections$biplot[] <- FALSE
             selections$curve[] <- FALSE
 
@@ -329,10 +415,11 @@ server <- function(input, output, session) {
             saveRDS(results, file = file)
           
             mats$mat <- mats$mat_initial
-            mats$caproc <- ca_procrustes_ser(mats$mat)
-            mats$caproc_ref <- ca_procrustes(isolate(mats$mat))
+            mats$caproc <- ca_procrustes_ser(mats$mat, symmetric = isolate(as.logical(input$sym)))
+            mats$caproc_ref <- ca_procrustes(isolate(mats$mat), symmetric = isolate(as.logical(input$sym)))
             mats$nr <- nrow(mats$caproc$dat)
 
+            selections$caplot[] <- FALSE
             selections$biplot <- rep(FALSE, mats$nr)
             selections$curve <- rep(FALSE, mats$nr)
         }
@@ -345,9 +432,10 @@ server <- function(input, output, session) {
             mi <- mi[(!(rownames(mi) %in% sr)), ]
             mi <- mi[ , (colSums(mi) != 0)]
             mats$mat <- mi
-            mats$caproc <- ca_procrustes_ser(isolate(mats$mat))
-            mats$caproc_ref <- ca_procrustes(isolate(mats$mat))
+            mats$caproc <- ca_procrustes_ser(isolate(mats$mat), symmetric = isolate(as.logical(input$sym)))
+            mats$caproc_ref <- ca_procrustes(isolate(mats$mat), symmetric = isolate(as.logical(input$sym)))
             mats$nr <- nrow(isolate(mats$caproc$dat))
+            selections$caplot <- rep(FALSE, isolate(mats$nr))
             selections$biplot <- rep(FALSE, isolate(mats$nr))
             selections$curve <- rep(FALSE, isolate(mats$nr))
         }
@@ -360,9 +448,10 @@ server <- function(input, output, session) {
             mi <- mi[, (!(colnames(mi) %in% sc)) ]
             mi <- mi[(rowSums(mi) != 0), ]
             mats$mat <- mi
-            mats$caproc <- ca_procrustes_ser(isolate(mats$mat))
-            mats$caproc_ref <- ca_procrustes(isolate(mats$mat))
+            mats$caproc <- ca_procrustes_ser(isolate(mats$mat), symmetric = isolate(as.logical(input$sym)))
+            mats$caproc_ref <- ca_procrustes(isolate(mats$mat), symmetric = isolate(as.logical(input$sym)))
             mats$nr <- nrow(isolate(mats$caproc$dat))
+            selections$caplot <- rep(FALSE, isolate(mats$nr))
             selections$biplot <- rep(FALSE, isolate(mats$nr))
             selections$curve <- rep(FALSE, isolate(mats$nr))
         }

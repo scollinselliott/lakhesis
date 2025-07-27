@@ -1,26 +1,26 @@
-#' Criterion of Optimality: Spearman Correlation
+#' Optimality Criterion: Squared Correlation
 #' 
-#' Treating each incidence of 1 in an element \eqn{(i,j)} of a seriated matrix as an \eqn{(x,y)} point, computes Spearman's rank correlation coefficient \insertCite{spearman_proof_1904}{lakhesis}.
+#' Treating each incidence of 1 in an element \eqn{(i,j)} of a seriated matrix as an \eqn{(x,y)} point, computes the squared correlation coefficient \insertCite{@see @mccormick_identification_1969, 147-148}{lakhesis}.
 #' 
 #' @param obj A seriated binary matrix.
 #' @returns Spearman's rank correlation coefficient.
 #' 
 #' @examples
 #' data("quattrofontanili")
-#' cor_sp(quattrofontanili)
+#' cor_sq(quattrofontanili)
 #' 
 #' @references
 #'   \insertAllCited{}
 #' 
 #' @export
 #' @importFrom Rdpack reprompt
-cor_sp <- function(obj) {
-    UseMethod("cor_sp")
+cor_sq <- function(obj) {
+    UseMethod("cor_sq")
 }
 
-#' @rdname cor_sp
+#' @rdname cor_sq
 #' @export 
-cor_sp.matrix <- function(obj) {
+cor_sq.matrix <- function(obj) {
     x <- c()
     y <- c()
     for (i in 1:nrow(obj)) {
@@ -29,14 +29,14 @@ cor_sp.matrix <- function(obj) {
         x <- c(x, xi)
         y <- c(y, yi)
     }
-    r_sp <- stats::cor(x,y, method = "spearman") 
-    return(r_sp)
+    r_ <- ( stats::cor(x,y, method = "pearson")  )^2
+    return(r_)
 }
 
-#' @rdname cor_sp
+#' @rdname cor_sq
 #' @export
-cor_sp.incidence_matrix <- function(obj) {
-    cor_sp.matrix(obj)
+cor_sq.incidence_matrix <- function(obj) {
+    cor_sq.matrix(obj)
 }
 
 
@@ -73,7 +73,7 @@ spearman_sq.numeric <- function(r1, r2) {
 
 
 
-#' Kendall-Doran (Column) Concentration
+#' Optimality Criterion: Kendall-Doran (Column) Concentration
 #'
 #' The Kendall-Doran measure of concentration \insertCite{kendall_statistical_1963,doran_computer_1971}{lakhesis}. In a seriated matrix, this function computes the total number cells between the first and last non-zero value, column by column.
 #' 
@@ -110,7 +110,7 @@ conc_c.incidence_matrix <- function(obj) {
 }
 
 
-#' Weighted Row-Column Concentration
+#' Optimality Criterion: Weighted Row-Column Concentration
 #'
 #' Extends the Kendall-Doran (column) measure of concentration (see \code{\link[lakhesis]{conc_c}}) to include rows and then weights the total measure by the total sum of values in the matrix.
 #' 

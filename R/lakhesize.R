@@ -4,7 +4,7 @@
 #'
 #' @param strands A \code{list} of \code{strands} class (see \code{\link[lakhesis]{strand_add}}).
 #' @param crit The criterion used to assess the seration resulting from two strands \eqn{x} and \eqn{y}: 
-#'   * \code{"cor_sp"} Computes Spearman's correlation coefficent for the incidences of 1s as points \eqn{(i,j)}. See \code{\link[lakhesis]{cor_sp}}.  Higher values are more optimal. This is the default option.
+#'   * \code{"cor_sq"} Computes a squared correlation coefficent for the incidences of 1s as points \eqn{(i,j)}. See \code{\link[lakhesis]{cor_sq}}. Higher values are more optimal. This is the default option.
 #'   * \code{"conc_wrc"} Computes weighted row-column concentration as the optimality criterion. See \code{\link[lakhesis]{conc_wrc}}. Lower values are more optimal.
 #' 
 #' @param pbar Displaying a progress bar. Default is \code{TRUE}.
@@ -24,21 +24,21 @@
 #' # summary(L) 
 #'
 #' @export
-lakhesize <- function(strands, crit = "cor_sp", pbar = TRUE) {
+lakhesize <- function(strands, crit = "cor_sq", pbar = TRUE) {
     UseMethod("lakhesize")
 }
 
 #' @rdname lakhesize
 #' @export 
-lakhesize.strands <- function(strands, crit = "cor_sp", pbar = TRUE) {
+lakhesize.strands <- function(strands, crit = "cor_sq", pbar = TRUE) {
     lakhesize.default(strands, crit, pbar)
 }
 
 #' @rdname lakhesize
 #' @export
-lakhesize.default <- function(strands, crit = "cor_sp", pbar = TRUE) {    
-    if (!(crit %in% c("cor_sp", "conc_wrc"))) {
-        stop('Criterion must be "cor_sp" or "conc_wrc".')
+lakhesize.default <- function(strands, crit = "cor_sq", pbar = TRUE) {    
+    if (!(crit %in% c("cor_sq", "conc_wrc"))) {
+        stop('Criterion must be "cor_sq" or "conc_wrc".')
     }
     obj <- strands[[1]]$im_seriated
     for (i in 2:length(strands)) {
@@ -72,7 +72,6 @@ lakhesize.default <- function(strands, crit = "cor_sp", pbar = TRUE) {
             check <- check_matrix[1,2]
         }
 
-
         if (0 %in% check ) {
             warning("Each strand must share at least four joint elements with another strand.")
             return(NULL)
@@ -81,7 +80,7 @@ lakhesize.default <- function(strands, crit = "cor_sp", pbar = TRUE) {
                 pb <- utils::txtProgressBar(min = 0, max = ns, style = 3)
             }   
             regressed <- c()
-            kappa_matrix <- matrix(NA, ns, ns)
+            criterion_matrix <- matrix(NA, ns, ns)
 
             for (i in 1:ns) {
                 for (j in i:ns) {
@@ -113,16 +112,16 @@ lakhesize.default <- function(strands, crit = "cor_sp", pbar = TRUE) {
                             C <- names(cdat)[order(cdat)]
                             if (crit == "conc_wrc") {
                                 K <- conc_wrc(obj[R, C])
-                            } else if (crit == "cor_sp") {
-                                K <- cor_sp(obj[R, C])
+                            } else if (crit == "cor_sq") {
+                                K <- cor_sq(obj[R, C])
                             }
-                            kappa_matrix[i,j] <- K
+                            criterion_matrix[i,j] <- K
                         }
                     }
                 }
             }
 
-            regressed <- rev( arrayInd(which.min(kappa_matrix), dim(kappa_matrix)))
+            regressed <- rev( arrayInd(which.min(criterion_matrix), dim(criterion_matrix)))
             remaining <- 1:ns
             remaining <- remaining[-regressed]
 
@@ -181,8 +180,8 @@ lakhesize.default <- function(strands, crit = "cor_sp", pbar = TRUE) {
 
                         if (crit == "conc_wrc") {
                             K <- conc_wrc(obj[R, C])
-                        } else if (crit == "cor_sp") {
-                            K <- cor_sp(obj[R, C])
+                        } else if (crit == "cor_sq") {
+                            K <- cor_sq(obj[R, C])
                         }
 
                         kappa_check[i] <- K
@@ -239,14 +238,14 @@ lakhesize.default <- function(strands, crit = "cor_sp", pbar = TRUE) {
                     k.c <- conc_wrc(strand.im)
                     strand.k.c <- c(strand.k.c, k.c)
                 }
-            } else if (crit == "cor_sp") {
+            } else if (crit == "cor_sq") {
                 for (i in 1:length(strands)) {
                     ctx <- stats::na.omit(rowranks[,i])
                     fnd <- stats::na.omit(colranks[,i])
                     roworder <- names(ctx)[order(ctx)]
                     colorder <- names(fnd)[order(fnd)]
                     strand.im <- obj[roworder,colorder]
-                    k.c <- cor_sp(strand.im)
+                    k.c <- cor_sq(strand.im)
                     strand.k.c <- c(strand.k.c, k.c)
                 }
             }

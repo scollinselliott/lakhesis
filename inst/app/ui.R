@@ -6,12 +6,11 @@ ui <- shinydashboard::dashboardPage(
         shiny::radioButtons("char", label = "Encoding:", choices = c("ISO-8859-1" = "iso-8859-1", "UTF-8" = "utf-8")),
         shiny::fileInput('datafile', 'Choose CSV File:',
                 accept=c('csv', 'comma-separated-values','.csv')),
-        shiny::radioButtons("crits", label = "Criterion:", choices = c("cor_sp" = "cor_sp", "conc_wrc" = "conc_wrc")),
+        shiny::radioButtons("sym", label = "CA Scores:", choices = c("Symmetric" = TRUE, "Asymmetric" = FALSE)),
         shiny::actionButton("reinitialize", "Reinitialize", width = "90%"),
-        shiny::actionButton("rerun", "Recompute with Selection", width = "90%"),
-        shiny::actionButton("log", "Save Seriation as Strand", width = "90%"),
-        shiny::actionButton("lakhesize", "Lakhesize Strands", width = "90%"),
-        shiny::actionButton("deviancetest", "Run Deviance Test", width = "90%"),
+        shiny::actionButton("rerun", "Replot with Selection", width = "90%"),
+        # shiny::actionButton("log", "Save Seriation as Strand", width = "90%"),
+
         shiny::br(),
         shiny::downloadButton("downloadData", "Export Data", width = "90%"),
         shiny::br(),shiny::br(),
@@ -23,7 +22,12 @@ ui <- shinydashboard::dashboardPage(
     shinydashboard::dashboardBody(  
         shiny::fluidRow(
             shinydashboard::tabBox(title = "Seriation Explorer",
-                id = "pointselector", height = "600px",
+                id = "pointselector", height = "500px", width = 5, 
+                    shiny::tabPanel("CA Plot",
+                    shiny::plotOutput(outputId="caplot", brush = shiny::brushOpts(id="plot_brush_caplot", resetOnNew = TRUE), dblclick = "plot_reset"),
+                    #column(12,align = "center",offset = 0,
+                    #shiny::actionButton("save_curve", "Gather Plot Points", width = "90%"))
+                ),
                 shiny::tabPanel("CA-Procrustes Plot",
                     shiny::plotOutput(outputId="biplot", brush = shiny::brushOpts(id="plot_brush_biplot", resetOnNew = TRUE), dblclick = "plot_reset"),
                     #column(12,align = "center",offset = 0,
@@ -35,8 +39,26 @@ ui <- shinydashboard::dashboardPage(
                     #shiny::actionButton("save_curve", "Gather Plot Points", width = "90%"))
                 )
             ),
+            shinydashboard::tabBox(title = "Save Strand",
+                id = "pcaplot", height = "500px", width = 2, 
+                shiny::tabPanel("Projection",
+                shiny::column(12,align = "center",offset = 0,
+                p("Select a strand by choosing which axis to use for its seriation."),
+                shiny::actionButton("log_ca1", "CA1", width = "90%"),
+                shiny::actionButton("log_ca2", "CA2", width = "90%"),
+                shiny::actionButton("log_proc1", "Procrustes1", width = "90%"),
+                shiny::actionButton("log_proc2", "Procrustes2", width = "90%"),
+                shiny::actionButton("log_curve", "Curve", width = "90%"),
+                shiny::br(),
+                shiny::radioButtons("crits", label = "Criterion:", choices = c("cor_sq" = "cor_sq", "conc_wrc" = "conc_wrc")),
+                shiny::actionButton("lakhesize", "Lakhesize (Consensus)", width = "90%"),
+                shiny::actionButton("deviancetest", "Run Deviance Test", width = "90%")
+
+                )
+                )
+            ),
             shinydashboard::tabBox(title = "Consensus Seriation",
-                id = "pcaplot", height = "600px",
+                id = "pcaplot", height = "500px", width = 5, 
                 shiny::tabPanel("Matrix",
                     shiny::plotOutput(outputId="consensusmatrixplot")
                 )

@@ -6,18 +6,18 @@
 \alias{lakhesize.default}
 \title{Lakhesize}
 \usage{
-lakhesize(strands, crit = "cor_sp", pbar = TRUE)
+lakhesize(strands, crit = "cor_sq", pbar = TRUE)
 
-\method{lakhesize}{strands}(strands, crit = "cor_sp", pbar = TRUE)
+\method{lakhesize}{strands}(strands, crit = "cor_sq", pbar = TRUE)
 
-\method{lakhesize}{default}(strands, crit = "cor_sp", pbar = TRUE)
+\method{lakhesize}{default}(strands, crit = "cor_sq", pbar = TRUE)
 }
 \arguments{
 \item{strands}{A \code{list} of \code{strands} class (see \code{\link[lakhesis]{strand_add}}).}
 
 \item{crit}{The criterion used to assess the seration resulting from two strands \eqn{x} and \eqn{y}:
 \itemize{
-\item \code{"cor_sp"} Computes Spearman's correlation coefficent for the incidences of 1s as points \eqn{(i,j)}. See \code{\link[lakhesis]{cor_sp}}.  Higher values are more optimal. This is the default option.
+\item \code{"cor_sq"} Computes a squared correlation coefficent for the incidences of 1s as points \eqn{(i,j)}. See \code{\link[lakhesis]{cor_sq}}. Higher values are more optimal. This is the default option.
 \item \code{"conc_wrc"} Computes weighted row-column concentration as the optimality criterion. See \code{\link[lakhesis]{conc_wrc}}. Lower values are more optimal.
 }}
 

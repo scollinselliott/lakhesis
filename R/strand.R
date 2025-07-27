@@ -28,7 +28,6 @@ strand_extract.strands <- function(strands) {
         stop("Strands improperly produced. Row names and column names of input matrix be unique.")
     }
 
-
     rowranks <- matrix(NA, nrow = nrow(obj),  ncol = length(strands)) 
     rownames(rowranks) <- rownames(obj)
 
@@ -157,4 +156,47 @@ strands_create <- function(strands) {
 strands_create.list <- function(strands) {
     class(strands) <- c("strands", "list")
     return(strands)
+}
+
+
+
+#' Create Strand Object from Seriated Incidence Matrix
+#' 
+#' Given a seriated incidence matrix with unique row and column names, create a \code{strand} object.
+#' 
+#' @param obj A \code{list} of strands.
+#' @param method The method used to create the strand (optional).
+#'
+#' @return A \code{list} of class \code{strands}.
+#' 
+#' @export 
+strand_create <- function(obj, method = NULL) {
+    UseMethod("strand_create")
+}
+
+#' @rdname strand_create
+#' @export
+strand_create.matrix <- function(obj, method = NULL) {
+
+    ord_row <- data.frame(Rank = 1:nrow(obj))
+    ord_row$Type <- factor("row")
+    rownames(ord_row) <- rownames(obj)
+    ord_col <- data.frame(Rank = 1:ncol(obj))
+    ord_col$Type <- factor("col")
+    rownames(ord_col) <- colnames(obj)
+
+    ranking <- rbind(ord_row,ord_col)
+    ranking$sel <- FALSE
+
+    class(obj) <- c("incidence_matrix", "matrix", "array")
+
+    res <- list(dat = ranking, im_seriated = obj, method = method)
+    class(res) <- c("strand", "list")
+    return(res)
+}
+
+#' @rdname strand_create
+#' @export
+strand_create.incidence_matrix <- function(obj, method = NULL) {
+    strand_create.matrix(obj, method)
 }

@@ -4,7 +4,7 @@
 \alias{conc_c}
 \alias{conc_c.matrix}
 \alias{conc_c.incidence_matrix}
-\title{Kendall-Doran (Column) Concentration}
+\title{Optimality Criterion: Kendall-Doran (Column) Concentration}
 \usage{
 conc_c(obj)
 

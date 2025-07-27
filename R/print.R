@@ -1,28 +1,39 @@
 #' @export 
 print.procrustean <- function(x, ...) {
-    cat("Procrustes-fit CA scores of class", class(x), "\n")
-    cat("  $ref : principal scores: reference points\n")
-    cat("  $x : principal scores: row points\n")
-    cat("  $y : principal scores: column points\n")
+        cat("Procrustes-fit CA scores of class", class(x), "\n")
+        cat("  $ref : principal scores: reference points\n")
+        cat("  $x : standard scores: row points\n")
+        cat("  $y : principal scores: column points\n")
+        cat("  $x_pr : Procrustes-fit standard scores: row points\n")
+        cat("  $y_pr : Procrustes-fit principal scores: column points\n")
 }
 
 
 
 #' @export 
-plot.procrustean <- function(x, ...) {
+plot.procrustean <- function(x, bw = FALSE, ...) {
     Procrustes1 <- Procrustes2 <- NULL
     ref <- data.frame(Procrustes1 = x$ref[,1], Procrustes2 = x$ref[,2])
-    r.dat <- data.frame(Procrustes1 = x$x[,1], Procrustes2 = x$x[,2])
-    c.dat <- data.frame(Procrustes1 = x$y[,1], Procrustes2 = x$y[,2])
+    r.dat <- data.frame(Procrustes1 = x$x_pr[,1], Procrustes2 = x$x_pr[,2])
+    c.dat <- data.frame(Procrustes1 = x$y_pr[,1], Procrustes2 = x$y_pr[,2])
     Type <- c(rep("row", nrow(x$x)), rep("col", nrow(x$y)) )
     dat <- cbind( rbind(r.dat, c.dat), Type)
     #ref <- im_ref( matrix(NA, nrow = sum(strand$Type == 'row'),  ncol = sum(strand$Type == 'col')  ))
     #refcurve <- ca_procrustes_curve(ref)
+    if (bw == FALSE) {
     curve.plot <- ggplot2::ggplot() +
         ggplot2::geom_point(data = dat, ggplot2::aes(x = Procrustes1, y = Procrustes2, color = Type), size = 2) +
         ggplot2::geom_text(data = dat, ggplot2::aes(x = Procrustes1, y = Procrustes2, color = Type ), label = rownames(dat), size = 3, hjust = 0.025, nudge_x = 0.015, check_overlap = TRUE) + 
         ggplot2::geom_line(data = ref,  ggplot2::aes(x = Procrustes1, y = Procrustes2), linewidth=1, alpha=0.4, linetype=1) +
         ggplot2::theme_bw() + ggplot2::theme(aspect.ratio = 1, legend.position="none") 
+    } else if (bw == TRUE) {
+    curve.plot <- ggplot2::ggplot() +
+        ggplot2::geom_point(data = dat, ggplot2::aes(x = Procrustes1, y = Procrustes2, color = Type), size = 2) +
+        ggplot2::geom_text(data = dat, ggplot2::aes(x = Procrustes1, y = Procrustes2, color = Type ), label = rownames(dat), size = 3, hjust = 0.025, nudge_x = 0.015, check_overlap = TRUE) + 
+        ggplot2::geom_line(data = ref,  ggplot2::aes(x = Procrustes1, y = Procrustes2), linewidth=1, alpha=0.4, linetype=1) +
+        scale_colour_grey(start = 0.8, end = 0) + 
+        ggplot2::theme_bw() + ggplot2::theme(aspect.ratio = 1, legend.position="none")         
+    }
     curve.plot
 }
 
@@ -116,7 +127,7 @@ summary.lakhesis <- function(object, ...) {
     cat("\n")
     cat("Seriated incidience matrix in $im_seriated\n")
     cat("Coefficients in $coef\n")
-    cat("cor_sp = ", cor_sp(object$im_seriated), "\n")
+    cat("cor_sq = ", cor_sq(object$im_seriated), "\n")
     cat("conc_wrc = ", conc_wrc(object$im_seriated), "\n")
 }
 
@@ -128,9 +139,9 @@ plot.lakhesis <- function(x, display = "im_seriated", ...) {
     lakhcoef <- x$coef
     if (display == "im_seriated") {
         im_seriated <- x$im_seriated
-        k_sp <- cor_sp(im_seriated)
+        k_sp <- cor_sq(im_seriated)
         k_wrc <- conc_wrc(im_seriated)
-        ttl <- paste(format(nrow(im_seriated))," x ",format(ncol(im_seriated)),"; cor_sp = ",format(round(k_sp,3)), "; conc_wrc = ",format(round(k_wrc,3)), sep = "")
+        ttl <- paste(format(nrow(im_seriated))," x ",format(ncol(im_seriated)),"; cor_sq = ",format(round(k_sp,3)), "; conc_wrc = ",format(round(k_wrc,3)), sep = "")
         im_Image <- t(im_seriated[nrow(im_seriated):1 , ])
         graphics::image(im_Image, col=c('white','black'), xaxt='n', yaxt='n', main = ttl)
     } else if (display == "agreement") {
@@ -153,8 +164,8 @@ plot.lakhesis <- function(x, display = "im_seriated", ...) {
 #' @export 
 plot.incidence_matrix <- function(x, ...) {
     k_wrc <- conc_wrc(x)
-    k_sp <- cor_sp(x)
-    ttl <- paste(format(nrow(x))," x ",format(ncol(x)),"; cor_sp = ", format(round(k_sp,3)), "; conc_rc = ",format(round(k_wrc,3)), sep = "")
+    k_sp <- cor_sq(x)
+    ttl <- paste(format(nrow(x))," x ",format(ncol(x)),"; cor_sq = ", format(round(k_sp,3)), "; conc_rc = ",format(round(k_wrc,3)), sep = "")
     im_Image <- t(x[nrow(x):1 , ])
     graphics::image(im_Image, col=c('white','black'), xaxt='n', yaxt='n', main = ttl)
 }

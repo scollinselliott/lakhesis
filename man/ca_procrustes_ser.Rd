@@ -4,16 +4,25 @@
 \alias{ca_procrustes_ser}
 \alias{ca_procrustes_ser.incidence_matrix}
 \alias{ca_procrustes_ser.matrix}
-\title{Seriate Using Reference Curve for Procrustes-Fit CA Scores}
+\title{Seriate Procrustes-Fit CA Scores}
 \usage{
-ca_procrustes_ser(obj, samples = 10^5)
+ca_procrustes_ser(obj, projection = "curve", samples = 10^5, symmetric = TRUE)
 
-\method{ca_procrustes_ser}{incidence_matrix}(obj, samples = 10^5)
+\method{ca_procrustes_ser}{incidence_matrix}(obj, projection = "curve", samples = 10^5, symmetric = TRUE)
 
-\method{ca_procrustes_ser}{matrix}(obj, samples = 10^5)
+\method{ca_procrustes_ser}{matrix}(obj, projection = "curve", samples = 10^5, symmetric = TRUE)
 }
 \arguments{
 \item{obj}{An incidence matrix of size n x k.}
+
+\item{projection}{Which projection to use:
+\itemize{
+\item \code{ca1} The first axis for CA scores.
+\item \code{ca2} The second axis for CA scores.
+\item \code{procrustes1} The first axis of Procrustes-fit CA scores.
+\item \code{procrustes2} The second axis of Procrustes-fit CA scores.
+\item \code{curve} The reference curve of an ideal seriation, using Procrustes fitting (this is the default).
+}}
 
 \item{samples}{Number of samples to use for plotting points along polynomial curve. Default is \code{10^5}.}
 }

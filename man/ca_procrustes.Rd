@@ -6,25 +6,29 @@
 \alias{ca_procrustes.incidence_matrix}
 \title{Correspondence Analysis with Procrustes Fitting}
 \usage{
-ca_procrustes(obj)
+ca_procrustes(obj, symmetric = TRUE)
 
-\method{ca_procrustes}{matrix}(obj)
+\method{ca_procrustes}{matrix}(obj, symmetric = TRUE)
 
-\method{ca_procrustes}{incidence_matrix}(obj)
+\method{ca_procrustes}{incidence_matrix}(obj, symmetric = TRUE)
 }
 \arguments{
 \item{obj}{An incidence matrix of size n x k.}
+
+\item{symmetric}{Whether to use standard scores for both rows and columns. Default is \code{TRUE}. Setting this to \code{FALSE} will result in a assymetric map of standard scores for rows and principal scores for columns.}
 }
 \value{
 A \code{list} object of class \code{strand} containing the following:
 \itemize{
 \item \code{ref} The Procrustes-fit coordinates of the scores of the reference seriation.
-\item \code{x} The Procrustes-fit coordinates of the row scores of the data.
-\item \code{y} The Procrustes-fit coordinates of the column scores of the data.
+\item \code{x} The coordinates of the row standard scores of the data.
+\item \code{y} The coordinates of the column principal scores of the data.
+\item \code{x_pr} The Procrustes-fit coordinates of the row standard scores of the data.
+\item \code{y_pr} The Procrustes-fit coordinates of the column column scores of the data.
 }
 }
 \description{
-Fit scores of correspondence analysis on an incidence matrix to those produced by reference matrix which contain an ideal seriation using a Procrustes method (on the reference matrix, see \code{\link[lakhesis]{im_ref}}). Rotation is determined by minimizing Euclidean distance from each row score to the nearest reference row score. Correspondence analysis is performed using the \code{\link[ca]{ca}} package \insertCite{nenadic_correspondence_2007}{lakhesis}.
+Fit scores of correspondence analysi on an incidence matrix to those produced by reference matrix which contain an ideal seriation using a Procrustes method (on the reference matrix, see \code{\link[lakhesis]{im_ref}}).  Rotation is determined by minimizing Euclidean distance from each row score to the nearest reference row score. Correspondence analysis is performed using the \code{\link[ca]{ca}} package \insertCite{nenadic_correspondence_2007}{lakhesis}.
 }
 \examples{
 data("quattrofontanili")

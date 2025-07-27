@@ -4,7 +4,7 @@
 \alias{conc_wrc}
 \alias{conc_wrc.matrix}
 \alias{conc_wrc.incidence_matrix}
-\title{Weighted Row-Column Concentration}
+\title{Optimality Criterion: Weighted Row-Column Concentration}
 \usage{
 conc_wrc(obj)
 
