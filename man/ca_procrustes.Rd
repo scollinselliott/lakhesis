@@ -15,7 +15,7 @@ ca_procrustes(obj, symmetric = TRUE)
 \arguments{
 \item{obj}{An incidence matrix of size n x k.}
 
-\item{symmetric}{Whether to use standard scores for both rows and columns. Default is \code{TRUE}. Setting this to \code{FALSE} will result in a assymetric map of standard scores for rows and principal scores for columns.}
+\item{symmetric}{Whether to use standard scores for both rows and columns. Default is \code{TRUE}. Setting this to \code{FALSE} will result in a asymmetric map of standard scores for rows and principal scores for columns.}
 }
 \value{
 A \code{list} object of class \code{strand} containing the following:

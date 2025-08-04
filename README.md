@@ -39,8 +39,8 @@ a single consensus seriation using an optimality criterion. The process
 of harmonizing different partial strands of sequential elements via
 iterative linear regressions is called a lakhesis technique, after the
 fate from ancient Greek mythology figure who measured the strand of
-one’s life. The package relies on `Rcpp` and `RcppArmadillo` for
-Eddelbuettel and Balamuta (2018).
+one’s life. The package relies on `Rcpp` and `RcppArmadillo`
+(Eddelbuettel and Sanderson 2014; Eddelbuettel and Balamuta 2018).
 
 While command line functions can be run in `R`, the functionality of
 `lakhesis` is primarily achieved via the Lakhesis Calculator, a
