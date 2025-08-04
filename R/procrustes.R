@@ -135,6 +135,7 @@ ca_procrustes.incidence_matrix <- function(obj, symmetric = TRUE) {
 #'   * \code{procrustes2} The second axis of Procrustes-fit CA scores.
 #'   * \code{curve} The reference curve of an ideal seriation, using Procrustes fitting (this is the default).
 #' @param samples Number of samples to use for plotting points along polynomial curve. Default is \code{10^5}.
+#' @param symmetric Whether to use standard scores for both rows and columns. Default is \code{TRUE}. Setting this to \code{FALSE} will result in a asymmetric map of standard scores for rows and principal scores for columns.
 #' @return A \code{list} of class \code{strand} containing the following:.
 #' * \code{$dat} A data frame with the following columns:
 #'   * \code{Procrustes1, Procrustes2} The location of the point on the biplot after fitting.

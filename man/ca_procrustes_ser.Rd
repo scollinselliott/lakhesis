@@ -25,6 +25,8 @@ ca_procrustes_ser(obj, projection = "curve", samples = 10^5, symmetric = TRUE)
 }}
 
 \item{samples}{Number of samples to use for plotting points along polynomial curve. Default is \code{10^5}.}
+
+\item{symmetric}{Whether to use standard scores for both rows and columns. Default is \code{TRUE}. Setting this to \code{FALSE} will result in a asymmetric map of standard scores for rows and principal scores for columns.}
 }
 \value{
 A \code{list} of class \code{strand} containing the following:.
