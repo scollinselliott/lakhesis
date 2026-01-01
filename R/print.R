@@ -12,7 +12,7 @@ print.procrustean <- function(x, ...) {
 
 #' @export 
 plot.procrustean <- function(x, bw = FALSE, ...) {
-    Procrustes1 <- Procrustes2 <- NULL
+    Procrustes1 <- Procrustes2 <- scale_colour_grey <- NULL
     ref <- data.frame(Procrustes1 = x$ref[,1], Procrustes2 = x$ref[,2])
     r.dat <- data.frame(Procrustes1 = x$x_pr[,1], Procrustes2 = x$x_pr[,2])
     c.dat <- data.frame(Procrustes1 = x$y_pr[,1], Procrustes2 = x$y_pr[,2])
