@@ -157,7 +157,7 @@ R2, C3
 R3, C3
 ```
 
-If characters are not displyaing properly in the plot, make sure to
+If characters are not displaying properly in the plot, make sure to
 check font encoding (UTF-8 is recommended).
 
 Row and column elements must be unique (a row element cannot have the
