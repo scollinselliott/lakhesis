@@ -4,6 +4,9 @@
 # <img src="man/figures/logo.png" align="right" width="150px"/> lakhesis: Consensus Seriation for Binary Data
 
 <!-- badges: start -->
+
+[![CRAN
+status](https://www.r-pkg.org/badges/version/lakhesis)](https://CRAN.R-project.org/package=lakhesis)
 <!-- badges: end -->
 
 The `R` package `lakhesis` provides an interactive platform and critical
@@ -206,7 +209,8 @@ The vignette “A Guide to Lakhesis” contains more information on usage.
 
 ## References
 
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent"
+entry-spacing="0">
 
 <div id="ref-chang_shiny_2024" class="csl-entry">
 

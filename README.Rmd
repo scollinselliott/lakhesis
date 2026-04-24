@@ -17,6 +17,7 @@ knitr::opts_chunk$set(
 # <img src="man/figures/logo.png" align="right" width="150px"/> lakhesis: Consensus Seriation for Binary Data
 
 <!-- badges: start -->
+[![CRAN status](https://www.r-pkg.org/badges/version/lakhesis)](https://CRAN.R-project.org/package=lakhesis)
 <!-- badges: end -->
 
 The `R` package `lakhesis` provides an interactive platform and critical measures for seriating binary data matrices through the exploration, selection, and consensus of partially seriated sequences. 
