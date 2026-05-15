@@ -207,6 +207,15 @@ summary(x)
 
 The vignette “A Guide to Lakhesis” contains more information on usage.
 
+## Citation
+
+To cite this `lakhesis`, please use the following reference:
+
+Collins-Elliott, S.A. 2026. “Lakhesis: Consensus Seriation via Iterative
+Regression of Partial Rankings for Binary Data.” *Journal of Applied
+Statistics*.
+[doi:10.1080/02664763.2026.2672564](https://doi.org/10.1080/02664763.2026.2672564).
+
 ## References
 
 <div id="refs" class="references csl-bib-body hanging-indent"
