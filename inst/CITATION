@@ -3,7 +3,9 @@ bibentry(
   title    = "Lakhesis: Consensus Seriation via Iterative Regression of Partial Rankings for Binary Data",
   author   = c(person(c("Stephen", "A."), "Collins-Elliott")),
   journal  = "Journal of Applied Statistics",
-  year     = "Forthcoming",
-  key      = "collins-elliott_lakhesis_nd"
+  year     = "2026",
+  pages    = "1--23",
+  doi      = "10.1080/02664763.2026.2672564",
+  key      = "collins-elliott_lakhesis_2026"
 )
 
