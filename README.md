@@ -22,28 +22,28 @@ species may occur according to a preferred environmental condition that
 diminishes as that environment changes (ter Braak and Looman 1986).
 There are a number of R functions and packages, especially
 [`seriation`](https://github.com/mhahsler/seriation) (Hahsler, Hornik,
-and Buchcta 2008) and
-[`vegan`](https://CRAN.R-project.org/package=vegan) (Oksanen et al.
-2024) that provide the means to seriate or ordinate matrices, especially
-for frequency or count data. While binary (presence/absence) data are
-often viewed as a reductive case of frequency data, they can also
-present their own challenges. Moreover, not all incidence matrices (the
-matrix of 0/1s that record the joint incidence or occurrence for a
-row-column pairing) will be well seriated. The selection of which row
-and column elements to inlcude in the input is accordingly an intrinsic
-part of the task of seriation. In this respect, `lakhesis` seeks to
-complement existing methods in `R`, focusing on binary data, by
-providing an interactive, graphical means of selecting seriated
-sequences. It relies correspondence analysis (CA), a mainstay technique
-for seriation, and offers a method of Procrustes-fit CA to align scores
-with an ideal reference curve. Multiple seriations can be rerun on
-partial subsets, called “strands,” of the initial incidence matrix,
-which are then recompiled into a single consensus seriation using an
-optimality criterion. The process of harmonizing different strands of
-sequential elements via iterative linear regression is called a lakhesis
-technique, after the fate from ancient Greek mythology who measured the
-strand of one’s life. The package relies on `Rcpp` and `RcppArmadillo`
-(Eddelbuettel and Sanderson 2014; Eddelbuettel and Balamuta 2018).
+and Buchta 2008) and [`vegan`](https://CRAN.R-project.org/package=vegan)
+(Oksanen et al. 2024) that provide the means to seriate or ordinate
+matrices, especially for frequency or count data. While binary
+(presence/absence) data are often viewed as a reductive case of
+frequency data, they can also present their own challenges. Moreover,
+not all incidence matrices (the matrix of 0/1s that record the joint
+incidence or occurrence for a row-column pairing) will be well seriated.
+The selection of which row and column elements to inlcude in the input
+is accordingly an intrinsic part of the task of seriation. In this
+respect, `lakhesis` seeks to complement existing methods in `R`,
+focusing on binary data, by providing an interactive, graphical means of
+selecting seriated sequences. It relies correspondence analysis (CA), a
+mainstay technique for seriation, and offers a method of Procrustes-fit
+CA to align scores with an ideal reference curve. Multiple seriations
+can be rerun on partial subsets, called “strands,” of the initial
+incidence matrix, which are then recompiled into a single consensus
+seriation using an optimality criterion. The process of harmonizing
+different strands of sequential elements via iterative linear regression
+is called a lakhesis technique, after the fate from ancient Greek
+mythology who measured the strand of one’s life. The package relies on
+`Rcpp` and `RcppArmadillo` (Eddelbuettel and Sanderson 2014;
+Eddelbuettel and Balamuta 2018).
 
 While command line functions can be run in `R`, the functionality of
 `lakhesis` is primarily achieved via the Lakhesis Calculator, a
@@ -149,7 +149,7 @@ should consist of just two columns without headers, in which each row
 represents the incidence of a row-column pair. For example, an incidence
 matrix of
 
-$$\begin{array} \,  & C_1 & C_2 & C_3 \\\ R_1 & 1 & 0 & 0 \\\ R_2 &  0 & 1 & 1 \\\  R_3 & 0 & 0 & 1 \end{array}$$
+$$\begin{array}   & C_1 & C_2 & C_3 \\\ R_1 & 1 & 0 & 0 \\\ R_2 &  0 & 1 & 1 \\\  R_3 & 0 & 0 & 1 \end{array}$$
 
 will have a corresponding long format of
 
@@ -250,7 +250,7 @@ Analysis* 71: 1054–63. <https://doi.org/10.1016/j.csda.2013.02.005>.
 
 <div id="ref-hahsler_getting_2008" class="csl-entry">
 
-Hahsler, M., K. Hornik, and C. Buchcta. 2008. “Getting Things in Order:
+Hahsler, M., K. Hornik, and C. Buchta. 2008. “Getting Things in Order:
 An Introduction to the R Package Seriation.” *Journal of Statistical
 Software* 25: 1–34. <https://doi.org/10.18637/jss.v025.i03>.
 
