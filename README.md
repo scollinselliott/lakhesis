@@ -149,9 +149,10 @@ should consist of just two columns without headers, in which each row
 represents the incidence of a row-column pair. For example, an incidence
 matrix of
 
-      | $C_1$ | $C_2$ | $C_3$ |
-
-$R_1$ \| 1 \| 0 \| 0 \| $R_2$ \| 0 \| 1 \| 1 \| $R_3$ \| 0 \| 0 \| 1 \|
+      \| $C_1$ \| $C_2$ \| $C_3$ \|  
+$R_1$ \| 1 \| 0 \| 0 \|  
+$R_2$ \| 0 \| 1 \| 1 \|  
+$R_3$ \| 0 \| 0 \| 1 \|
 
 will have a corresponding long format of
 
